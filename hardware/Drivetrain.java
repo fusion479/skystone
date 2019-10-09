@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
+import org.firstinspires.ftc.teamcode.PIDController;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -37,9 +38,10 @@ public class Drivetrain extends Mechanism {
     public DcMotor backLeft;
     public DcMotor backRight;
     private BNO055IMU imu;
+    private PIDController pidDrive;
+    private PIDController pidRotate;
 
     double flPower = 0.0, frPower = 0.0, blPower = 0.0, brPower = 0.0;
-
 
     public Drivetrain() {
 
@@ -67,6 +69,9 @@ public class Drivetrain extends Mechanism {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        pidRotate = new PIDController(0.005, 0, 0);
+        pidDrive = new PIDController(0.05,0,0);
+
         // Set all motors to zero power
         frontLeft.setPower(0);
         backLeft.setPower(0);
@@ -87,41 +92,57 @@ public class Drivetrain extends Mechanism {
         imu.initialize(parameters);
     }
 
-    public double trueScaledInput(double joystickValue){
-        double signum = Math.signum(joystickValue);
-        double joystickScale = Math.pow(joystickValue,2) * signum;
-        return joystickScale;
+//    double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+//    double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+//    double rightX = gamepad1.right_stick_x;
+//    final double v1 = r * Math.cos(robotAngle) + rightX;
+//    final double v2 = r * Math.sin(robotAngle) - rightX;
+//    final double v3 = r * Math.sin(robotAngle) + rightX;
+//    final double v4 = r * Math.cos(robotAngle) - rightX;
+
+    public void teleDrive(double r, double robotAngle, double rightX) {
+        double v1 = r * Math.cos(robotAngle) + rightX;
+        double v2 = r * Math.sin(robotAngle) - rightX;
+        double v3 = r * Math.sin(robotAngle) + rightX;
+        double v4 = r * Math.cos(robotAngle) - rightX;
+        frontLeft.setPower(v1);
+        frontRight.setPower(v2);
+        backLeft.setPower(v3);
+        backRight.setPower(v4);
     }
 
-    public void tankDriveScaled(double leftY, double rightY, double slide){
-        flPower = trueScaledInput(leftY) - trueScaledInput(slide);
-        frPower = trueScaledInput(rightY) + trueScaledInput(slide);
-        blPower = trueScaledInput(leftY) + trueScaledInput(slide);
-        brPower = trueScaledInput(rightY) - trueScaledInput(slide);
+//    public double trueScaledInput(double joystickValue){
+//        double signum = Math.signum(joystickValue);
+//        double joystickScale = Math.pow(joystickValue,2) * signum;
+//        return joystickScale;
+//    }
+//
+//    public void tankDriveScaled(double leftY, double rightY, double slide){
+//        flPower = trueScaledInput(leftY) - trueScaledInput(slide);
+//        frPower = trueScaledInput(rightY) + trueScaledInput(slide);
+//        blPower = trueScaledInput(leftY) + trueScaledInput(slide);
+//        brPower = trueScaledInput(rightY) - trueScaledInput(slide);
+//
+//        frontLeft.setPower(Range.clip(flPower,-1,1));
+//        backLeft.setPower(Range.clip(blPower,-1,1));
+//        backRight.setPower(Range.clip(brPower,-1,1));
+//        frontRight.setPower(Range.clip(frPower,-1,1));
+//    }
 
-        frontLeft.setPower(Range.clip(flPower,-1,1));
-        backLeft.setPower(Range.clip(blPower,-1,1));
-        backRight.setPower(Range.clip(brPower,-1,1));
-        frontRight.setPower(Range.clip(frPower,-1,1));
-    }
-
-    public void driveToPos(double inches) {
+    public void driveToPos(double inches, double power) {
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        int frontLeftTarget, frontRightTarget, backLeftTarget, backRightTarget;
+        int tickCount;
 
-        frontLeftTarget = (int) (inches * COUNTS_PER_INCH);
-        frontRightTarget = (int) (inches * COUNTS_PER_INCH);
-        backLeftTarget = (int) (inches * COUNTS_PER_INCH);
-        backRightTarget = (int) (inches * COUNTS_PER_INCH);
+        tickCount = (int) (inches * COUNTS_PER_INCH);
 
-        frontLeft.setTargetPosition(frontLeftTarget);
-        backLeft.setTargetPosition(backLeftTarget);
-        backRight.setTargetPosition(backRightTarget);
-        frontRight.setTargetPosition(frontRightTarget);
+        frontLeft.setTargetPosition(tickCount);
+        backLeft.setTargetPosition(tickCount);
+        backRight.setTargetPosition(tickCount);
+        frontRight.setTargetPosition(tickCount);
 
         frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -129,16 +150,20 @@ public class Drivetrain extends Mechanism {
         backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         while(opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
-            frontLeft.setPower(0.4*inches/Math.abs(inches));
-            frontRight.setPower(0.4*inches/Math.abs(inches));
-            backRight.setPower(0.4*inches/Math.abs(inches));
-            backLeft.setPower(0.4*inches/Math.abs(inches));
+            frontLeft.setPower(power*inches/Math.abs(inches));
+            frontRight.setPower(power*inches/Math.abs(inches));
+            backRight.setPower(power*inches/Math.abs(inches));
+            backLeft.setPower(power*inches/Math.abs(inches));
         }
 
         frontLeft.setPower(0.0);
         backRight.setPower(0.0);
         backLeft.setPower(0.0);
         frontRight.setPower(0.0);
+
+    }
+
+    public void turn(double angle) {
 
     }
 }
