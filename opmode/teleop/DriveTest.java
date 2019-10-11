@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
+import org.firstinspires.ftc.teamcode.hardware.Launcher;
 
 
 @TeleOp(name="Drive", group="Teleop")
@@ -12,9 +13,12 @@ public class DriveTest extends LinearOpMode {
     double leftInput, rightInput, slideInput, launchInput;
 
     private Drivetrain drive = new Drivetrain();
+    private Launcher launcher = new Launcher();
+
     @Override
     public void runOpMode() throws InterruptedException {
         drive.init(hardwareMap);
+        launcher.init(hardwareMap);
 
         while(!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("Status", "Waiting in Init");
@@ -30,7 +34,15 @@ public class DriveTest extends LinearOpMode {
 
             drive.teleDrive(r, robotAngle, rightX);
 
-
+            if(gamepad1.left_trigger > 0) {
+                launcher.launch(-gamepad1.left_trigger);
+            }
+            else if (gamepad1.right_trigger > 0) {
+                launcher.launch(gamepad1.right_trigger);
+            }
+            else if (gamepad1.left_trigger == 0 && gamepad1.right_trigger == 0) {
+                launcher.launch(0);
+            }
 //            leftInput = gamepad1.left_stick_y;
 //            rightInput = gamepad1.right_stick_y;
 //            slideInput = -gamepad1.left_trigger + gamepad1.right_trigger;

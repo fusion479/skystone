@@ -22,7 +22,7 @@ public class Launcher extends Mechanism {
         center.setPower(0);
     }
 
-    public void launch(double power) {
+    public void launch(float power) {
         center.setPower(power);
     }
 }
