@@ -101,15 +101,20 @@ public class Drivetrain extends Mechanism {
 //    final double v4 = r * Math.cos(robotAngle) - rightX;
 
     public void teleDrive(double r, double robotAngle, double rightX) {
-        double v1 = r * Math.cos(robotAngle) + rightX;
-        double v2 = r * Math.sin(robotAngle) - rightX;
-        double v3 = r * Math.sin(robotAngle) + rightX;
-        double v4 = r * Math.cos(robotAngle) - rightX;
+        double v1 = r * Math.cos(robotAngle) - rightX;
+        double v2 = r * Math.sin(robotAngle) + rightX;
+        double v3 = r * Math.sin(robotAngle) - rightX;
+        double v4 = r * Math.cos(robotAngle) + rightX;
         frontLeft.setPower(v1);
         frontRight.setPower(v2);
         backLeft.setPower(v3);
         backRight.setPower(v4);
+
     }
+
+//    public void teleTurn(double r) {
+//
+//    }
 
 //    public double trueScaledInput(double joystickValue){
 //        double signum = Math.signum(joystickValue);
