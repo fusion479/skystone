@@ -16,35 +16,36 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 
 public class Drivetrain extends Mechanism {
-
-    //temp
     private static final double     COUNTS_PER_MOTOR_REV    = 1120;
+
     /**
      * Drivetrain gear ratio (< 1.0 if geared up).
      */
     private static final double     DRIVE_GEAR_REDUCTION    = 1.0;
+
     /**
      * Diameter of wheel in inches.
      */
     private static final double     WHEEL_DIAMETER_INCHES   = 4.0;
+
     /**
      * Calculated ticks per inch.
      */
     private static final double     COUNTS_PER_INCH         =
             (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
 
-    public DcMotor frontLeft;
-    public DcMotor frontRight;
-    public DcMotor backLeft;
-    public DcMotor backRight;
+//    private DcMotor[] motors;
+    private DcMotor frontLeft;
+    private DcMotor frontRight;
+    private DcMotor backLeft;
+    private DcMotor backRight;
     private BNO055IMU imu;
     private PIDController pidDrive;
     private PIDController pidRotate;
 
-    double flPower = 0.0, frPower = 0.0, blPower = 0.0, brPower = 0.0;
+    private double flPower = 0.0, frPower = 0.0, blPower = 0.0, brPower = 0.0;
 
     public Drivetrain() {
-
     }
 
     public Drivetrain(LinearOpMode opMode) {
@@ -73,10 +74,7 @@ public class Drivetrain extends Mechanism {
         pidDrive = new PIDController(0.05,0,0);
 
         // Set all motors to zero power
-        frontLeft.setPower(0);
-        backLeft.setPower(0);
-        frontRight.setPower(0);
-        backRight.setPower(0);
+        setPower(0.0);
 
         // Initialize IMU with parameters
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -92,29 +90,13 @@ public class Drivetrain extends Mechanism {
         imu.initialize(parameters);
     }
 
-//    double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-//    double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
-//    double rightX = gamepad1.right_stick_x;
-//    final double v1 = r * Math.cos(robotAngle) + rightX;
-//    final double v2 = r * Math.sin(robotAngle) - rightX;
-//    final double v3 = r * Math.sin(robotAngle) + rightX;
-//    final double v4 = r * Math.cos(robotAngle) - rightX;
-
     public void teleDrive(double r, double robotAngle, double rightX) {
         double v1 = r * Math.cos(robotAngle) - rightX;
         double v2 = r * Math.sin(robotAngle) + rightX;
         double v3 = r * Math.sin(robotAngle) - rightX;
         double v4 = r * Math.cos(robotAngle) + rightX;
-        frontLeft.setPower(v1);
-        frontRight.setPower(v2);
-        backLeft.setPower(v3);
-        backRight.setPower(v4);
-
+        setPower(v1,v2,v3,v4);
     }
-
-//    public void teleTurn(double r) {
-//
-//    }
 
 //    public double trueScaledInput(double joystickValue){
 //        double signum = Math.signum(joystickValue);
@@ -140,9 +122,8 @@ public class Drivetrain extends Mechanism {
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        int tickCount;
-
-        tickCount = (int) (inches * COUNTS_PER_INCH);
+        int tickCount = (int) (inches * COUNTS_PER_INCH);
+        double set_power = power*inches/Math.abs(inches);
 
         frontLeft.setTargetPosition(tickCount);
         backLeft.setTargetPosition(tickCount);
@@ -155,17 +136,21 @@ public class Drivetrain extends Mechanism {
         backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         while(opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
-            frontLeft.setPower(power*inches/Math.abs(inches));
-            frontRight.setPower(power*inches/Math.abs(inches));
-            backRight.setPower(power*inches/Math.abs(inches));
-            backLeft.setPower(power*inches/Math.abs(inches));
+            setPower(set_power);
         }
 
-        frontLeft.setPower(0.0);
-        backRight.setPower(0.0);
-        backLeft.setPower(0.0);
-        frontRight.setPower(0.0);
+        setPower(0.0);
+    }
 
+    private void setPower(double power) {
+        setPower(power, power, power, power);
+    }
+
+    private void setPower(double FL, double FR, double BL, double BR) {
+        frontLeft.setPower(FL);
+        backRight.setPower(BR);
+        backLeft.setPower(BL);
+        frontRight.setPower(FR);
     }
 
     public void turn(double angle) {
