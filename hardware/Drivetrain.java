@@ -34,7 +34,6 @@ public class Drivetrain extends Mechanism {
     private static final double     COUNTS_PER_INCH         =
             (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
 
-//    private DcMotor[] motors;
     private DcMotor frontLeft;
     private DcMotor frontRight;
     private DcMotor backLeft;
@@ -42,6 +41,9 @@ public class Drivetrain extends Mechanism {
     private BNO055IMU imu;
     private PIDController pidDrive;
     private PIDController pidRotate;
+
+    double  globalAngle, power = .30, correction;
+    Orientation lastAngles = new Orientation();
 
     private double flPower = 0.0, frPower = 0.0, blPower = 0.0, brPower = 0.0;
 
@@ -98,23 +100,23 @@ public class Drivetrain extends Mechanism {
         setPower(v1,v2,v3,v4);
     }
 
-//    public double trueScaledInput(double joystickValue){
-//        double signum = Math.signum(joystickValue);
-//        double joystickScale = Math.pow(joystickValue,2) * signum;
-//        return joystickScale;
-//    }
-//
-//    public void tankDriveScaled(double leftY, double rightY, double slide){
-//        flPower = trueScaledInput(leftY) - trueScaledInput(slide);
-//        frPower = trueScaledInput(rightY) + trueScaledInput(slide);
-//        blPower = trueScaledInput(leftY) + trueScaledInput(slide);
-//        brPower = trueScaledInput(rightY) - trueScaledInput(slide);
-//
-//        frontLeft.setPower(Range.clip(flPower,-1,1));
-//        backLeft.setPower(Range.clip(blPower,-1,1));
-//        backRight.setPower(Range.clip(brPower,-1,1));
-//        frontRight.setPower(Range.clip(frPower,-1,1));
-//    }
+    public double trueScaledInput(double joystickValue){
+        double signum = Math.signum(joystickValue);
+        double joystickScale = Math.pow(joystickValue,2) * signum;
+        return joystickScale;
+    }
+
+    public void tankDriveScaled(double leftY, double rightY, double slide){
+        flPower = trueScaledInput(leftY) - trueScaledInput(slide);
+        frPower = trueScaledInput(rightY) + trueScaledInput(slide);
+        blPower = trueScaledInput(leftY) + trueScaledInput(slide);
+        brPower = trueScaledInput(rightY) - trueScaledInput(slide);
+
+        frontLeft.setPower(Range.clip(flPower,-1,1));
+        backLeft.setPower(Range.clip(blPower,-1,1));
+        backRight.setPower(Range.clip(brPower,-1,1));
+        frontRight.setPower(Range.clip(frPower,-1,1));
+    }
 
     public void driveToPos(double inches, double power) {
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -146,15 +148,95 @@ public class Drivetrain extends Mechanism {
         setPower(power, power, power, power);
     }
 
-    private void setPower(double FL, double FR, double BL, double BR) {
+    public void setPower(double FL, double FR, double BL, double BR) {
         frontLeft.setPower(FL);
         backRight.setPower(BR);
         backLeft.setPower(BL);
         frontRight.setPower(FR);
     }
 
-    public void turn(double angle) {
+    /**
+     * Resets the cumulative angle tracking to zero.
+     */
+    public void resetAngle()
+    {
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
+        globalAngle = 0;
+    }
+
+    /**
+     * Get current cumulative angle rotation from last reset.
+     * @return Angle in degrees. + = left, - = right from zero point.
+     */
+    public double getAngle()
+    {
+        // We experimentally determined the Z axis is the axis we want to use for heading angle.
+        // We have to process the angle because the imu works in euler angles so the Z axis is
+        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
+        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
+
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
+
+        if (deltaAngle < -180)
+            deltaAngle += 360;
+        else if (deltaAngle > 180)
+            deltaAngle -= 360;
+
+        globalAngle += deltaAngle;
+
+        lastAngles = angles;
+
+        return globalAngle;
+    }
+
+    /**
+     * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
+     * @param degrees Degrees to turn, + is left - is right
+     */
+    public void turn(int degrees, double power) {
+        // restart imu angle tracking.
+        resetAngle();
+        pidRotate.reset();
+        pidRotate.setSetpoint(degrees);
+        pidRotate.setInputRange(0, 90);
+        pidRotate.setOutputRange(.05, power);
+        pidRotate.setTolerance(0.5);
+        pidRotate.enable();
+        if (degrees < 0) {
+            while (getAngle() == 0) {
+                frontLeft.setPower(-power);
+                backLeft.setPower(-power);
+                frontRight.setPower(power);
+                backRight.setPower(power);
+            }
+            do {
+                power = pidRotate.performPID(getAngle()); // power will be - on right turn.
+                frontLeft.setPower(power);
+                backLeft.setPower(power);
+                frontRight.setPower(-power);
+                backRight.setPower(-power);
+            }
+            while (!pidRotate.onTarget());
+        }
+        else    // left turn.
+            do {
+                power = pidRotate.performPID(getAngle()); // power will be + on left turn.
+                frontLeft.setPower(power);
+                backLeft.setPower(power);
+                frontRight.setPower(-power);
+                backRight.setPower(-power);
+            }
+            while (!pidRotate.onTarget());
+
+        // turn the motors off.
+        frontLeft.setPower(0);
+        backLeft.setPower(0);
+        frontRight.setPower(0);
+        backRight.setPower(0);
+        resetAngle();
     }
 }
 
