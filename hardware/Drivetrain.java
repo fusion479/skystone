@@ -38,7 +38,7 @@ public class Drivetrain extends Mechanism {
     private DcMotor frontRight;
     private DcMotor backLeft;
     private DcMotor backRight;
-    private BNO055IMU imu;
+    public BNO055IMU imu;
     private PIDController pidDrive;
     private PIDController pidRotate;
 
