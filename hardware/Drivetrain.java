@@ -82,7 +82,7 @@ public class Drivetrain extends Mechanism {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+//        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
         parameters.loggingEnabled      = false;
         parameters.loggingTag          = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
@@ -93,10 +93,10 @@ public class Drivetrain extends Mechanism {
     }
 
     public void teleDrive(double r, double robotAngle, double rightX) {
-        double v1 = r * Math.cos(robotAngle) - rightX;
-        double v2 = r * Math.sin(robotAngle) + rightX;
-        double v3 = r * Math.sin(robotAngle) - rightX;
-        double v4 = r * Math.cos(robotAngle) + rightX;
+        double v1 = r * Math.sin(robotAngle) - rightX;
+        double v2 = r * Math.cos(robotAngle) + rightX;
+        double v3 = r * Math.cos(robotAngle) - rightX;
+        double v4 = r * Math.sin(robotAngle) + rightX;
         setPower(v1,v2,v3,v4);
     }
 
@@ -163,6 +163,14 @@ public class Drivetrain extends Mechanism {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         globalAngle = 0;
+    }
+
+    public float getHeading() {
+        return lastAngles.firstAngle;
+    }
+
+    public double getGlobal() {
+        return globalAngle;
     }
 
     /**
