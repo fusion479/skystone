@@ -31,7 +31,11 @@ public class Basic extends LinearOpMode {
 //        drivetrain.setPower(0,0,0,0);
 //
         while(opModeIsActive()) {
-            drivetrain.turn(90,0.5);
+            drivetrain.turn(-120,0.7);
+            sleep(1000);
+            drivetrain.turn(120,0.7);
+            sleep(1000);
+            drivetrain.driveToPos(5,0.75);
 //            telemetry.addData("1 imu heading", drivetrain.getHeading());
 //            telemetry.addData("2 global heading", drivetrain.getHeading());
 //            telemetry.update();

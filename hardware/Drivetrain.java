@@ -207,11 +207,14 @@ public class Drivetrain extends Mechanism {
     public void turn(int degrees, double power) {
         // restart imu angle tracking.
         resetAngle();
-        pidRotate.reset();
+        double p = Math.abs(power/degrees);
+        double i = p / 115.0;
+        pidRotate.setPID(p, i, 0);
+
         pidRotate.setSetpoint(degrees);
-        pidRotate.setInputRange(0, 90);
-        pidRotate.setOutputRange(.05, power);
-        pidRotate.setTolerance(0.05);
+        pidRotate.setInputRange(0, degrees);
+        pidRotate.setOutputRange(0, power);
+        pidRotate.setTolerance(1.0 / Math.abs(degrees) * 115.0);
         pidRotate.enable();
         if (degrees < 0) {
             while (getAngle() == 0) {
