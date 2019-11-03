@@ -1,4 +1,8 @@
-# FTC Fusion 479 2019-2020 SKYSTONE
+# FIRST FTC Fusion 479 2019-2020 SKYSTONE
+
+## Newbies assignments 
+- Set up your coding environment
+- [Tell us about yourself](https://github.com/fusion479/skystone/issues/4)
 
 ## Setting up your coding environment
 - Create a GitHub account
