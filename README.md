@@ -5,6 +5,7 @@
 - [Tell us about yourself](https://github.com/fusion479/skystone/issues/4)
 
 ## Setting up your coding environment
+- Download Java 8 by following these [instructions](https://dojo.stuycs.org/resources/software_installation_and_tips/installation_instructions/programming_languages/installing_jdk.html)
 - Create a GitHub account
 - Download [Git](https://git-scm.com/downloads)
 - Download [Android Studio](https://developer.android.com/studio)
