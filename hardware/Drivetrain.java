@@ -5,6 +5,7 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.PIDController;
@@ -42,6 +43,7 @@ public class Drivetrain extends Mechanism {
     private PIDController pidDrive;
     private PIDController pidRotate;
 
+    public Servo servo;
     double  globalAngle, power = .30, correction;
     Orientation lastAngles = new Orientation();
 
@@ -55,12 +57,13 @@ public class Drivetrain extends Mechanism {
     }
 
     public void init(HardwareMap hwMap) {
+        servo = hwMap.servo.get("servo");
         frontLeft = hwMap.dcMotor.get("frontLeft");
         frontRight = hwMap.dcMotor.get("frontRight");
         backLeft = hwMap.dcMotor.get("backLeft");
         backRight = hwMap.dcMotor.get("backRight");
 
-        // Set motor direction (AndyMark configuration)
+//         Set motor direction (AndyMark configuration)
         frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
