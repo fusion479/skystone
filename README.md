@@ -6,7 +6,7 @@
 - Peruse the [demo branch](https://github.com/fusion479/skystone/tree/demo) of this repo which contains code for our demo bot.
 #### Setting up your coding environment 
 - Download Java 8 by following these [instructions](https://dojo.stuycs.org/resources/software_installation_and_tips/installation_instructions/programming_languages/installing_jdk.html)
-- Create a GitHub account changes
+- Create a GitHub account
 - Download [Git](https://git-scm.com/downloads)
 - Download [Android Studio](https://developer.android.com/studio)
 - Clone the [ftc_app repository](https://github.com/ftctechnh/ftc_app) by using `git clone` in your terminal or by downloading the .zip  
