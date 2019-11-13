@@ -17,33 +17,34 @@ public class Basic extends LinearOpMode {
 
     public void runOpMode() {
 
-        drivetrain.init(hardwareMap);
-        telemetry.addData("Status", "Initialized");
-        telemetry.addData("imu status", drivetrain.imu.getCalibrationStatus().toString());
-        drivetrain.getAngle();
-        telemetry.update();
-        waitForStart();
-        runtime.reset();  // Start counting run time from now.
-        drivetrain.resetAngle();
+//        drivetrain.init(hardwareMap);
+//        telemetry.addData("Status", "Initialized");
+//        telemetry.addData("imu status", drivetrain.imu.getCalibrationStatus().toString());
+//        drivetrain.getAngle();
+//        telemetry.update();
+//        waitForStart();
+//        runtime.reset();  // Start counting run time from now.
+//        drivetrain.resetAngle();
 //        drivetrain.driveToPos(5, 0.5);
 //        drivetrain.setPower(0.5,-0.5,0.5,-0.5);
 //        sleep(10000);
 //        drivetrain.setPower(0,0,0,0);
 //
-        while(opModeIsActive()) {
-            drivetrain.turn(-120,0.7);
-            sleep(1000);
-            drivetrain.turn(120,0.7);
-            sleep(1000);
-            drivetrain.driveToPos(5,0.75);
+//        while(opModeIsActive()) {
+//            drivetrain.turn(-120,0.7);
+//            sleep(1000);
+//            drivetrain.turn(120,0.7);
+//            sleep(1000);
+//            drivetrain.driveToPos(5,0.75);
 //            telemetry.addData("1 imu heading", drivetrain.getHeading());
 //            telemetry.addData("2 global heading", drivetrain.getHeading());
 //            telemetry.update();
 //            drivetrain.getAngle();
-            break;
-        }
+//            break;
+//        }
 
 //        drivetrain.turn(90,0.5);
 
+//    }
     }
 }
