@@ -11,6 +11,9 @@ public class DriveTest extends LinearOpMode {
     double servo0Position;
     double servo1Position;
     double servo2Position;
+    double servo3Position;
+    double servo4Position;
+
 
     private Drivetrain drive = new Drivetrain();
 
@@ -29,34 +32,30 @@ public class DriveTest extends LinearOpMode {
             servo0Position = 0;
             servo1Position = 0;
             servo2Position = 0;
+            servo3Position = 0;
+            servo4Position = 0;
 
             double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
             double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             double rightX = gamepad1.right_stick_x;
 
-
-
-
-
-            if(gamepad1.b) {
+            if(gamepad1.a) {
                 servo0Position = 0.5;
             }
-            if (gamepad1.a) {
-                servo0Position = 1.0;
+            if (gamepad1.b) {
+                servo1Position = 0.5;
             }
-
             if(gamepad1.x){
                 servo2Position = 0.5;
             }
             if(gamepad1.y){
-                servo2Position = 1.0;
+                servo3Position = 0.5;
             }
-
-
 
             drive.servo0.setPosition(servo0Position);
             drive.servo1.setPosition(servo1Position);
             drive.servo2.setPosition(servo2Position);
+            drive.servo3.setPosition(servo3Position);
 
             telemetry.addData("r", r);
             telemetry.addData("robotAngle", robotAngle);
