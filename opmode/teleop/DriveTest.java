@@ -8,7 +8,9 @@ import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 @TeleOp(name="Drive", group="Teleop")
 public class DriveTest extends LinearOpMode {
 
-    double servoPosition;
+    double servo0Position;
+    double servo1Position;
+    double servo2Position;
 
     private Drivetrain drive = new Drivetrain();
 
@@ -24,20 +26,37 @@ public class DriveTest extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()) {
-            servoPosition = 0;
+            servo0Position = 0;
+            servo1Position = 0;
+            servo2Position = 0;
+
             double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
             double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             double rightX = gamepad1.right_stick_x;
 
 
+
+
+
             if(gamepad1.b) {
-                servoPosition = 0.5;
+                servo0Position = 0.5;
             }
             if (gamepad1.a) {
-                servoPosition = 1.0;
+                servo0Position = 1.0;
             }
 
-            drive.servo.setPosition(servoPosition);
+            if(gamepad1.x){
+                servo2Position = 0.5;
+            }
+            if(gamepad1.y){
+                servo2Position = 1.0;
+            }
+
+
+
+            drive.servo0.setPosition(servo0Position);
+            drive.servo1.setPosition(servo1Position);
+            drive.servo2.setPosition(servo2Position);
 
             telemetry.addData("r", r);
             telemetry.addData("robotAngle", robotAngle);
@@ -45,7 +64,7 @@ public class DriveTest extends LinearOpMode {
             telemetry.addData("stickx", gamepad1.right_stick_x);
             telemetry.addData("sticky", gamepad1.right_stick_y);
             telemetry.addData("bbutton", gamepad1.b);
-            telemetry.addData("servoPosition", servoPosition);
+            telemetry.addData("servoPosition", servo0Position);
             telemetry.addData("abutton", gamepad1.a);
             telemetry.update();
         }
