@@ -103,23 +103,6 @@ public class Drivetrain extends Mechanism {
         setPower(v1,v2,v3,v4);
     }
 
-    public double trueScaledInput(double joystickValue){
-        double signum = Math.signum(joystickValue);
-        double joystickScale = Math.pow(joystickValue,2) * signum;
-        return joystickScale;
-    }
-
-    public void tankDriveScaled(double leftY, double rightY, double slide){
-        flPower = trueScaledInput(leftY) - trueScaledInput(slide);
-        frPower = trueScaledInput(rightY) + trueScaledInput(slide);
-        blPower = trueScaledInput(leftY) + trueScaledInput(slide);
-        brPower = trueScaledInput(rightY) - trueScaledInput(slide);
-
-        frontLeft.setPower(Range.clip(flPower,-1,1));
-        backLeft.setPower(Range.clip(blPower,-1,1));
-        backRight.setPower(Range.clip(brPower,-1,1));
-        frontRight.setPower(Range.clip(frPower,-1,1));
-    }
 
     public void driveToPos(double inches, double power) {
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

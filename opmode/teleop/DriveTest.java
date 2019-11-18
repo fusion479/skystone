@@ -27,7 +27,6 @@ public class DriveTest extends LinearOpMode {
             rightInput = gamepad1.right_stick_y;
             slideInput = -gamepad1.left_trigger + gamepad1.right_trigger;
 
-            drive.tankDriveScaled(leftInput, rightInput, slideInput);
         }
     }
 }

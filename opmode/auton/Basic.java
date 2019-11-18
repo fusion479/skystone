@@ -14,6 +14,10 @@ public class Basic extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         waitForStart();
-        drivetrain.driveToPos(5);
+        drivetrain.driveToPos(12, 5);
+        drivetrain.turn(90, 5);
+        drivetrain.driveToPos(24, 5);
+        drivetrain.turn(-90, 5  );
+        drivetrain.driveToPos(12 , 5);
     }
 }
