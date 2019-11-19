@@ -10,15 +10,13 @@ import org.firstinspires.ftc.teamcode.hardware.Launcher;
 @TeleOp(name="Drive", group="Teleop")
 public class DriveTest extends LinearOpMode {
 
-    double leftInput, rightInput, slideInput, launchInput, servoPosition;
+    double servoPosition;
 
     private Drivetrain drive = new Drivetrain();
-//    private Launcher launcher = new Launcher();
 
     @Override
     public void runOpMode() throws InterruptedException {
         drive.init(hardwareMap);
-//        launcher.init(hardwareMap);
 
         while(!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("Status", "Waiting in Init");
@@ -28,47 +26,31 @@ public class DriveTest extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()) {
-            servoPosition = 0;
+//            servoPosition = 0;
             double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
             double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             double rightX = gamepad1.right_stick_x;
 
             drive.teleDrive(r, robotAngle, rightX);
 
-            if(gamepad1.b) {
-                servoPosition = 0.5;
+//            if(gamepad1.b) {
+//                servoPosition = 0.5;
+//            }
+//            if (gamepad1.a) {
+//                servoPosition = 1.0;
+//            }
 
-            }
-            if (gamepad1.a) {
-                servoPosition = 1.0;
-            }
-            if(gamepad1.left_trigger > 0) {
-//                launcher.launch(-gamepad1.left_trigger);
-            }
-            else if (gamepad1.right_trigger > 0) {
-//                launcher.launch(gamepad1.right_trigger);
-            }
-            else if (gamepad1.left_trigger == 0 && gamepad1.right_trigger == 0) {
-//                launcher.launch(0);
-            }
-
-            drive.servo.setPosition(servoPosition);
+//            drive.servo.setPosition(servoPosition);
 
             telemetry.addData("r", r);
             telemetry.addData("robotAngle", robotAngle);
             telemetry.addData("rightX", rightX);
-
             telemetry.addData("stickx", gamepad1.right_stick_x);
             telemetry.addData("sticky", gamepad1.right_stick_y);
             telemetry.addData("bbutton", gamepad1.b);
-            telemetry.addData("servoPosition", servoPosition);
+//            telemetry.addData("servoPosition", servoPosition);
             telemetry.addData("abutton", gamepad1.a);
             telemetry.update();
-//            leftInput = gamepad1.left_stick_y;
-//            rightInput = gamepad1.right_stick_y;
-//            slideInput = -gamepad1.left_trigger + gamepad1.right_trigger;
-
-//            drive.tankDriveScaled(leftInput, rightInput, slideInput);
         }
     }
 }
