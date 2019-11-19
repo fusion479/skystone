@@ -64,10 +64,10 @@ public class Drivetrain extends Mechanism {
         backRight = hwMap.dcMotor.get("backRight");
 
 //         Set motor direction (AndyMark configuration)
-        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Set motor brake behavior
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -103,7 +103,7 @@ public class Drivetrain extends Mechanism {
         setPower(v1,v2,v3,v4);
     }
 
-    public void driveToPos(double inches, double power) {
+    public int driveToPos(double inches, double power) {
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -127,6 +127,7 @@ public class Drivetrain extends Mechanism {
         }
 
         setPower(0.0);
+        return tickCount;
     }
 
     private void setPower(double power) {
@@ -201,29 +202,30 @@ public class Drivetrain extends Mechanism {
         pidRotate.setOutputRange(0, power);
         pidRotate.setTolerance(1.0 / Math.abs(degrees) * 115.0);
         pidRotate.enable();
+        //Negative --> right ,Positive --> left
         if (degrees < 0) {
             while (getAngle() == 0) {
-                frontLeft.setPower(-power);
-                backLeft.setPower(-power);
-                frontRight.setPower(power);
-                backRight.setPower(power);
-            }
-            do {
-                power = pidRotate.performPID(getAngle()); // power will be - on right turn.
                 frontLeft.setPower(power);
                 backLeft.setPower(power);
                 frontRight.setPower(-power);
                 backRight.setPower(-power);
+            }
+            do {
+                power = pidRotate.performPID(getAngle()); // power will be - on right turn.
+                frontLeft.setPower(-power);
+                backLeft.setPower(-power);
+                frontRight.setPower(power);
+                backRight.setPower(power);
             }
             while (!pidRotate.onTarget());
         }
         else    // left turn.
             do {
                 power = pidRotate.performPID(getAngle()); // power will be + on left turn.
-                frontLeft.setPower(power);
-                backLeft.setPower(power);
-                frontRight.setPower(-power);
-                backRight.setPower(-power);
+                frontLeft.setPower(-power);
+                backLeft.setPower(-power);
+                frontRight.setPower(power);
+                backRight.setPower(power);
             }
             while (!pidRotate.onTarget());
 
