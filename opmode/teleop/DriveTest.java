@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 
 @TeleOp(name="Drive", group="Teleop")
@@ -24,12 +26,14 @@ public class DriveTest extends LinearOpMode {
         while(!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("Status", "Waiting in Init");
             telemetry.update();
+            telemetry.update();
         }
 
         waitForStart();
 
         while(opModeIsActive()) {
-            servo0Position = 0;
+            telemetry.addData("Status", drive.servo0.getPosition());
+
 //            servo1Position = 0;
 //            servo2Position = 0;
 //            servo3Position = 0;
@@ -39,10 +43,16 @@ public class DriveTest extends LinearOpMode {
             double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             double rightX = gamepad1.right_stick_x;
 
-//            if(gamepad1.a) {
-//                servo0Position = 0.5;
-//                drive.servo0.setPosition(servo0Position);
-//            }
+          if(gamepad1.a) {
+                servo0Position = .8;
+                drive.servo0.setDirection(Servo.Direction.REVERSE);
+
+
+            }
+          if(gamepad1.b){
+              servo0Position = 0.25;
+          }
+            drive.servo0.setPosition(servo0Position);
 //            if (gamepad1.b) {
 //                servo1Position = 0.5;
 //            }
