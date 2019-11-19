@@ -30,32 +30,32 @@ public class DriveTest extends LinearOpMode {
 
         while(opModeIsActive()) {
             servo0Position = 0;
-            servo1Position = 0;
-            servo2Position = 0;
-            servo3Position = 0;
-            servo4Position = 0;
+//            servo1Position = 0;
+//            servo2Position = 0;
+//            servo3Position = 0;
+//            servo4Position = 0;
 
             double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
             double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             double rightX = gamepad1.right_stick_x;
 
-            if(gamepad1.a) {
-                servo0Position = 0.5;
-            }
-            if (gamepad1.b) {
-                servo1Position = 0.5;
-            }
-            if(gamepad1.x){
-                servo2Position = 0.5;
-            }
-            if(gamepad1.y){
-                servo3Position = 0.5;
-            }
+//            if(gamepad1.a) {
+//                servo0Position = 0.5;
+//                drive.servo0.setPosition(servo0Position);
+//            }
+//            if (gamepad1.b) {
+//                servo1Position = 0.5;
+//            }
+//            if(gamepad1.x){
+//                servo2Position = 0.5;
+//            }
+//            if(gamepad1.y){
+//                servo3Position = 0.5;
+//            }
 
-            drive.servo0.setPosition(servo0Position);
-            drive.servo1.setPosition(servo1Position);
-            drive.servo2.setPosition(servo2Position);
-            drive.servo3.setPosition(servo3Position);
+//            drive.servo0.setPosition(servo0Position);
+//            drive.servo2.setPosition(servo2Position);
+//            drive.servo3.setPosition(servo3Position);
 
             telemetry.addData("r", r);
             telemetry.addData("robotAngle", robotAngle);
@@ -63,7 +63,8 @@ public class DriveTest extends LinearOpMode {
             telemetry.addData("stickx", gamepad1.right_stick_x);
             telemetry.addData("sticky", gamepad1.right_stick_y);
             telemetry.addData("bbutton", gamepad1.b);
-            telemetry.addData("servoPosition", servo0Position);
+            telemetry.addData("servoPosition", drive.servo0.getPosition());
+            telemetry.addData("servoPosition", drive.servo0.getDirection());
             telemetry.addData("abutton", gamepad1.a);
             telemetry.update();
         }
