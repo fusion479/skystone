@@ -103,7 +103,7 @@ public class Drivetrain extends Mechanism {
         setPower(v1,v2,v3,v4);
     }
 
-    public int driveToPos(double inches, double power) {
+    public void driveToPos(double inches, double power) {
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -127,7 +127,6 @@ public class Drivetrain extends Mechanism {
         }
 
         setPower(0.0);
-        return tickCount;
     }
 
     private void setPower(double power) {

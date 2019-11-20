@@ -35,7 +35,7 @@ public class Basic extends LinearOpMode {
             sleep(1000);
             drivetrain.turn(120,0.7);
             sleep(1000);
-//            int test = drivetrain.driveToPos(5,0.75);
+            drivetrain.driveToPos(6, 0.75);
 //            telemetry.addData("tickcount", test);
 //            telemetry.addData("2 global heading", drivetrain.getHeading());
             telemetry.update();
