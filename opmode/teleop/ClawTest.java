@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.hardware.Claw;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 
-@TeleOp(name="Drive and Claw", group="Teleop")
-public class DriveTest extends LinearOpMode {
+@TeleOp(name="ClawTest", group="Teleop")
+public class ClawTest extends LinearOpMode {
 
     private Claw claw = new Claw();
     private Drivetrain drive = new Drivetrain();
