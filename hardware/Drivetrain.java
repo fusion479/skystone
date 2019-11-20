@@ -17,12 +17,6 @@ import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 
 public class Drivetrain extends Mechanism {
 
-    public Servo servo0;
-//    public Servo servo1;
-//    public Servo servo2;
-//    public Servo servo3;
-//    public Servo servo4;
-
     public Drivetrain() {
     }
 
@@ -31,11 +25,6 @@ public class Drivetrain extends Mechanism {
     }
 
     public void init(HardwareMap hwMap) {
-        servo0 = hwMap.servo.get("servo0");
-//        servo1 = hwMap.servo.get("servo1");
-//        servo2 = hwMap.servo.get("servo2");
-//        servo3 = hwMap.servo.get("servo3");
-//        servo4 = hwMap.servo.get("servo4");
     }
 
 }
