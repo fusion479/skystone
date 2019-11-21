@@ -9,8 +9,8 @@
 - Create a GitHub account
 - Download [Git](https://git-scm.com/downloads)
 - Download [Android Studio](https://developer.android.com/studio)
-- Clone the [ftc_app repository](https://github.com/ftctechnh/ftc_app) by using `git clone` in your terminal or by downloading the .zip  
-- Using your terminal, change directories into the following path `ftc_app\TeamCode\src\main\java\org\firstinspires\ftc`
+- Clone the [ftc_app repository](https://github.com/FIRST-Tech-Challenge/SkyStone) by using `git clone` in your terminal or by downloading the .zip  
+- Using your terminal, change directories into the following path `SkyStone\TeamCode\src\main\java\org\firstinspires\ftc`
 - Delete the teamcode directory
 - Clone this repository into the above path and rename its directory to teamcode
 - Open Android Studio and click "Open an existing Android Studio project"
