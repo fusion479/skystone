@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Claw extends Mechanism {
     private Servo servo0;
+    private Servo servo1;
 
     public Claw() {
 
@@ -16,15 +17,24 @@ public class Claw extends Mechanism {
 
     public void init(HardwareMap hwMap){
         servo0 = hwMap.servo.get("servo0");
+        servo1 = hwMap.servo.get("servo1");
     }
-    public void openClaw(){
+    public void open(){
         servo0.setDirection(Servo.Direction.FORWARD);
         servo0.setPosition(0.2);
     }
 
-    public void closeClaw(){
+    public void close(){
         servo0.setDirection(Servo.Direction.REVERSE);
         servo0.setPosition(0.6);
+    }
+
+    public void swivel() {
+        servo1.setPosition(0);
+    }
+
+    public void swivel2() {
+        servo1.setPosition(1);
     }
 }
 

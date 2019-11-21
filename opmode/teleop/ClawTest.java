@@ -10,11 +10,11 @@ import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 public class ClawTest extends LinearOpMode {
 
     private Claw claw = new Claw();
-    private Drivetrain drive = new Drivetrain();
+//    private Drivetrain drive = new Drivetrain();
 
     @Override
     public void runOpMode() throws InterruptedException {
-        drive.init(hardwareMap);
+//        drive.init(hardwareMap);
         claw.init(hardwareMap);
 
         while(!opModeIsActive() && !isStopRequested()) {
@@ -30,9 +30,13 @@ public class ClawTest extends LinearOpMode {
             double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             double rightX = gamepad1.right_stick_x;
 
-            if(gamepad1.a) claw.openClaw();
+            if(gamepad1.a) claw.open();
 
-            if(gamepad1.b) claw.closeClaw();
+            if(gamepad1.b) claw.close();
+
+            if(gamepad1.x) claw.swivel();
+
+            if(gamepad1.y) claw.swivel2();
 
             telemetry.addData("r", r);
             telemetry.addData("robotAngle", robotAngle);
@@ -41,6 +45,8 @@ public class ClawTest extends LinearOpMode {
             telemetry.addData("sticky", gamepad1.right_stick_y);
             telemetry.addData("bbutton", gamepad1.b);
             telemetry.addData("abutton", gamepad1.a);
+            telemetry.addData("xbutton", gamepad1.x);
+            telemetry.addData("ybutton", gamepad1.y);
             telemetry.update();
         }
     }
