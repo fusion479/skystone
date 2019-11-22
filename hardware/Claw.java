@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.hardware;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Claw extends Mechanism {
@@ -19,14 +21,14 @@ public class Claw extends Mechanism {
         grip = hwMap.servo.get("grip");
         swivel = hwMap.servo.get("swivel");
     }
+
     public void open(){
         grip.setDirection(Servo.Direction.FORWARD);
         grip.setPosition(0.2);
     }
 
     public void close(){
-        grip.setDirection(Servo.Direction.REVERSE);
-        grip.setPosition(0.6);
+        grip.setPosition(0.8);
     }
 
     public void front() {
@@ -34,7 +36,7 @@ public class Claw extends Mechanism {
     }
 
     public void back() {
-        swivel.setPosition(-1);
+        swivel.setPosition(1);
     }
 }
 
