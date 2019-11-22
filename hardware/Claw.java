@@ -34,7 +34,7 @@ public class Claw extends Mechanism {
     }
 
     public void back() {
-        swivel.setPosition(1);
+        swivel.setPosition(-1);
     }
 }
 
