@@ -55,7 +55,7 @@ public class Camera extends Mechanism {
     private static final float bridgeZ = 6.42f * mmPerInch;
     private static final float bridgeY = 23 * mmPerInch;
     private static final float bridgeX = 5.18f * mmPerInch;
-    private static final float bridgeRotY = 59;                                 // Units are degrees
+    private static final float bridgeRotY = 59; // Units are degrees
     private static final float bridgeRotZ = 180;
 
     // Constants for perimeter targets
@@ -66,12 +66,12 @@ public class Camera extends Mechanism {
     private OpenGLMatrix lastLocation = null;
     private VuforiaLocalizer vuforia = null;
 
-    private boolean targetVisible = false;
     private float phoneXRotate    = 0;
     private float phoneYRotate    = 0;
     private float phoneZRotate    = 0;
 
     public Camera(LinearOpMode opMode) {this.opMode = opMode; }
+
     @Override
     public void init(HardwareMap hwMap) {
         /*
@@ -214,16 +214,13 @@ public class Camera extends Mechanism {
         // The two examples below assume that the camera is facing forward out the front of the robot.
 
         // We need to rotate the camera around it's long axis to bring the correct camera forward.
-        if (CAMERA_CHOICE == BACK) {
-            phoneYRotate = -90;
-        } else {
-            phoneYRotate = 90;
-        }
+        if (CAMERA_CHOICE == BACK)  phoneYRotate = -90;
+
+        else phoneYRotate = 90;
+
 
         // Rotate the phone vertical about the X axis if it's in portrait mode
-        if (PHONE_IS_PORTRAIT) {
-            phoneXRotate = 90 ;
-        }
+        if (PHONE_IS_PORTRAIT) phoneXRotate = 90 ;
 
         // Next, translate the camera lens to where it is on the robot.
         // In this example, it is centered (left to right), but forward of the middle of the robot, and above ground level.
@@ -241,21 +238,14 @@ public class Camera extends Mechanism {
         }
     }
 
-    public void activateTrackables() {
-        targetsSkyStone.activate();
-    }
+    public void activateTrackables() { targetsSkyStone.activate(); }
 
-    public void deactivateTrackables() {
-        targetsSkyStone.deactivate();
-    }
+    public void deactivateTrackables() { targetsSkyStone.deactivate(); }
 
     // check all the trackable targets to see which one (if any) is visible.
     public String isTargetVisible() {
-        targetVisible = false;
         for (VuforiaTrackable trackable : allTrackables) {
             if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
-//                telemetry.addData("Visible Target", trackable.getName());
-                targetVisible = true;
 
                 // getUpdatedRobotLocation() will return null if no new information is available since
                 // the last time that call was made, or if the trackable is not currently visible.
