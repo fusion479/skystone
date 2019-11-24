@@ -7,8 +7,6 @@ public class Claw extends Mechanism {
     private Servo grip;
     private Servo swivel;
 
-    public Claw() { }
-
     public Claw(LinearOpMode opMode) { this.opMode = opMode; }
 
     public void init(HardwareMap hwMap){
