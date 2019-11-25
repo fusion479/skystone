@@ -7,34 +7,23 @@ public class Claw extends Mechanism {
     private Servo grip;
     private Servo swivel;
 
-    public Claw() {
-
-    }
-
-    public Claw(LinearOpMode opMode) {
-        this.opMode = opMode;
-    }
+    public Claw(LinearOpMode opMode) { this.opMode = opMode; }
 
     public void init(HardwareMap hwMap){
         grip = hwMap.servo.get("grip");
         swivel = hwMap.servo.get("swivel");
-    }
-    public void open(){
-        grip.setDirection(Servo.Direction.FORWARD);
-        grip.setPosition(0.2);
+        front();
+        open();
     }
 
-    public void close(){
-        grip.setDirection(Servo.Direction.REVERSE);
-        grip.setPosition(0.6);
-    }
+    public void open(){grip.setPosition(0.8);}
+
+    public void close(){ grip.setPosition(0.2);}
 
     public void front() {
         swivel.setPosition(0);
     }
 
-    public void back() {
-        swivel.setPosition(1);
-    }
+    public void back() { swivel.setPosition(1); }
 }
 

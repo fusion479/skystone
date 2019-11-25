@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 @TeleOp(name="ClawTest", group="Teleop")
 public class ClawTest extends LinearOpMode {
 
-    private Claw claw = new Claw();
-//    private Drivetrain drive = new Drivetrain();
+    private Claw claw = new Claw(this);
+//    private Drivetrain drive = new Drivetrain(this);
 
     @Override
     public void runOpMode() throws InterruptedException {
