@@ -57,17 +57,17 @@ public class Drivetrain extends Mechanism {
     }
 
     public void init(HardwareMap hwMap) {
-        servo = hwMap.servo.get("servo");
+//        servo = hwMap.servo.get("servo");
         frontLeft = hwMap.dcMotor.get("frontLeft");
         frontRight = hwMap.dcMotor.get("frontRight");
         backLeft = hwMap.dcMotor.get("backLeft");
         backRight = hwMap.dcMotor.get("backRight");
 
 //         Set motor direction (AndyMark configuration)
-        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Set motor brake behavior
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -96,10 +96,10 @@ public class Drivetrain extends Mechanism {
     }
 
     public void teleDrive(double r, double robotAngle, double rightX) {
-        double v1 = r * Math.sin(robotAngle) - rightX;
-        double v2 = r * Math.cos(robotAngle) + rightX;
-        double v3 = r * Math.cos(robotAngle) - rightX;
-        double v4 = r * Math.sin(robotAngle) + rightX;
+        double v1 = -r * Math.sin(robotAngle) + rightX;
+        double v2 = -r * Math.cos(robotAngle) - rightX;
+        double v3 = -r * Math.cos(robotAngle) + rightX;
+        double v4 = -r * Math.sin(robotAngle) - rightX;
         setPower(v1,v2,v3,v4);
     }
 
@@ -201,29 +201,30 @@ public class Drivetrain extends Mechanism {
         pidRotate.setOutputRange(0, power);
         pidRotate.setTolerance(1.0 / Math.abs(degrees) * 115.0);
         pidRotate.enable();
+        //Negative --> right ,Positive --> left
         if (degrees < 0) {
             while (getAngle() == 0) {
-                frontLeft.setPower(-power);
-                backLeft.setPower(-power);
-                frontRight.setPower(power);
-                backRight.setPower(power);
-            }
-            do {
-                power = pidRotate.performPID(getAngle()); // power will be - on right turn.
                 frontLeft.setPower(power);
                 backLeft.setPower(power);
                 frontRight.setPower(-power);
                 backRight.setPower(-power);
+            }
+            do {
+                power = pidRotate.performPID(getAngle()); // power will be - on right turn.
+                frontLeft.setPower(-power);
+                backLeft.setPower(-power);
+                frontRight.setPower(power);
+                backRight.setPower(power);
             }
             while (!pidRotate.onTarget());
         }
         else    // left turn.
             do {
                 power = pidRotate.performPID(getAngle()); // power will be + on left turn.
-                frontLeft.setPower(power);
-                backLeft.setPower(power);
-                frontRight.setPower(-power);
-                backRight.setPower(-power);
+                frontLeft.setPower(-power);
+                backLeft.setPower(-power);
+                frontRight.setPower(power);
+                backRight.setPower(power);
             }
             while (!pidRotate.onTarget());
 

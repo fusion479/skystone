@@ -35,15 +35,14 @@ public class Basic extends LinearOpMode {
             sleep(1000);
             drivetrain.turn(120,0.7);
             sleep(1000);
-            drivetrain.driveToPos(5,0.75);
-//            telemetry.addData("1 imu heading", drivetrain.getHeading());
+            drivetrain.driveToPos(6, 0.75);
+//            telemetry.addData("tickcount", test);
 //            telemetry.addData("2 global heading", drivetrain.getHeading());
-//            telemetry.update();
+            telemetry.update();
 //            drivetrain.getAngle();
             break;
         }
 
-//        drivetrain.turn(90,0.5);
 
     }
 }
