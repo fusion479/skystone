@@ -29,18 +29,6 @@ public class Camera extends Mechanism {
     VuforiaTrackables targetsSkyStone;
     List<VuforiaTrackable> allTrackables;
 
-    /*
-     * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
-     * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
-     * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
-     * web site at https://developer.vuforia.com/license-manager.
-     *
-     * Vuforia license keys are always 380 characters long, and look as if they contain mostly
-     * random data. As an example, here is a example of a fragment of a valid key:
-     *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
-     * Once you've obtained a license key, copy the string from the Vuforia web site
-     * and paste it in to your code on the next line, between the double quotes.
-     */
     private static final String VUFORIA_KEY = "ASXWvaz/////AAABmVrHEPeP3UZFjcyQPRZtKagyJIo8LRYZQ89bZwRniZYFnbJmzUHhY1IHrKfEBGRoiNZI92LgHSrRVaIQpCxbaG25WnXUjUm3IfgDDMkjaD0p+qpN7MG9QB30rNCK+PyUYsoD6+GelavyWtakaiUYsvlMs7qD1oMAmV+grVZ5HgPqWlC1ve0FbLYPMfuhm+zN7XTR4kYgHcJbkP1TxXM4EWuSLRLtQuHOyRGQ8+YimWawKX81irSjfzizo6zxaORH3DL503OgadkHHm1SKg+pBGGdS7yYSFXzciDk0t6BXDjaiKJDMYjWYvyWDA2IpevcQ4Fg0yv87j843vy418bbGJT3LrmeuGLW5uUcM4QUW1ri";
 
     // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
