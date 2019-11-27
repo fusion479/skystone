@@ -5,7 +5,6 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.PIDController;
@@ -43,21 +42,18 @@ public class Drivetrain extends Mechanism {
     private PIDController pidDrive;
     private PIDController pidRotate;
 
-    public Servo servo;
     double  globalAngle, power = .30, correction;
     Orientation lastAngles = new Orientation();
 
     private double flPower = 0.0, frPower = 0.0, blPower = 0.0, brPower = 0.0;
 
-    public Drivetrain() {
-    }
+    public Drivetrain() {}
 
     public Drivetrain(LinearOpMode opMode) {
         this.opMode = opMode;
     }
 
     public void init(HardwareMap hwMap) {
-//        servo = hwMap.servo.get("servo");
         frontLeft = hwMap.dcMotor.get("frontLeft");
         frontRight = hwMap.dcMotor.get("frontRight");
         backLeft = hwMap.dcMotor.get("backLeft");
@@ -68,6 +64,7 @@ public class Drivetrain extends Mechanism {
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+
 
         // Set motor brake behavior
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -85,7 +82,7 @@ public class Drivetrain extends Mechanism {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-//        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        //parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
         parameters.loggingEnabled      = false;
         parameters.loggingTag          = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
@@ -143,10 +140,8 @@ public class Drivetrain extends Mechanism {
     /**
      * Resets the cumulative angle tracking to zero.
      */
-    public void resetAngle()
-    {
+    public void resetAngle() {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
         globalAngle = 0;
     }
 
@@ -236,4 +231,3 @@ public class Drivetrain extends Mechanism {
         resetAngle();
     }
 }
-
