@@ -57,7 +57,7 @@ public class Drivetrain extends Mechanism {
     }
 
     public void init(HardwareMap hwMap) {
-        servo = hwMap.servo.get("servo");
+//        servo = hwMap.servo.get("servo");
         frontLeft = hwMap.dcMotor.get("frontLeft");
         frontRight = hwMap.dcMotor.get("frontRight");
         backLeft = hwMap.dcMotor.get("backLeft");
@@ -96,10 +96,10 @@ public class Drivetrain extends Mechanism {
     }
 
     public void teleDrive(double r, double robotAngle, double rightX) {
-        double v1 = r * Math.sin(robotAngle) + rightX;
-        double v2 = r * Math.cos(robotAngle) - rightX;
-        double v3 = r * Math.cos(robotAngle) + rightX;
-        double v4 = r * Math.sin(robotAngle) - rightX;
+        double v1 = -r * Math.sin(robotAngle) + rightX;
+        double v2 = -r * Math.cos(robotAngle) - rightX;
+        double v3 = -r * Math.cos(robotAngle) + rightX;
+        double v4 = -r * Math.sin(robotAngle) - rightX;
         setPower(v1,v2,v3,v4);
     }
 

@@ -19,7 +19,17 @@ public class DriveTest extends LinearOpMode {
         drive.init(hardwareMap);
 
         while(!opModeIsActive() && !isStopRequested()) {
+            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+            double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+            double rightX = gamepad1.right_stick_x;
             telemetry.addData("Status", "Waiting in Init");
+            telemetry.addData("r", r);
+            telemetry.addData("robotAngle", robotAngle);
+            telemetry.addData("rightX", rightX);
+            telemetry.addData("right-stickx", gamepad1.right_stick_x);
+            telemetry.addData("right-sticky", gamepad1.right_stick_y);
+            telemetry.addData("left-stickx", gamepad1.left_stick_x);
+            telemetry.addData("left-sticky", gamepad1.left_stick_y);
             telemetry.update();
         }
 
@@ -45,8 +55,10 @@ public class DriveTest extends LinearOpMode {
             telemetry.addData("r", r);
             telemetry.addData("robotAngle", robotAngle);
             telemetry.addData("rightX", rightX);
-            telemetry.addData("stickx", gamepad1.right_stick_x);
-            telemetry.addData("sticky", gamepad1.right_stick_y);
+            telemetry.addData("right-stickx", gamepad1.right_stick_x);
+            telemetry.addData("right-sticky", gamepad1.right_stick_y);
+            telemetry.addData("left-stickx", gamepad1.left_stick_x);
+            telemetry.addData("left-sticky", gamepad1.left_stick_y);
             telemetry.addData("bbutton", gamepad1.b);
 //            telemetry.addData("servoPosition", servoPosition);
             telemetry.addData("abutton", gamepad1.a);
