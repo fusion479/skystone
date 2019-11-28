@@ -16,12 +16,12 @@ import org.firstinspires.ftc.teamcode.hardware.Camera;
 public class Basic extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     //    Drivetrain drivetrain = new Drivetrain(this);
-    Claw claw = new Claw(this);
+//    Claw claw = new Claw(this);
     Camera camera = new Camera(this);
 
     public void runOpMode() {
 //        drivetrain.init(hardwareMap);
-        claw.init(hardwareMap);
+//        claw.init(hardwareMap);
         camera.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
 //        telemetry.addData("imu status", drivetrain.imu.getCalibrationStatus().toString());
@@ -42,14 +42,14 @@ public class Basic extends LinearOpMode {
             if (!targetVisible.equals("none")) {
                 float[] positions = camera.getLocation();
 
-                if (targetVisible.equals("Stone Target") && positions[0] > -6.0) {
-                    claw.close();
-                    sleep(2000);
-                    claw.back();
-                    sleep(2000);
-                    claw.open();
-                    sleep(2000);
-                }
+//                if (targetVisible.equals("Stone Target") && positions[0] > -6.0) {
+//                    claw.close();
+//                    sleep(2000);
+//                    claw.back();
+//                    sleep(2000);
+//                    claw.open();
+//                    sleep(2000);
+//                }
             }
 //            telemetry.addData("1 imu heading", drivetrain.getHeading());
 //        drivetrain.turn(90, 0.5);
