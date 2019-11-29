@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.PIDController;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -15,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Drivetrain extends Mechanism {
@@ -37,44 +36,35 @@ public class Drivetrain extends Mechanism {
     private static final double     COUNTS_PER_INCH         =
             (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
 
-
-    private DcMotor frontLeft;
-    private DcMotor frontRight;
-    private DcMotor backLeft;
-    private DcMotor backRight;
-
-    Map<String, DcMotor> motors = new HashMap<>();
+    Map<String, DcMotor> motors = new LinkedHashMap<>();
 
     public BNO055IMU imu;
     private PIDController pidDrive;
     private PIDController pidRotate;
 
-    double  globalAngle, power = .30, correction;
+    double  globalAngle = .3;
     Orientation lastAngles = new Orientation();
-
-    private double flPower = 0.0, frPower = 0.0, blPower = 0.0, brPower = 0.0;
 
     public Drivetrain(LinearOpMode opMode) {
         this.opMode = opMode;
     }
 
     public void init(HardwareMap hwMap) {
-        frontLeft = hwMap.dcMotor.get("frontLeft");
-        frontRight = hwMap.dcMotor.get("frontRight");
-        backLeft = hwMap.dcMotor.get("backLeft");
-        backRight = hwMap.dcMotor.get("backRight");
+        String[] names = new String[] {"frontLeft", "frontRight", "backLeft", "backRight"};
 
-        //Set motor direction (AndyMark configuration)
-        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        // Set each motor to refer to the motors on the phone configuration
+        for(String name: names) { motors.put(name, hwMap.dcMotor.get(name)); }
 
-        // Set motor brake behavior
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // Set motor direction
+        for(String motor: motors.keySet()) {
+            // left motors go forward
+            if(motor.contains("Left")) motors.get(motor).setDirection(DcMotorSimple.Direction.FORWARD);
+            // right motors go backwards
+            else motors.get(motor).setDirection(DcMotorSimple.Direction.REVERSE);
+        }
+
+        // Set motor brake behavior to brake
+        for(DcMotor motor: motors.values()) { motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); }
 
         pidRotate = new PIDController(0.005, 0.1, 0);
         pidDrive = new PIDController(0.05,0,0);
@@ -86,7 +76,6 @@ public class Drivetrain extends Mechanism {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        //parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
         parameters.loggingEnabled      = false;
         parameters.loggingTag          = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
@@ -97,29 +86,25 @@ public class Drivetrain extends Mechanism {
     }
 
     private void setPower(double power) {
-        setPower(power, power, power, power);
+        setPower(new double[]{power, power, power, power});
     }
 
-    public void setPower(double FL, double FR, double BL, double BR) {
-        frontLeft.setPower(FL);
-        backRight.setPower(BR);
-        backLeft.setPower(BL);
-        frontRight.setPower(FR);
+    public void setPower(double[] powers) {
+        // sequence is frontLeft, frontRight, backLeft, backRight
+        DcMotor[] dcMotors = motors.values().toArray(new DcMotor[motors.size()]);
+        for(int motor = 0; motor < 4; dcMotors[motor].setPower(powers[motor]), motor++) { }
     }
 
     public void setMode(DcMotor.RunMode mode) {
-        frontLeft.setMode(mode);
-        backRight.setMode(mode);
-        backLeft.setMode(mode);
-        frontRight.setMode(mode);
+        for(DcMotor motor: motors.values()) { motor.setMode(mode); }
     }
 
     public void teleDrive(double r, double robotAngle, double rightX) {
-        double v1 = r * Math.sin(robotAngle) - rightX;
-        double v2 = r * Math.cos(robotAngle) + rightX;
-        double v3 = r * Math.cos(robotAngle) - rightX;
-        double v4 = r * Math.sin(robotAngle) + rightX;
-        setPower(v1,v2,v3,v4);
+        double v1 = r * Math.sin(robotAngle) - rightX; //frontLeft
+        double v2 = r * Math.cos(robotAngle) + rightX; //frontRight
+        double v3 = r * Math.cos(robotAngle) - rightX; //backLeft
+        double v4 = r * Math.sin(robotAngle) + rightX; //backRight
+        setPower(new double[]{v1, v2, v3, v4});
     }
 
     public void driveToPos(double inches, double power) {
@@ -128,14 +113,14 @@ public class Drivetrain extends Mechanism {
         int tickCount = (int) (inches * COUNTS_PER_INCH);
         double set_power = power*inches/Math.abs(inches);
 
-        frontLeft.setTargetPosition(tickCount);
-        backLeft.setTargetPosition(tickCount);
-        backRight.setTargetPosition(tickCount);
-        frontRight.setTargetPosition(tickCount);
+        for(DcMotor motor : motors.values()) { motor.setTargetPosition(tickCount); }
 
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        while(opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
+        boolean isBusy = true;
+
+        while(opMode.opModeIsActive() && isBusy) {
+            for(DcMotor motor : motors.values()) { if (!motor.isBusy()) isBusy = false; }
             setPower(set_power);
         }
 
@@ -150,13 +135,9 @@ public class Drivetrain extends Mechanism {
         globalAngle = 0;
     }
 
-    public float getHeading() {
-        return lastAngles.firstAngle;
-    }
+    public float getHeading() { return lastAngles.firstAngle; }
 
-    public double getGlobal() {
-        return globalAngle;
-    }
+    public double getGlobal() { return globalAngle; }
 
     /**
      * Get current cumulative angle rotation from last reset.
@@ -199,18 +180,18 @@ public class Drivetrain extends Mechanism {
         pidRotate.enable();
         if (degrees < 0) {
             while (getAngle() == 0) {
-                setPower(-power, power, -power, power);
+                setPower(new double[] {-power, power, -power, power});
             }
             do {
                 power = pidRotate.performPID(getAngle()); // power will be - on right turn.
-                setPower(power, -power, power, -power);
+                setPower(new double[] {power, -power, power, -power});
             }
             while (!pidRotate.onTarget());
         }
         else    // left turn.
             do {
                 power = pidRotate.performPID(getAngle()); // power will be + on left turn.
-                setPower(power, -power, power, -power);
+                setPower(new double[] {power, -power, power, -power});
             }
             while (!pidRotate.onTarget());
 
