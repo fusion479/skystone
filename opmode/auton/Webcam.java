@@ -32,6 +32,8 @@ public class Webcam extends LinearOpMode {
 
             String targetVisible = camera.isTargetVisible();
 
+            telemetry.addData("Visible Target", targetVisible);
+
             if(!targetVisible.equals("none")){
                 // Provide feedback as to where the robot is located (if we know).
 
@@ -44,7 +46,15 @@ public class Webcam extends LinearOpMode {
                 telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", degrees[0], degrees[1], degrees[2]);
             }
 
-            telemetry.addData("Visible Target", targetVisible);
+            //this sequence probably should not remain within the if statement
+            //once the block is picked up, it may not be in the view of the camera
+            //if the robot is within a degree margin of error,
+            //move forward
+            //once the robot is close enough (use positions[0]
+            // pick up block with servo
+            // move back
+            // move to the left and drop off brick
+
             telemetry.update();
         }
 

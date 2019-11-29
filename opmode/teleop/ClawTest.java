@@ -13,13 +13,12 @@ public class ClawTest extends LinearOpMode {
 //    private Drivetrain drive = new Drivetrain(this);
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode(){
 //        drive.init(hardwareMap);
         claw.init(hardwareMap);
 
         while(!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("Status", "Waiting in Init");
-            telemetry.update();
             telemetry.update();
         }
 
@@ -41,12 +40,11 @@ public class ClawTest extends LinearOpMode {
             telemetry.addData("r", r);
             telemetry.addData("robotAngle", robotAngle);
             telemetry.addData("rightX", rightX);
-            telemetry.addData("stickx", gamepad1.right_stick_x);
-            telemetry.addData("sticky", gamepad1.right_stick_y);
-            telemetry.addData("bbutton", gamepad1.b);
-            telemetry.addData("abutton", gamepad1.a);
-            telemetry.addData("xbutton", gamepad1.x);
-            telemetry.addData("ybutton", gamepad1.y);
+            telemetry.addData("rightY", gamepad1.right_stick_y);
+            telemetry.addData("b button", gamepad1.b);
+            telemetry.addData("a button", gamepad1.a);
+            telemetry.addData("x button", gamepad1.x);
+            telemetry.addData("y button", gamepad1.y);
             telemetry.update();
         }
     }
