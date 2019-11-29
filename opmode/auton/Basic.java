@@ -51,11 +51,6 @@ public class Basic extends LinearOpMode {
                     sleep(2000);
                 }
             }
-
-
-
-
-
 //            telemetry.addData("1 imu heading", drivetrain.getHeading());
 //            telemetry.addData("2 global heading", drivetrain.getHeading());
 //            telemetry.update();
