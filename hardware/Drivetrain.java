@@ -15,6 +15,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Drivetrain extends Mechanism {
     private static final double     COUNTS_PER_MOTOR_REV    = 1120;
 
@@ -34,10 +37,14 @@ public class Drivetrain extends Mechanism {
     private static final double     COUNTS_PER_INCH         =
             (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
 
+
     private DcMotor frontLeft;
     private DcMotor frontRight;
     private DcMotor backLeft;
     private DcMotor backRight;
+
+    Map<String, DcMotor> motors = new HashMap<>();
+
     public BNO055IMU imu;
     private PIDController pidDrive;
     private PIDController pidRotate;
@@ -46,8 +53,6 @@ public class Drivetrain extends Mechanism {
     Orientation lastAngles = new Orientation();
 
     private double flPower = 0.0, frPower = 0.0, blPower = 0.0, brPower = 0.0;
-
-    public Drivetrain() {}
 
     public Drivetrain(LinearOpMode opMode) {
         this.opMode = opMode;
@@ -91,40 +96,6 @@ public class Drivetrain extends Mechanism {
         imu.initialize(parameters);
     }
 
-    public void teleDrive(double r, double robotAngle, double rightX) {
-        double v1 = r * Math.sin(robotAngle) - rightX;
-        double v2 = r * Math.cos(robotAngle) + rightX;
-        double v3 = r * Math.cos(robotAngle) - rightX;
-        double v4 = r * Math.sin(robotAngle) + rightX;
-        setPower(v1,v2,v3,v4);
-    }
-
-    public void driveToPos(double inches, double power) {
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        int tickCount = (int) (inches * COUNTS_PER_INCH);
-        double set_power = power*inches/Math.abs(inches);
-
-        frontLeft.setTargetPosition(tickCount);
-        backLeft.setTargetPosition(tickCount);
-        backRight.setTargetPosition(tickCount);
-        frontRight.setTargetPosition(tickCount);
-
-        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        while(opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
-            setPower(set_power);
-        }
-
-        setPower(0.0);
-    }
-
     private void setPower(double power) {
         setPower(power, power, power, power);
     }
@@ -134,6 +105,41 @@ public class Drivetrain extends Mechanism {
         backRight.setPower(BR);
         backLeft.setPower(BL);
         frontRight.setPower(FR);
+    }
+
+    public void setMode(DcMotor.RunMode mode) {
+        frontLeft.setMode(mode);
+        backRight.setMode(mode);
+        backLeft.setMode(mode);
+        frontRight.setMode(mode);
+    }
+
+    public void teleDrive(double r, double robotAngle, double rightX) {
+        double v1 = r * Math.sin(robotAngle) - rightX;
+        double v2 = r * Math.cos(robotAngle) + rightX;
+        double v3 = r * Math.cos(robotAngle) - rightX;
+        double v4 = r * Math.sin(robotAngle) + rightX;
+        setPower(v1,v2,v3,v4);
+    }
+
+    public void driveToPos(double inches, double power) {
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        int tickCount = (int) (inches * COUNTS_PER_INCH);
+        double set_power = power*inches/Math.abs(inches);
+
+        frontLeft.setTargetPosition(tickCount);
+        backLeft.setTargetPosition(tickCount);
+        backRight.setTargetPosition(tickCount);
+        frontRight.setTargetPosition(tickCount);
+
+        setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while(opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
+            setPower(set_power);
+        }
+
+        setPower(0.0);
     }
 
     /**
@@ -158,10 +164,6 @@ public class Drivetrain extends Mechanism {
      */
     public double getAngle()
     {
-        // We experimentally determined the Z axis is the axis we want to use for heading angle.
-        // We have to process the angle because the imu works in euler angles so the Z axis is
-        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
-        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
 
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
@@ -197,35 +199,22 @@ public class Drivetrain extends Mechanism {
         pidRotate.enable();
         if (degrees < 0) {
             while (getAngle() == 0) {
-                frontLeft.setPower(-power);
-                backLeft.setPower(-power);
-                frontRight.setPower(power);
-                backRight.setPower(power);
+                setPower(-power, power, -power, power);
             }
             do {
                 power = pidRotate.performPID(getAngle()); // power will be - on right turn.
-                frontLeft.setPower(power);
-                backLeft.setPower(power);
-                frontRight.setPower(-power);
-                backRight.setPower(-power);
+                setPower(power, -power, power, -power);
             }
             while (!pidRotate.onTarget());
         }
         else    // left turn.
             do {
                 power = pidRotate.performPID(getAngle()); // power will be + on left turn.
-                frontLeft.setPower(power);
-                backLeft.setPower(power);
-                frontRight.setPower(-power);
-                backRight.setPower(-power);
+                setPower(power, -power, power, -power);
             }
             while (!pidRotate.onTarget());
 
-        // turn the motors off.
-        frontLeft.setPower(0);
-        backLeft.setPower(0);
-        frontRight.setPower(0);
-        backRight.setPower(0);
+        setPower(0);
         resetAngle();
     }
 }
