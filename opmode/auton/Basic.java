@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.hardware.Camera;
 
 @Autonomous(name = "Basic")
 public class Basic extends LinearOpMode {
-    private ElapsedTime     runtime = new ElapsedTime();
+    private ElapsedTime     runtime = new ();
 //    Drivetrain drivetrain = new Drivetrain(this);
     Claw claw = new Claw (this);
     Camera camera = new Camera(this);
