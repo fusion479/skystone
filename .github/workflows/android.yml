@@ -19,4 +19,6 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Gradle
-      run: ./SkyStone/gradlew build
+      run: |
+        chmod +x ./SkyStone/gradlew
+        ./SkyStone/gradlew build
