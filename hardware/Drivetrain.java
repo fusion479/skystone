@@ -38,7 +38,7 @@ public class Drivetrain extends Mechanism {
 
     Map<String, DcMotor> motors = new LinkedHashMap<>();
 
-    public BNO055IMU imu;
+    private BNO055IMU imu;
     private PIDController pidDrive;
     private PIDController pidRotate;
 

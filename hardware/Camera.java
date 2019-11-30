@@ -70,8 +70,6 @@ public class Camera extends Mechanism {
         int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
-        // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
 
         //  Instantiate the Vuforia engine
@@ -109,7 +107,7 @@ public class Camera extends Mechanism {
         rear2.setName("Rear Perimeter 2");
 
         // For convenience, gather together all the trackable objects in one easily-iterable collection */
-        allTrackables = new ArrayList<VuforiaTrackable>();
+        allTrackables = new ArrayList<>();
         allTrackables.addAll(targetsSkyStone);
 
         /**
