@@ -36,18 +36,16 @@ public class Drivetrain extends Mechanism {
     private static final double     COUNTS_PER_INCH         =
             (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
 
-    Map<String, DcMotor> motors = new LinkedHashMap<>();
+    private Map<String, DcMotor> motors = new LinkedHashMap<>();
 
     private BNO055IMU imu;
     private PIDController pidDrive;
     private PIDController pidRotate;
 
-    double  globalAngle = .3;
-    Orientation lastAngles = new Orientation();
+    private double  globalAngle = .3;
+    private Orientation lastAngles = new Orientation();
 
-    public Drivetrain(LinearOpMode opMode) {
-        this.opMode = opMode;
-    }
+    public Drivetrain(LinearOpMode opMode) { this.opMode = opMode; }
 
     public void init(HardwareMap hwMap) {
         String[] names = new String[] {"frontLeft", "frontRight", "backLeft", "backRight"};
@@ -85,19 +83,15 @@ public class Drivetrain extends Mechanism {
         imu.initialize(parameters);
     }
 
-    private void setPower(double power) {
-        setPower(new double[]{power, power, power, power});
-    }
+    private void setPower(double power) { setPower(new double[]{power, power, power, power}); }
 
-    public void setPower(double[] powers) {
+    private void setPower(double[] powers) {
         // sequence is frontLeft, frontRight, backLeft, backRight
         DcMotor[] dcMotors = motors.values().toArray(new DcMotor[motors.size()]);
-        for(int motor = 0; motor < 4; dcMotors[motor].setPower(powers[motor]), motor++) { }
+        for(int motor = 0; motor < 4; motor++) { dcMotors[motor].setPower(powers[motor]); }
     }
 
-    public void setMode(DcMotor.RunMode mode) {
-        for(DcMotor motor: motors.values()) { motor.setMode(mode); }
-    }
+    private void setMode(DcMotor.RunMode mode) { for(DcMotor motor: motors.values()) { motor.setMode(mode); } }
 
     public void teleDrive(double r, double robotAngle, double rightX) {
         double v1 = r * Math.sin(robotAngle) - rightX; //frontLeft

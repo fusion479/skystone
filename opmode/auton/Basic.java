@@ -16,8 +16,8 @@ import org.firstinspires.ftc.teamcode.hardware.Camera;
 public class Basic extends LinearOpMode {
     private ElapsedTime     runtime = new ElapsedTime();
 //    Drivetrain drivetrain = new Drivetrain(this);
-    Claw claw = new Claw (this);
-    Camera camera = new Camera(this);
+    private Claw claw = new Claw (this);
+    private Camera camera = new Camera(this);
 
     public void runOpMode() {
 //        drivetrain.init(hardwareMap);

@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.hardware.Camera;
 @TeleOp(name="WebcamTele")
 public class Webcam extends LinearOpMode {
 
-    Camera camera = new Camera(this);
+    private Camera camera = new Camera(this);
     @Override
     public void runOpMode() {
 

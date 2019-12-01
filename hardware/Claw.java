@@ -20,9 +20,7 @@ public class Claw extends Mechanism {
 
     public void close(){ grip.setPosition(0.2);}
 
-    public void front() {
-        swivel.setPosition(0);
-    }
+    public void front(){ swivel.setPosition(0); }
 
     public void back() { swivel.setPosition(1); }
 }

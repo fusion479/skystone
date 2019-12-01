@@ -26,8 +26,8 @@ public class Camera extends Mechanism {
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
     private static final boolean PHONE_IS_PORTRAIT = false;
 
-    VuforiaTrackables targetsSkyStone;
-    List<VuforiaTrackable> allTrackables;
+    private VuforiaTrackables targetsSkyStone;
+    private List<VuforiaTrackable> allTrackables;
 
     private static final String VUFORIA_KEY = "ASXWvaz/////AAABmVrHEPeP3UZFjcyQPRZtKagyJIo8LRYZQ89bZwRniZYFnbJmzUHhY1IHrKfEBGRoiNZI92LgHSrRVaIQpCxbaG25WnXUjUm3IfgDDMkjaD0p+qpN7MG9QB30rNCK+PyUYsoD6+GelavyWtakaiUYsvlMs7qD1oMAmV+grVZ5HgPqWlC1ve0FbLYPMfuhm+zN7XTR4kYgHcJbkP1TxXM4EWuSLRLtQuHOyRGQ8+YimWawKX81irSjfzizo6zxaORH3DL503OgadkHHm1SKg+pBGGdS7yYSFXzciDk0t6BXDjaiKJDMYjWYvyWDA2IpevcQ4Fg0yv87j843vy418bbGJT3LrmeuGLW5uUcM4QUW1ri";
 
@@ -110,7 +110,7 @@ public class Camera extends Mechanism {
         allTrackables = new ArrayList<>();
         allTrackables.addAll(targetsSkyStone);
 
-        /**
+        /*
          * In order for localization to work, we need to tell the system where each target is on the field, and
          * where the phone resides on the robot.  These specifications are in the form of <em>transformation matrices.</em>
          * Transformation matrices are a central, important concept in the math here involved in localization.
@@ -218,7 +218,7 @@ public class Camera extends Mechanism {
                 .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES, phoneYRotate, phoneZRotate, phoneXRotate));
 
-        /**  Let all the trackable listeners know where the phone is.  */
+        /*  Let all the trackable listeners know where the phone is.  */
         for (VuforiaTrackable trackable : allTrackables) {
             ((VuforiaTrackableDefaultListener) trackable.getListener()).setPhoneInformation(robotFromCamera, parameters.cameraDirection);
         }
