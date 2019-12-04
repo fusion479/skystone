@@ -11,7 +11,7 @@ public class DriveTest extends LinearOpMode {
 
     double servoPosition;
 
-    private Drivetrain drive = new Drivetrain();
+    private Drivetrain drive = new Drivetrain(this);
 
     @Override
     public void runOpMode() throws InterruptedException {
