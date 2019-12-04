@@ -116,42 +116,42 @@ public class Drivetrain extends Mechanism {
     }
 
     public void teleDrive(double r, double robotAngle, double rightX) {
-        double v1 = r * Math.sin(robotAngle) - rightX;
-        double v2 = r * Math.cos(robotAngle) + rightX;
-        double v3 = r * Math.cos(robotAngle) - rightX;
-        double v4 = r * Math.sin(robotAngle) + rightX;
+        double v1 = -r * Math.sin(robotAngle) + rightX;
+        double v2 = -r * Math.cos(robotAngle) - rightX;
+        double v3 = -r * Math.cos(robotAngle) + rightX;
+        double v4 = -r * Math.sin(robotAngle) - rightX;
         setPower(v1,v2,v3,v4);
     }
 
-//    public void autonDrive(double inches, double power, double robotAngle, double rightX) {
-//        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//
-//        int tickCount = (int) (inches * COUNTS_PER_INCH);
-//
-//        double v1 = -power *inches/Math.abs(inches) * Math.sin(robotAngle) + rightX;
-//        double v2 = -power *inches/Math.abs(inches) * Math.cos(robotAngle) - rightX;
-//        double v3 = -power *inches/Math.abs(inches) * Math.cos(robotAngle) + rightX;
-//        double v4 = -power *inches/Math.abs(inches) * Math.sin(robotAngle) - rightX;
-//
-//        frontLeft.setTargetPosition(tickCount);
-//        backLeft.setTargetPosition(tickCount);
-//        backRight.setTargetPosition(tickCount);
-//        frontRight.setTargetPosition(tickCount);
-//
-//        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//
-//        while(opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
-//            setPower(v1,v2,v3,v4);
-//        }
-//
-//        setPower(0.0);
-//    }
+    public void autonDrive(double inches, double power, double robotAngle, double rightX) {
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        int tickCount = (int) (inches * COUNTS_PER_INCH);
+
+        double v1 = -power *inches/Math.abs(inches) * Math.sin(robotAngle) + rightX;
+        double v2 = -power *inches/Math.abs(inches) * Math.cos(robotAngle) - rightX;
+        double v3 = -power *inches/Math.abs(inches) * Math.cos(robotAngle) + rightX;
+        double v4 = -power *inches/Math.abs(inches) * Math.sin(robotAngle) - rightX;
+
+        frontLeft.setTargetPosition(tickCount);
+        backLeft.setTargetPosition(tickCount);
+        backRight.setTargetPosition(tickCount);
+        frontRight.setTargetPosition(tickCount);
+
+        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while(opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
+            setPower(v1,v2,v3,v4);
+        }
+
+        setPower(0.0);
+    }
 
     public void driveToPos(double inches, double power) {
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
