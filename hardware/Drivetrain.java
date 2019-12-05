@@ -131,10 +131,10 @@ public class Drivetrain extends Mechanism {
 
         int tickCount = (int) (inches * COUNTS_PER_INCH);
 
-        double v1 = -power *inches/Math.abs(inches) * Math.sin(robotAngle) + rightX;
-        double v2 = -power *inches/Math.abs(inches) * Math.cos(robotAngle) - rightX;
-        double v3 = -power *inches/Math.abs(inches) * Math.cos(robotAngle) + rightX;
-        double v4 = -power *inches/Math.abs(inches) * Math.sin(robotAngle) - rightX;
+        double v1 = -power *inches/Math.abs(inches) * Math.sin(robotAngle * Math.PI / 180) + rightX;
+        double v2 = -power *inches/Math.abs(inches) * Math.cos(robotAngle * Math.PI / 180) - rightX;
+        double v3 = -power *inches/Math.abs(inches) * Math.cos(robotAngle * Math.PI / 180) + rightX;
+        double v4 = -power *inches/Math.abs(inches) * Math.sin(robotAngle * Math.PI / 180) - rightX;
 
         frontLeft.setTargetPosition(tickCount);
         backLeft.setTargetPosition(tickCount);

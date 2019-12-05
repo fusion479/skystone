@@ -11,11 +11,11 @@ public class DriveTest extends LinearOpMode {
 
     double servoPosition;
 
-    private Drivetrain drive = new Drivetrain(this);
+
 
     @Override
     public void runOpMode() throws InterruptedException {
-        drive.init(hardwareMap);
+
 
         while(!opModeIsActive() && !isStopRequested()) {
             double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
@@ -40,7 +40,7 @@ public class DriveTest extends LinearOpMode {
             double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             double rightX = gamepad1.right_stick_x;
 
-            drive.teleDrive(r, robotAngle, rightX);
+
 
 //            if(gamepad1.b) {
 //                servoPosition = 0.5;
