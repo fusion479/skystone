@@ -211,11 +211,18 @@ public class Drivetrain extends Mechanism {
 
         return globalAngle;
     }
-
+    public void strafeLeft(){
+        setPower(-0.5,-0.5,0.5,0.5);
+    }
+    public void strafeRight(){
+        setPower(0.5, 0.5, -0.5, -0.5);
+    }
     /**
      * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
      * @param degrees Degrees to turn, + is left - is right
+
      */
+
     public void turn(int degrees, double power) {
         // restart imu angle tracking.
         resetAngle();
