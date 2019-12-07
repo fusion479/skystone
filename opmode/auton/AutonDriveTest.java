@@ -5,8 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
-import org.firstinspires.ftc.teamcode.hardware.Claw
-
+import org.firstinspires.ftc.teamcode.hardware.Claw;
 
 @Autonomous(name = "AutonDriveTest")
 public class AutonDriveTest extends LinearOpMode {
@@ -24,19 +23,14 @@ public class AutonDriveTest extends LinearOpMode {
         waitForStart();
 
         runtime.reset();
+        drivetrain.resetAngle();
+        drivetrain.driveToPos(24, 0.75);
+        drivetrain.strafeLeft();
+        claw.close();
+        sleep(100);
+        drivetrain.strafeRight();
+        sleep(2000);
+        drivetrain.strafeLeft();
 
-        while (!isStopRequested()) {
-            drivetrain.resetAngle();
-            drivetrain.driveToPos(24, 0.75);
-            drivetrain.strafeLeft();
-            claw.close();
-            sleep(100);
-            drivetrain.strafeRight();
-            sleep(2000);
-            drivetrain.strafeLeft();
-
-
-          break;
-        }
     }
 }

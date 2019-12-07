@@ -46,4 +46,13 @@ public class Lift extends Mechanism{
         lift.setPower(0.0);
     }
 
+    public void liftDown(double power) {
+        lift.setDirection(DcMotorSimple.Direction.FORWARD);
+        lift.setPower(power);
+    }
+
+    public void liftUp(double power) {
+        lift.setDirection(DcMotorSimple.Direction.REVERSE);
+        lift.setPower(power);
+    }
 }
