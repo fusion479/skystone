@@ -19,6 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Drivetrain extends Mechanism {
+
+    private boolean slow_mode = false;
+
     private static final double     COUNTS_PER_MOTOR_REV    = 1120;
 
     /**
@@ -49,8 +52,8 @@ public class Drivetrain extends Mechanism {
     private PIDController pidDrive;
     private PIDController pidRotate;
 
-    double  globalAngle, power = .30, correction;
-    Orientation lastAngles = new Orientation();
+    private double  globalAngle, power = .30, correction;
+    private Orientation lastAngles = new Orientation();
 
     private double flPower = 0.0, frPower = 0.0, blPower = 0.0, brPower = 0.0;
 
@@ -108,7 +111,7 @@ public class Drivetrain extends Mechanism {
         frontRight.setPower(FR);
     }
 
-    public void setMode(DcMotor.RunMode mode) {
+    private void setMode(DcMotor.RunMode mode) {
         frontLeft.setMode(mode);
         backRight.setMode(mode);
         backLeft.setMode(mode);
@@ -116,42 +119,13 @@ public class Drivetrain extends Mechanism {
     }
 
     public void teleDrive(double r, double robotAngle, double rightX) {
-        double v1 = r * Math.sin(robotAngle) - rightX;
-        double v2 = r * Math.cos(robotAngle) + rightX;
-        double v3 = r * Math.cos(robotAngle) - rightX;
-        double v4 = r * Math.sin(robotAngle) + rightX;
+        double multiplier = (slow_mode) ? 0.5 : 0.75;
+        double v1 = -r * multiplier *Math.cos(robotAngle) - rightX;
+        double v2 = -r * multiplier * Math.sin(robotAngle) + rightX;
+        double v3 = -r * multiplier * Math.sin(robotAngle) - rightX;
+        double v4 = -r * multiplier * Math.cos(robotAngle) + rightX;
         setPower(v1,v2,v3,v4);
     }
-
-//    public void autonDrive(double inches, double power, double robotAngle, double rightX) {
-//        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//
-//        int tickCount = (int) (inches * COUNTS_PER_INCH);
-//
-//        double v1 = -power *inches/Math.abs(inches) * Math.sin(robotAngle) + rightX;
-//        double v2 = -power *inches/Math.abs(inches) * Math.cos(robotAngle) - rightX;
-//        double v3 = -power *inches/Math.abs(inches) * Math.cos(robotAngle) + rightX;
-//        double v4 = -power *inches/Math.abs(inches) * Math.sin(robotAngle) - rightX;
-//
-//        frontLeft.setTargetPosition(tickCount);
-//        backLeft.setTargetPosition(tickCount);
-//        backRight.setTargetPosition(tickCount);
-//        frontRight.setTargetPosition(tickCount);
-//
-//        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//
-//        while(opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
-//            setPower(v1,v2,v3,v4);
-//        }
-//
-//        setPower(0.0);
-//    }
 
     public void driveToPos(double inches, double power) {
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -211,11 +185,18 @@ public class Drivetrain extends Mechanism {
 
         return globalAngle;
     }
-
+    public void strafeLeft(){
+        setPower(-0.5,-0.5,0.5,0.5);
+    }
+    public void strafeRight(){
+        setPower(0.5, 0.5, -0.5, -0.5);
+    }
     /**
      * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
      * @param degrees Degrees to turn, + is left - is right
+
      */
+
     public void turn(int degrees, double power) {
         // restart imu angle tracking.
         resetAngle();
@@ -248,5 +229,9 @@ public class Drivetrain extends Mechanism {
 
         setPower(0);
         resetAngle();
+    }
+
+    public void setSlow() {
+        slow_mode = !slow_mode;
     }
 }
