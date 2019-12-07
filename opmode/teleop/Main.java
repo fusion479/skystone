@@ -14,16 +14,14 @@ import org.firstinspires.ftc.teamcode.hardware.Lift;
 @TeleOp(name="Main", group="Teleop")
 public class Main extends LinearOpMode {
 
-    private Drivetrain drivetrain = new Drivetrain(this);
-//    private Camera camera = new Camera(this);
+    private Drivetrain drive = new Drivetrain(this);
     private Claw claw = new Claw(this);
     private Lift lift = new Lift(this);
     private Hook hook = new Hook(this);
 
     @Override
     public void runOpMode() throws InterruptedException {
-        drivetrain.init(hardwareMap);
-//        camera.init(hardwareMap);
+        drive.init(hardwareMap);
         claw.init(hardwareMap);
         hook.init(hardwareMap);
         lift.init(hardwareMap);
@@ -40,9 +38,9 @@ public class Main extends LinearOpMode {
             double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             double rightX = gamepad1.right_stick_x;
 
-            drivetrain.teleDrive(r, robotAngle, rightX);
+            drive.teleDrive(r, robotAngle, rightX);
 
-            if (gamepad1.start) drivetrain.setSlow();
+            if (gamepad1.start) drive.setSlow();
 
             if (gamepad1.b) claw.open();
 
