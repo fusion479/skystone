@@ -33,7 +33,7 @@ public class ClawTest extends LinearOpMode {
 
             if(gamepad1.b) claw.close();
 
-            if(gamepad1.x) claw.front();
+            if(gamepad1.x) claw.front(false);
 
             if(gamepad1.y) claw.back();
 

@@ -19,6 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Drivetrain extends Mechanism {
+
+    private boolean slow_mode = false;
+
     private static final double     COUNTS_PER_MOTOR_REV    = 1120;
 
     /**
@@ -116,10 +119,10 @@ public class Drivetrain extends Mechanism {
     }
 
     public void teleDrive(double r, double robotAngle, double rightX) {
-        double v1 = r * Math.sin(robotAngle) - rightX;
-        double v2 = r * Math.cos(robotAngle) + rightX;
-        double v3 = r * Math.cos(robotAngle) - rightX;
-        double v4 = r * Math.sin(robotAngle) + rightX;
+        double v1 = -r * 0.75 *Math.cos(robotAngle) - rightX;
+        double v2 = -r * 0.75 * Math.sin(robotAngle) + rightX;
+        double v3 = -r * 0.75 * Math.sin(robotAngle) - rightX;
+        double v4 = -r * 0.75 * Math.cos(robotAngle) + rightX;
         setPower(v1,v2,v3,v4);
     }
 
@@ -248,5 +251,9 @@ public class Drivetrain extends Mechanism {
 
         setPower(0);
         resetAngle();
+    }
+
+    public void setSlow() {
+        slow_mode = !slow_mode;
     }
 }
