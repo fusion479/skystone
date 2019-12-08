@@ -120,10 +120,10 @@ public class Drivetrain extends Mechanism {
 
     public void teleDrive(double r, double robotAngle, double rightX) {
         double multiplier = (slow_mode) ? 0.5 : 0.75;
-        double v1 = -r * multiplier *Math.cos(robotAngle) - rightX;
-        double v2 = -r * multiplier * Math.sin(robotAngle) + rightX;
-        double v3 = -r * multiplier * Math.sin(robotAngle) - rightX;
-        double v4 = -r * multiplier * Math.cos(robotAngle) + rightX;
+        double v1 = -r * multiplier * Math.cos(robotAngle) - rightX * multiplier;
+        double v2 = -r * multiplier * Math.sin(robotAngle) + rightX * multiplier;
+        double v3 = -r * multiplier * Math.sin(robotAngle) - rightX * multiplier;
+        double v4 = -r * multiplier * Math.cos(robotAngle) + rightX * multiplier;
         setPower(v1,v2,v3,v4);
     }
 
@@ -185,11 +185,13 @@ public class Drivetrain extends Mechanism {
 
         return globalAngle;
     }
-    public void strafeLeft(){
-        setPower(-0.5,-0.5,0.5,0.5);
+    public void strafeLeft(double power){
+        setPower(-power, power, power, -power);
     }
-    public void strafeRight(){
-        setPower(0.5, 0.5, -0.5, -0.5);
+
+    public void strafeRight(double power){
+        setPower(power, -power, -power, power);
+
     }
     /**
      * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
@@ -231,7 +233,7 @@ public class Drivetrain extends Mechanism {
         resetAngle();
     }
 
-    public void setSlow() {
-        slow_mode = !slow_mode;
-    }
+    public void setSlow() { slow_mode = true; }
+
+    public void unSlow() { slow_mode = false; }
 }

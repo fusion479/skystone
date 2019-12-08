@@ -13,28 +13,20 @@ public class Claw extends Mechanism {
         grip = hwMap.servo.get("grip");
         swivel = hwMap.servo.get("swivel");
 //        swivel.setDirection(Servo.Direction.REVERSE);
-        try {
-            front(true);
-        } catch (InterruptedException e) {
-
-        }
-        open();
     }
 
     public void open(){grip.setPosition(0.8);}
 
     public void close(){ grip.setPosition(0.2);}
 
-    public void front(boolean init) throws InterruptedException{
+    public void front() throws InterruptedException{
         swivel.setPosition(0.98);
-        if(init)
-            Thread.sleep(2000);
     }
 
     public void back() throws InterruptedException{
         close();
-        Thread.sleep(2000);
-        swivel.setPosition(0.5);
+        Thread.sleep(250);
+        swivel.setPosition(0.3);
     }
 }
 

@@ -41,8 +41,6 @@ public class DriveTest extends LinearOpMode {
             double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             double rightX = gamepad1.right_stick_x;
 
-
-
 //            if(gamepad1.b) {
 //                servoPosition = 0.5;
 //            }
