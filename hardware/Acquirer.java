@@ -1,14 +1,13 @@
 package org.firstinspires.ftc.teamcode.hardware;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Acquirer extends Mechanism{
     private CRServo wheel1;
     private CRServo wheel2;
 
-    public Acquirer (LinearOpMode opMode){this.opMode = opMode; }
+    public Acquirer (LinearOpMode opMode) { this.opMode = opMode; }
 
     @Override
     public void init(HardwareMap hwMap) {
@@ -17,11 +16,12 @@ public class Acquirer extends Mechanism{
 
     }
     public void intake(){
-        wheel1.setPower(10);
-        wheel2.setPower(-10);
+        wheel1.setPower(1);
+        wheel2.setPower(-1);
     }
-//    public void output(){
-//        wheel1.setPower(-10);
-//        wheel2.setPower(10);
-//    }
+
+    public void output(){
+        wheel1.setPower(-1);
+        wheel2.setPower(1);
+    }
 }
