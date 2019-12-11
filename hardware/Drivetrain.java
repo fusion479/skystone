@@ -22,7 +22,7 @@ public class Drivetrain extends Mechanism {
 
     private boolean slow_mode = false;
 
-    private static final double     COUNTS_PER_MOTOR_REV    = 1120;
+    private static final double     COUNTS_PER_MOTOR_REV    = 537.6;
 
     /**
      * Drivetrain gear ratio (< 1.0 if geared up).
