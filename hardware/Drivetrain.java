@@ -22,8 +22,8 @@ public class Drivetrain extends Mechanism {
 
     private boolean slow_mode = false;
 
-    private static final double     COUNTS_PER_MOTOR_REV    = 537.6;
-
+//    private static final double     COUNTS_PER_MOTOR_REV    = 537.6;
+    private static double COUNTS_PER_MOTOR_REV = 537.6;
     /**
      * Drivetrain gear ratio (< 1.0 if geared up).
      */
@@ -236,4 +236,16 @@ public class Drivetrain extends Mechanism {
     public void setSlow() { slow_mode = true; }
 
     public void unSlow() { slow_mode = false; }
+
+    public void changeCount() {
+        COUNTS_PER_MOTOR_REV = 1120;
+    }
+
+    public void changeBack() {
+        COUNTS_PER_MOTOR_REV = 537.6;
+    }
+
+    public double getCount() {
+        return COUNTS_PER_MOTOR_REV;
+    }
 }
