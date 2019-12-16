@@ -12,13 +12,8 @@ public class DriveTest extends LinearOpMode {
 
     double servoPosition;
 
-
-
-
     @Override
     public void runOpMode() throws InterruptedException {
-
-
         while(!opModeIsActive() && !isStopRequested()) {
             double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
             double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;

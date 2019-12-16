@@ -14,18 +14,18 @@ import org.firstinspires.ftc.teamcode.hardware.Lift;
 public class AutonMain extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private Drivetrain drive = new Drivetrain(this);
-    private Camera camera = new Camera(this);
-    private Claw claw = new Claw(this);
-    private Hook hook = new Hook(this);
-    private Lift lift = new Lift(this);
+//    private Camera camera = new Camera(this);
+//    private Claw claw = new Claw(this);
+//    private Hook hook = new Hook(this);
+//    private Lift lift = new Lift(this);
 
     @Override
     public void runOpMode() throws InterruptedException {
         drive.init(hardwareMap);
-        camera.init(hardwareMap);
-        claw.init(hardwareMap);
-        hook.init(hardwareMap);
-        lift.init(hardwareMap);
+//        camera.init(hardwareMap);
+//        claw.init(hardwareMap);
+//        hook.init(hardwareMap);
+//        lift.init(hardwareMap);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -37,6 +37,7 @@ public class AutonMain extends LinearOpMode {
         // case 0 red loading
         // facing alliance bridge
         drive.driveToPos(10, 0.75);
+        drive.turn(-90, 0.75);
 
         // case 1 red loading
         // facing forward

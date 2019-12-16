@@ -20,10 +20,9 @@ import java.util.Map;
 
 public class Drivetrain extends Mechanism {
 
-    private boolean slow_mode = false;
+    private static boolean slow_mode = false;
 
-//    private static final double     COUNTS_PER_MOTOR_REV    = 537.6;
-    private static double COUNTS_PER_MOTOR_REV = 537.6;
+    private static final double COUNTS_PER_MOTOR_REV = 537.6;
     /**
      * Drivetrain gear ratio (< 1.0 if geared up).
      */
@@ -45,8 +44,6 @@ public class Drivetrain extends Mechanism {
     private DcMotor frontRight;
     private DcMotor backLeft;
     private DcMotor backRight;
-
-    Map<String, DcMotor> motors = new HashMap<>();
 
     public BNO055IMU imu;
     private PIDController pidDrive;
@@ -72,7 +69,6 @@ public class Drivetrain extends Mechanism {
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
-
 
         // Set motor brake behavior
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -128,6 +124,14 @@ public class Drivetrain extends Mechanism {
     }
 
     public void driveToPos(double inches, double power) {
+
+        pidDrive.setSetpoint(0);
+        pidDrive.setOutputRange(0, power);
+        pidDrive.setInputRange(-90, 90);
+        pidDrive.enable();
+
+        correction = pidDrive.performPID(getAngle());
+
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         int tickCount = (int) (inches * COUNTS_PER_INCH);
@@ -141,7 +145,7 @@ public class Drivetrain extends Mechanism {
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         while(opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
-            setPower(set_power);
+            setPower(set_power - correction, set_power + correction, set_power - correction, set_power + correction);
         }
 
         setPower(0.0);
@@ -159,9 +163,7 @@ public class Drivetrain extends Mechanism {
         return lastAngles.firstAngle;
     }
 
-    public double getGlobal() {
-        return globalAngle;
-    }
+    public double getGlobal() { return globalAngle; }
 
     /**
      * Get current cumulative angle rotation from last reset.
@@ -169,7 +171,6 @@ public class Drivetrain extends Mechanism {
      */
     public double getAngle()
     {
-
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
@@ -185,6 +186,7 @@ public class Drivetrain extends Mechanism {
 
         return globalAngle;
     }
+
     public void strafeLeft(double power){
         setPower(-power, power, power, -power);
     }
@@ -198,7 +200,6 @@ public class Drivetrain extends Mechanism {
      * @param degrees Degrees to turn, + is left - is right
 
      */
-
     public void turn(int degrees, double power) {
         // restart imu angle tracking.
         resetAngle();
@@ -233,19 +234,7 @@ public class Drivetrain extends Mechanism {
         resetAngle();
     }
 
-    public void setSlow() { slow_mode = true; }
+    public void setSlow(boolean bool) { slow_mode = bool; }
 
-    public void unSlow() { slow_mode = false; }
-
-    public void changeCount() {
-        COUNTS_PER_MOTOR_REV = 1120;
-    }
-
-    public void changeBack() {
-        COUNTS_PER_MOTOR_REV = 537.6;
-    }
-
-    public double getCount() {
-        return COUNTS_PER_MOTOR_REV;
-    }
+    public boolean getSlow() { return slow_mode; }
 }
