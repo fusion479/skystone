@@ -33,11 +33,29 @@ public class AutonMain extends LinearOpMode {
         waitForStart();
 
         runtime.reset();
+        drive.resetAngle();
 
         // case 0 red loading
         // facing alliance bridge
-        drive.driveToPos(10, 0.75);
-        drive.turn(-90, 0.75);
+
+//        telemetry.addData("angle", drive.getAngle());
+//        telemetry.addData("correction", drive.correction);
+//        drive.driveToPos(40, 0.6);
+
+        drive.teleDrive(-1, 3* Math.PI / 4, 0);
+        sleep(1000);
+        drive.setPower(0,0,0,0);
+//        drive.strafeLeft(0.5);
+//        sleep(2000);
+//        drive.strafeRight(0.5);
+//        telemetry.update();
+//        drive.teleDrive(-1,Math.PI/4,0);
+//        sleep(5000);
+//        drive.turn(-90, 0.75);
+
+//        drive.driveToPos(40, 0.25);
+
+//        drive.turn(90,1);
 
         // case 1 red loading
         // facing forward
