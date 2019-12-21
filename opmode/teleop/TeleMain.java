@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.hardware.Hook;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
 
 @TeleOp(name="TeleMain", group="Teleop")
-public class Main extends LinearOpMode {
+public class TeleMain extends LinearOpMode {
 
     private Drivetrain drive = new Drivetrain(this);
     private Claw claw = new Claw(this);

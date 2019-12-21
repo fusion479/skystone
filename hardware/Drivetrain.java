@@ -49,7 +49,10 @@ public class Drivetrain extends Mechanism {
     private PIDController pidDrive;
     private PIDController pidRotate;
 
-    public double  globalAngle, power = .30, correction;
+    private int coefficientIndex;
+    private int controllerIndex;
+
+    private double  globalAngle, power = .30, correction;
     private Orientation lastAngles = new Orientation();
 
     private double flPower = 0.0, frPower = 0.0, blPower = 0.0, brPower = 0.0;
@@ -124,6 +127,8 @@ public class Drivetrain extends Mechanism {
     }
 
     public void driveToPos(double inches, double power) {
+
+        resetAngle();
 
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -242,11 +247,79 @@ public class Drivetrain extends Mechanism {
         pidDrive.setPID(pidDrive.getP() + x, pidDrive.getI(), pidDrive.getD());
     }
 
-    public double getP(){
-        return pidDrive.getP();
-    }
-
     public void setSlow(boolean bool) { slow_mode = bool; }
 
     public boolean getSlow() { return slow_mode; }
+
+    public String coefficient() {
+        return (coefficientIndex == 0)
+            ? "P"
+            : (coefficientIndex == 1)
+                ? "I"
+                : "D";
+    }
+
+    public void changeCoefficient() {
+        if(coefficientIndex == 2) coefficientIndex = 0;
+        else coefficientIndex++;
+    }
+
+    public void changeController() {
+        if(controllerIndex == 1) controllerIndex = 0;
+        else controllerIndex++;
+    }
+
+    public double[] getCoefficients() {
+        return (controllerIndex == 0)
+            ? new double[]{pidDrive.getP(), pidDrive.getI(), pidDrive.getD()}
+            : new double[]{pidRotate.getP(), pidRotate.getI(), pidRotate.getD()};
+    }
+
+    public String controller() {
+        return (controllerIndex == 0) ? "drive" : "turn";
+    }
+
+    public void increaseCoefficient() {
+        // pidDrive
+        if (controllerIndex == 0) {
+            if(coefficientIndex == 0)
+                pidDrive.setPID(pidDrive.getP() + 0.001, pidDrive.getI(), pidDrive.getD() );
+            else if(coefficientIndex == 1)
+                pidDrive.setPID(pidDrive.getP(), pidDrive.getI() + 0.001, pidDrive.getD() );
+            else if(coefficientIndex == 2)
+                pidDrive.setPID(pidDrive.getP(), pidDrive.getI(), pidDrive.getD() + 0.001 );
+        }
+        // pidRotate
+        else {
+            if(coefficientIndex == 0)
+                pidRotate.setPID(pidRotate.getP() + 0.001, pidRotate.getI(), pidRotate.getD() );
+            else if(coefficientIndex == 1)
+                pidRotate.setPID(pidRotate.getP(), pidRotate.getI() + 0.001, pidRotate.getD() );
+            else if(coefficientIndex == 2)
+                pidRotate.setPID(pidRotate.getP(), pidRotate.getI(), pidRotate.getD() + 0.001 );
+        }
+    }
+
+    public void decreaseCoefficient() {
+        // pidDrive
+        if (controllerIndex == 0) {
+            if(coefficientIndex == 0)
+                pidDrive.setPID(pidDrive.getP() - 0.001, pidDrive.getI(), pidDrive.getD() );
+            else if(coefficientIndex == 1)
+                pidDrive.setPID(pidDrive.getP(), pidDrive.getI() - 0.001, pidDrive.getD() );
+            else if(coefficientIndex == 2)
+                pidDrive.setPID(pidDrive.getP(), pidDrive.getI(), pidDrive.getD() - 0.001 );
+        }
+        // pidRotate
+        else {
+            if(coefficientIndex == 0)
+                pidRotate.setPID(pidRotate.getP() - 0.001, pidRotate.getI(), pidRotate.getD() );
+            else if(coefficientIndex == 1)
+                pidRotate.setPID(pidRotate.getP(), pidRotate.getI() - 0.001, pidRotate.getD() );
+            else if(coefficientIndex == 2)
+                pidRotate.setPID(pidRotate.getP(), pidRotate.getI(), pidRotate.getD() - 0.001 );
+        }
+    }
+
+
 }

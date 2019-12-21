@@ -16,7 +16,7 @@ public class AutonMain extends LinearOpMode {
     private Drivetrain drive = new Drivetrain(this);
 //    private Camera camera = new Camera(this);
 //    private Claw claw = new Claw(this);
-//    private Hook hook = new Hook(this);
+    private Hook hook = new Hook(this);
 //    private Lift lift = new Lift(this);
 
     @Override
@@ -24,7 +24,7 @@ public class AutonMain extends LinearOpMode {
         drive.init(hardwareMap);
 //        camera.init(hardwareMap);
 //        claw.init(hardwareMap);
-//        hook.init(hardwareMap);
+        hook.init(hardwareMap);
 //        lift.init(hardwareMap);
 
         telemetry.addData("Status", "Initialized");
@@ -33,46 +33,15 @@ public class AutonMain extends LinearOpMode {
         waitForStart();
 
         runtime.reset();
-        drive.resetAngle();
-
-        // case 0 red loading
-        // facing alliance bridge
-
-//        telemetry.addData("angle", drive.getAngle());
-//        telemetry.addData("correction", drive.correction);
-//        drive.driveToPos(40, 0.6);
+        hook.unhook();
+        sleep(1000);
 
         drive.teleDrive(-1, 3* Math.PI / 4, 0);
-        sleep(1000);
+        sleep(400);
         drive.setPower(0,0,0,0);
-//        drive.strafeLeft(0.5);
-//        sleep(2000);
-//        drive.strafeRight(0.5);
-//        telemetry.update();
-//        drive.teleDrive(-1,Math.PI/4,0);
-//        sleep(5000);
-//        drive.turn(-90, 0.75);
-
-//        drive.driveToPos(40, 0.25);
-
-//        drive.turn(90,1);
-
-        // case 1 red loading
-        // facing forward
-//        drive.driveToPos(6, 0.75);
-//        drive.turn(90, 0.5);
-//        drive.driveToPos(10, 0.75);
-
-        //case 2 pull platform blue building
-//        hook.unhook();
-//        sleep(500);
-//        drive.driveToPos(17, 0.55);
-//        sleep(500);
-//        hook.hook();
-//        sleep(500);
-//        drive.driveToPos(-17, 0.55);
-
-//        drive.turn(90, 1);
-//        drive.driveToPos(36, 1);
+        drive.driveToPos(31,0.45);
+        hook.hook();
+        sleep(1000);
+        drive.driveToPos(-31, 0.45);
     }
 }
