@@ -266,9 +266,7 @@ public class Drivetrain extends Mechanism {
         }
     }
 
-    public double[] getCoefficients() {
-        return new double[]{current.getP(), current.getI(), current.getD()};
-    }
+    public double[] getCoefficients() { return new double[]{current.getP(), current.getI(), current.getD()}; }
 
     public String controller() { return (controllerIndex == 0) ? "drive" : "turn"; }
 

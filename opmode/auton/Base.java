@@ -10,22 +10,22 @@ import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Hook;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
 
-@Autonomous(name="AutonMain")
-public class AutonMain extends LinearOpMode {
+@Autonomous(name="Base")
+public class Base extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private Drivetrain drive = new Drivetrain(this);
-//    private Camera camera = new Camera(this);
-//    private Claw claw = new Claw(this);
+    private Camera camera = new Camera(this);
+    private Claw claw = new Claw(this);
     private Hook hook = new Hook(this);
-//    private Lift lift = new Lift(this);
+    private Lift lift = new Lift(this);
 
     @Override
     public void runOpMode() throws InterruptedException {
         drive.init(hardwareMap);
-//        camera.init(hardwareMap);
-//        claw.init(hardwareMap);
+        camera.init(hardwareMap);
+        claw.init(hardwareMap);
         hook.init(hardwareMap);
-//        lift.init(hardwareMap);
+        lift.init(hardwareMap);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
