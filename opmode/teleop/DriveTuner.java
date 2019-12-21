@@ -41,6 +41,7 @@ public class DriveTuner extends LinearOpMode {
 
             telemetry.addData("drive", "a");
             telemetry.addData("turn", "b");
+            telemetry.addData("strafe", "back, start");
             telemetry.update();
 
             double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
@@ -52,6 +53,10 @@ public class DriveTuner extends LinearOpMode {
             if (gamepad1.a) drive.driveToPos(driveDistance, drivePower);
 
             if (gamepad1.b) drive.turn(driveAngle, drivePower);
+
+            if (gamepad1.back) drive.strafeLeft(drivePower);
+
+            if(gamepad1.start) drive.strafeRight(drivePower);
 
             // set power
             if(gamepad1.right_trigger > 0) drivePower += (double) gamepad1.right_trigger;

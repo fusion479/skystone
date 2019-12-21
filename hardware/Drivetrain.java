@@ -49,6 +49,8 @@ public class Drivetrain extends Mechanism {
     private PIDController pidDrive;
     private PIDController pidRotate;
 
+    private PIDController current;
+
     private int coefficientIndex;
     private int controllerIndex;
 
@@ -80,6 +82,9 @@ public class Drivetrain extends Mechanism {
 
         pidRotate = new PIDController(0.005, 0.1, 0);
         pidDrive = new PIDController(0.04,0,0);
+
+        current = pidDrive;
+
         // Set all motors to zero power
         setPower(0.0);
 
@@ -250,55 +255,38 @@ public class Drivetrain extends Mechanism {
 
     public void changeCoefficient() { coefficientIndex = (coefficientIndex == 2) ? 0 : coefficientIndex + 1; }
 
-    public void changeController() { controllerIndex = (controllerIndex == 1) ? 0 : controllerIndex + 1; }
+    public void changeController() {
+        if(controllerIndex == 1) {
+            controllerIndex = 0;
+            current = pidDrive;
+        }
+        else {
+            controllerIndex++;
+            current = pidRotate;
+        }
+    }
 
     public double[] getCoefficients() {
-        return (controllerIndex == 0)
-            ? new double[]{pidDrive.getP(), pidDrive.getI(), pidDrive.getD()}
-            : new double[]{pidRotate.getP(), pidRotate.getI(), pidRotate.getD()};
+        return new double[]{current.getP(), current.getI(), current.getD()};
     }
 
     public String controller() { return (controllerIndex == 0) ? "drive" : "turn"; }
 
     public void increaseCoefficient() {
-        // pidDrive
-        if (controllerIndex == 0) {
-            if(coefficientIndex == 0)
-                pidDrive.setPID(pidDrive.getP() + 0.001, pidDrive.getI(), pidDrive.getD() );
-            else if(coefficientIndex == 1)
-                pidDrive.setPID(pidDrive.getP(), pidDrive.getI() + 0.001, pidDrive.getD() );
-            else if(coefficientIndex == 2)
-                pidDrive.setPID(pidDrive.getP(), pidDrive.getI(), pidDrive.getD() + 0.001 );
-        }
-        // pidRotate
-        else {
-            if(coefficientIndex == 0)
-                pidRotate.setPID(pidRotate.getP() + 0.001, pidRotate.getI(), pidRotate.getD() );
-            else if(coefficientIndex == 1)
-                pidRotate.setPID(pidRotate.getP(), pidRotate.getI() + 0.001, pidRotate.getD() );
-            else if(coefficientIndex == 2)
-                pidRotate.setPID(pidRotate.getP(), pidRotate.getI(), pidRotate.getD() + 0.001 );
-        }
+        if(coefficientIndex == 0)
+            current.setPID(current.getP() + 0.001, current.getI(), current.getD() );
+        else if(coefficientIndex == 1)
+            current.setPID(current.getP(), current.getI() + 0.001, current.getD() );
+        else if(coefficientIndex == 2)
+            current.setPID(current.getP(), current.getI(), current.getD() + 0.001 );
     }
 
     public void decreaseCoefficient() {
-        // pidDrive
-        if (controllerIndex == 0) {
-            if(coefficientIndex == 0)
-                pidDrive.setPID(pidDrive.getP() - 0.001, pidDrive.getI(), pidDrive.getD() );
-            else if(coefficientIndex == 1)
-                pidDrive.setPID(pidDrive.getP(), pidDrive.getI() - 0.001, pidDrive.getD() );
-            else if(coefficientIndex == 2)
-                pidDrive.setPID(pidDrive.getP(), pidDrive.getI(), pidDrive.getD() - 0.001 );
-        }
-        // pidRotate
-        else {
-            if(coefficientIndex == 0)
-                pidRotate.setPID(pidRotate.getP() - 0.001, pidRotate.getI(), pidRotate.getD() );
-            else if(coefficientIndex == 1)
-                pidRotate.setPID(pidRotate.getP(), pidRotate.getI() - 0.001, pidRotate.getD() );
-            else if(coefficientIndex == 2)
-                pidRotate.setPID(pidRotate.getP(), pidRotate.getI(), pidRotate.getD() - 0.001 );
-        }
+        if(coefficientIndex == 0)
+            current.setPID(current.getP() - 0.001, current.getI(), current.getD() );
+        else if(coefficientIndex == 1)
+            current.setPID(current.getP(), current.getI() - 0.001, current.getD() );
+        else if(coefficientIndex == 2)
+            current.setPID(current.getP(), current.getI(), current.getD() - 0.001 );
     }
 }
