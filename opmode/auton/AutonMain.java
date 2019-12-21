@@ -14,18 +14,18 @@ import org.firstinspires.ftc.teamcode.hardware.Lift;
 public class AutonMain extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private Drivetrain drive = new Drivetrain(this);
-    private Camera camera = new Camera(this);
-    private Claw claw = new Claw(this);
+//    private Camera camera = new Camera(this);
+//    private Claw claw = new Claw(this);
     private Hook hook = new Hook(this);
-    private Lift lift = new Lift(this);
+//    private Lift lift = new Lift(this);
 
     @Override
     public void runOpMode() throws InterruptedException {
         drive.init(hardwareMap);
-        camera.init(hardwareMap);
-        claw.init(hardwareMap);
+//        camera.init(hardwareMap);
+//        claw.init(hardwareMap);
         hook.init(hardwareMap);
-        lift.init(hardwareMap);
+//        lift.init(hardwareMap);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -33,27 +33,18 @@ public class AutonMain extends LinearOpMode {
         waitForStart();
 
         runtime.reset();
+        hook.unhook();
+        sleep(1000);
 
-        // case 0 red loading
-        // facing alliance bridge
-        drive.driveToPos(10, 0.75);
+        drive.strafeRight(1);
 
-        // case 1 red loading
-        // facing forward
-//        drive.driveToPos(6, 0.75);
-//        drive.turn(90, 0.5);
-//        drive.driveToPos(10, 0.75);
+        //drive strafeLeft remains untested
 
-        //case 2 pull platform blue building
-//        hook.unhook();
-//        sleep(500);
-//        drive.driveToPos(17, 0.55);
-//        sleep(500);
-//        hook.hook();
-//        sleep(500);
-//        drive.driveToPos(-17, 0.55);
-
-//        drive.turn(90, 1);
-//        drive.driveToPos(36, 1);
+        sleep(400);
+        drive.setPower(0,0,0,0);
+        drive.driveToPos(31,0.45);
+        hook.hook();
+        sleep(1000);
+        drive.driveToPos(-31, 0.45);
     }
 }

@@ -20,10 +20,9 @@ import java.util.Map;
 
 public class Drivetrain extends Mechanism {
 
-    private boolean slow_mode = false;
+    private static boolean slow_mode = false;
 
-    private static final double     COUNTS_PER_MOTOR_REV    = 537.6;
-
+    private static final double COUNTS_PER_MOTOR_REV = 537.6;
     /**
      * Drivetrain gear ratio (< 1.0 if geared up).
      */
@@ -46,22 +45,22 @@ public class Drivetrain extends Mechanism {
     private DcMotor backLeft;
     private DcMotor backRight;
 
-    Map<String, DcMotor> motors = new HashMap<>();
-
     public BNO055IMU imu;
     private PIDController pidDrive;
     private PIDController pidRotate;
 
-    private double  globalAngle, power = .30, correction;
-    private Orientation lastAngles = new Orientation();
+    private int coefficientIndex;
+    private int controllerIndex;
 
-    private double flPower = 0.0, frPower = 0.0, blPower = 0.0, brPower = 0.0;
+    private double  globalAngle = .30;
+    private Orientation lastAngles = new Orientation();
 
     public Drivetrain(LinearOpMode opMode) {
         this.opMode = opMode;
     }
 
     public void init(HardwareMap hwMap) {
+
         frontLeft = hwMap.dcMotor.get("frontLeft");
         frontRight = hwMap.dcMotor.get("frontRight");
         backLeft = hwMap.dcMotor.get("backLeft");
@@ -73,7 +72,6 @@ public class Drivetrain extends Mechanism {
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
-
         // Set motor brake behavior
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -81,8 +79,7 @@ public class Drivetrain extends Mechanism {
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         pidRotate = new PIDController(0.005, 0.1, 0);
-        pidDrive = new PIDController(0.05,0,0);
-
+        pidDrive = new PIDController(0.04,0,0);
         // Set all motors to zero power
         setPower(0.0);
 
@@ -128,6 +125,8 @@ public class Drivetrain extends Mechanism {
     }
 
     public void driveToPos(double inches, double power) {
+        double correction;
+        resetAngle();
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         int tickCount = (int) (inches * COUNTS_PER_INCH);
@@ -141,9 +140,21 @@ public class Drivetrain extends Mechanism {
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         while(opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
-            setPower(set_power);
-        }
+            pidDrive.setSetpoint(0);
+            pidDrive.setOutputRange(0, set_power);
+            pidDrive.setInputRange(-90, 90);
+            pidDrive.enable();
+            correction = pidDrive.performPID(getAngle());
 
+            if (Math.signum(inches) > 0) {
+                setPower(set_power + correction, set_power - correction, set_power + correction, set_power - correction);
+            } else if (Math.signum(inches) < 0) {
+                setPower(set_power - correction, set_power + correction, set_power - correction, set_power + correction);
+            }
+            opMode.telemetry.addData("angle", getAngle());
+            opMode.telemetry.addData("correction", correction);
+            opMode.telemetry.update();
+        }
         setPower(0.0);
     }
 
@@ -159,9 +170,7 @@ public class Drivetrain extends Mechanism {
         return lastAngles.firstAngle;
     }
 
-    public double getGlobal() {
-        return globalAngle;
-    }
+    public double getGlobal() { return globalAngle; }
 
     /**
      * Get current cumulative angle rotation from last reset.
@@ -169,7 +178,6 @@ public class Drivetrain extends Mechanism {
      */
     public double getAngle()
     {
-
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
@@ -185,20 +193,15 @@ public class Drivetrain extends Mechanism {
 
         return globalAngle;
     }
-    public void strafeLeft(double power){
-        setPower(-power, power, power, -power);
-    }
 
-    public void strafeRight(double power){
-        setPower(power, -power, -power, power);
+    public void strafeLeft(double power){ teleDrive(-power, 5* Math.PI / 4, 0); }
 
-    }
+    public void strafeRight(double power){ teleDrive(-power, 3* Math.PI / 4, 0); }
     /**
      * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
      * @param degrees Degrees to turn, + is left - is right
 
      */
-
     public void turn(int degrees, double power) {
         // restart imu angle tracking.
         resetAngle();
@@ -233,7 +236,69 @@ public class Drivetrain extends Mechanism {
         resetAngle();
     }
 
-    public void setSlow() { slow_mode = true; }
+    public void setSlow(boolean bool) { slow_mode = bool; }
 
-    public void unSlow() { slow_mode = false; }
+    public boolean getSlow() { return slow_mode; }
+
+    public String coefficient() {
+        return (coefficientIndex == 0)
+            ? "P"
+            : (coefficientIndex == 1)
+                ? "I"
+                : "D";
+    }
+
+    public void changeCoefficient() { coefficientIndex = (coefficientIndex == 2) ? 0 : coefficientIndex + 1; }
+
+    public void changeController() { controllerIndex = (controllerIndex == 1) ? 0 : controllerIndex + 1; }
+
+    public double[] getCoefficients() {
+        return (controllerIndex == 0)
+            ? new double[]{pidDrive.getP(), pidDrive.getI(), pidDrive.getD()}
+            : new double[]{pidRotate.getP(), pidRotate.getI(), pidRotate.getD()};
+    }
+
+    public String controller() { return (controllerIndex == 0) ? "drive" : "turn"; }
+
+    public void increaseCoefficient() {
+        // pidDrive
+        if (controllerIndex == 0) {
+            if(coefficientIndex == 0)
+                pidDrive.setPID(pidDrive.getP() + 0.001, pidDrive.getI(), pidDrive.getD() );
+            else if(coefficientIndex == 1)
+                pidDrive.setPID(pidDrive.getP(), pidDrive.getI() + 0.001, pidDrive.getD() );
+            else if(coefficientIndex == 2)
+                pidDrive.setPID(pidDrive.getP(), pidDrive.getI(), pidDrive.getD() + 0.001 );
+        }
+        // pidRotate
+        else {
+            if(coefficientIndex == 0)
+                pidRotate.setPID(pidRotate.getP() + 0.001, pidRotate.getI(), pidRotate.getD() );
+            else if(coefficientIndex == 1)
+                pidRotate.setPID(pidRotate.getP(), pidRotate.getI() + 0.001, pidRotate.getD() );
+            else if(coefficientIndex == 2)
+                pidRotate.setPID(pidRotate.getP(), pidRotate.getI(), pidRotate.getD() + 0.001 );
+        }
+    }
+
+    public void decreaseCoefficient() {
+        // pidDrive
+        if (controllerIndex == 0) {
+            if(coefficientIndex == 0)
+                pidDrive.setPID(pidDrive.getP() - 0.001, pidDrive.getI(), pidDrive.getD() );
+            else if(coefficientIndex == 1)
+                pidDrive.setPID(pidDrive.getP(), pidDrive.getI() - 0.001, pidDrive.getD() );
+            else if(coefficientIndex == 2)
+                pidDrive.setPID(pidDrive.getP(), pidDrive.getI(), pidDrive.getD() - 0.001 );
+        }
+        // pidRotate
+        else {
+            if(coefficientIndex == 0)
+                pidRotate.setPID(pidRotate.getP() - 0.001, pidRotate.getI(), pidRotate.getD() );
+            else if(coefficientIndex == 1)
+                pidRotate.setPID(pidRotate.getP(), pidRotate.getI() - 0.001, pidRotate.getD() );
+            else if(coefficientIndex == 2)
+                pidRotate.setPID(pidRotate.getP(), pidRotate.getI(), pidRotate.getD() - 0.001 );
+        }
+    }
 }
