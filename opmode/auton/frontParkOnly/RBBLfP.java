@@ -1,17 +1,13 @@
-package org.firstinspires.ftc.teamcode.opmode.auton;
+package org.firstinspires.ftc.teamcode.opmode.auton.frontParkOnly;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.hardware.Camera;
-import org.firstinspires.ftc.teamcode.hardware.Claw;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
-import org.firstinspires.ftc.teamcode.hardware.Hook;
-import org.firstinspires.ftc.teamcode.hardware.Lift;
 
-@Autonomous(name="Red-Building-FrontPark")
-public class RBfP extends LinearOpMode {
+@Autonomous(name="Red-Building-Blue-Loading-FrontPark")
+public class RBBLfP extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private Drivetrain drive = new Drivetrain(this);
 
@@ -23,6 +19,8 @@ public class RBfP extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
+
+        runtime.reset();
 
         //facing parallel to bridge using strafe
         drive.driveToPos(23,0.75);

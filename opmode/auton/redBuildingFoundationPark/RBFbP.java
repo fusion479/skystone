@@ -1,47 +1,58 @@
-package org.firstinspires.ftc.teamcode.opmode.auton;
+package org.firstinspires.ftc.teamcode.opmode.auton.redBuildingFoundationPark;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.hardware.Camera;
-import org.firstinspires.ftc.teamcode.hardware.Claw;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Hook;
-import org.firstinspires.ftc.teamcode.hardware.Lift;
 
-@Autonomous(name="Base")
-public class Base extends LinearOpMode {
+@Autonomous(name="Red-Building-Foundation-BackPark")
+public class RBFbP extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private Drivetrain drive = new Drivetrain(this);
-    private Camera camera = new Camera(this);
-    private Claw claw = new Claw(this);
     private Hook hook = new Hook(this);
-    private Lift lift = new Lift(this);
 
     @Override
     public void runOpMode() throws InterruptedException {
         drive.init(hardwareMap);
-        camera.init(hardwareMap);
-        claw.init(hardwareMap);
         hook.init(hardwareMap);
-        lift.init(hardwareMap);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         waitForStart();
-
         runtime.reset();
+
+        // facing parallel to bridge
         hook.unhook();
         sleep(1000);
 
+        //get completely in front of foundation
         drive.strafeRight(1);
-        sleep(400);
+        sleep(500);
         drive.setPower(0,0,0,0);
-        drive.driveToPos(31,0.45);
+        sleep(500);
+
+        //drive towards foundation
+        drive.driveToPos(30, 0.4);
+        sleep(1000);
+
+        // clamp down on foundation
         hook.hook();
         sleep(1000);
-        drive.driveToPos(-31, 0.45);
+
+        // drive back
+        drive.driveToPos(-30, 0.4);
+        sleep(1000);
+
+        //unhook
+        hook.unhook();
+        sleep(1000);
+
+        //park under bridge
+        drive.strafeLeft(1);
+        sleep(1000);
+        drive.setPower(0,0,0,0);
     }
 }

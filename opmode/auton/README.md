@@ -14,6 +14,8 @@ B = Building
 
 L = Loading
 
+A = Applies to both zones 
+
 ## Capabilities
 F = Foundation 
 
