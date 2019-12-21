@@ -272,21 +272,16 @@ public class Drivetrain extends Mechanism {
 
     public String controller() { return (controllerIndex == 0) ? "drive" : "turn"; }
 
-    public void increaseCoefficient() {
-        if(coefficientIndex == 0)
-            current.setPID(current.getP() + 0.001, current.getI(), current.getD() );
-        else if(coefficientIndex == 1)
-            current.setPID(current.getP(), current.getI() + 0.001, current.getD() );
-        else if(coefficientIndex == 2)
-            current.setPID(current.getP(), current.getI(), current.getD() + 0.001 );
-    }
+    public void increaseCoefficient() { setCoefficient(0.001); }
 
-    public void decreaseCoefficient() {
+    public void decreaseCoefficient() { setCoefficient(-0.001); }
+
+    private void setCoefficient(double change) {
         if(coefficientIndex == 0)
-            current.setPID(current.getP() - 0.001, current.getI(), current.getD() );
+            current.setPID(current.getP() + change, current.getI(), current.getD() );
         else if(coefficientIndex == 1)
-            current.setPID(current.getP(), current.getI() - 0.001, current.getD() );
+            current.setPID(current.getP(), current.getI() + change, current.getD() );
         else if(coefficientIndex == 2)
-            current.setPID(current.getP(), current.getI(), current.getD() - 0.001 );
+            current.setPID(current.getP(), current.getI(), current.getD() + change );
     }
 }
