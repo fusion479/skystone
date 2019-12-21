@@ -36,7 +36,10 @@ public class AutonMain extends LinearOpMode {
         hook.unhook();
         sleep(1000);
 
-        drive.teleDrive(-1, 3* Math.PI / 4, 0);
+        drive.strafeRight(1);
+
+        //drive strafeLeft remains untested
+
         sleep(400);
         drive.setPower(0,0,0,0);
         drive.driveToPos(31,0.45);

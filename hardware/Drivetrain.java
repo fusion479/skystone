@@ -52,10 +52,8 @@ public class Drivetrain extends Mechanism {
     private int coefficientIndex;
     private int controllerIndex;
 
-    private double  globalAngle, power = .30, correction;
+    private double  globalAngle = .30;
     private Orientation lastAngles = new Orientation();
-
-    private double flPower = 0.0, frPower = 0.0, blPower = 0.0, brPower = 0.0;
 
     public Drivetrain(LinearOpMode opMode) {
         this.opMode = opMode;
@@ -127,9 +125,8 @@ public class Drivetrain extends Mechanism {
     }
 
     public void driveToPos(double inches, double power) {
-
+        double correction;
         resetAngle();
-
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         int tickCount = (int) (inches * COUNTS_PER_INCH);
@@ -197,13 +194,9 @@ public class Drivetrain extends Mechanism {
         return globalAngle;
     }
 
-    public void strafeLeft(double power){
-        setPower(-power, power, power, -power);
-    }
+    public void strafeLeft(double power){ teleDrive(-power, 5* Math.PI / 4, 0); }
 
-    public void strafeRight(double power){
-        setPower(power, -power, -power, power);
-    }
+    public void strafeRight(double power){ teleDrive(-power, 3* Math.PI / 4, 0); }
     /**
      * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
      * @param degrees Degrees to turn, + is left - is right
@@ -243,10 +236,6 @@ public class Drivetrain extends Mechanism {
         resetAngle();
     }
 
-    public void setP(double x) {
-        pidDrive.setPID(pidDrive.getP() + x, pidDrive.getI(), pidDrive.getD());
-    }
-
     public void setSlow(boolean bool) { slow_mode = bool; }
 
     public boolean getSlow() { return slow_mode; }
@@ -259,15 +248,9 @@ public class Drivetrain extends Mechanism {
                 : "D";
     }
 
-    public void changeCoefficient() {
-        if(coefficientIndex == 2) coefficientIndex = 0;
-        else coefficientIndex++;
-    }
+    public void changeCoefficient() { coefficientIndex = (coefficientIndex == 2) ? 0 : coefficientIndex + 1; }
 
-    public void changeController() {
-        if(controllerIndex == 1) controllerIndex = 0;
-        else controllerIndex++;
-    }
+    public void changeController() { controllerIndex = (controllerIndex == 1) ? 0 : controllerIndex + 1; }
 
     public double[] getCoefficients() {
         return (controllerIndex == 0)
@@ -275,9 +258,7 @@ public class Drivetrain extends Mechanism {
             : new double[]{pidRotate.getP(), pidRotate.getI(), pidRotate.getD()};
     }
 
-    public String controller() {
-        return (controllerIndex == 0) ? "drive" : "turn";
-    }
+    public String controller() { return (controllerIndex == 0) ? "drive" : "turn"; }
 
     public void increaseCoefficient() {
         // pidDrive
@@ -320,6 +301,4 @@ public class Drivetrain extends Mechanism {
                 pidRotate.setPID(pidRotate.getP(), pidRotate.getI(), pidRotate.getD() - 0.001 );
         }
     }
-
-
 }
