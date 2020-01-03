@@ -130,6 +130,18 @@ public class Drivetrain extends Mechanism {
     }
 
     public void driveToPos(double inches, double power) {
+        if (power < 0) {
+            frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+            backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+            frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+            backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        }
+        else if (power >= 0) {
+            frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+            backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+            frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+            backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        }
         double correction;
         resetAngle();
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -199,9 +211,9 @@ public class Drivetrain extends Mechanism {
         return globalAngle;
     }
 
-    public void strafeLeft(double power){ teleDrive(-power, 5* Math.PI / 4, 0); }
+    public void strafeLeft(double power){ teleDrive(-power, 7 * Math.PI / 4, 0); }
 
-    public void strafeRight(double power){ teleDrive(-power, 3* Math.PI / 4, 0); }
+    public void strafeRight(double power){ teleDrive(-power, 3 * Math.PI / 4, 0); }
     /**
      * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
      * @param degrees Degrees to turn, + is left - is right
