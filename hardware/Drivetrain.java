@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.PIDController;
 
@@ -48,8 +49,11 @@ public class Drivetrain extends Mechanism {
     public BNO055IMU imu;
     private PIDController pidDrive;
     private PIDController pidRotate;
+    private PIDController pidStrafe;
 
     private PIDController current;
+
+    public double varCorr = 0;
 
     private int coefficientIndex;
     private int controllerIndex;
@@ -82,6 +86,7 @@ public class Drivetrain extends Mechanism {
 
         pidRotate = new PIDController(0.005, 0.1, 0);
         pidDrive = new PIDController(0.04,0,0);
+        pidStrafe = new PIDController(0.01, 0, 0);
 
         current = pidDrive;
 
@@ -210,10 +215,88 @@ public class Drivetrain extends Mechanism {
 
         return globalAngle;
     }
-
     public void strafeLeft(double power){ teleDrive(-power, 7 * Math.PI / 4, 0); }
 
     public void strafeRight(double power){ teleDrive(-power, 3 * Math.PI / 4, 0); }
+
+
+   public void strafe (double power, double duration){
+//        setPower(-power, power, power, -power);
+//       if (power < 0) {
+//           frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+//           backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+//           frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+//           backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+//       }
+//       else if (power >= 0) {
+//           frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+//           backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+//           frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+//           backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+//       }
+//       double correction;
+//       resetAngle();
+//       setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//
+//       int tickCount = (int) (inches * COUNTS_PER_INCH);
+//       double set_power = power*inches/Math.abs(inches);
+//
+//       frontLeft.setTargetPosition(tickCount);
+//       backLeft.setTargetPosition(tickCount);
+//       backRight.setTargetPosition(tickCount);
+//       frontRight.setTargetPosition(tickCount);
+//
+//       setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//       while(opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
+//           pidDrive.setSetpoint(90);
+//           pidDrive.setOutputRange(0, set_power);
+//           pidDrive.setInputRange(-90, 90);
+//           pidDrive.enable();
+//           correction = pidDrive.performPID(getAngle());
+//
+//           if (Math.signum(inches) > 0) {
+//               setPower(-(set_power + correction), set_power - correction, set_power + correction, -(set_power - correction));
+//           } else if (Math.signum(inches) < 0) {
+//               setPower(-(set_power - correction), set_power + correction, set_power - correction, -(set_power + correction));
+//           }
+//           opMode.telemetry.addData("angle", getAngle());
+//           opMode.telemetry.addData("correction", correction);
+//           opMode.telemetry.update();
+//       }
+//       setPower(0.0);
+       ElapsedTime time = new ElapsedTime();
+       time.reset();
+
+       setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+       pidStrafe.reset();
+       pidStrafe.setSetpoint(0);
+       pidStrafe.setOutputRange(0, power);
+       pidStrafe.setInputRange(-90, 90);
+       pidStrafe.enable();
+
+       while(opMode.opModeIsActive() && (time.seconds() <= duration)) {
+           double corrections = pidStrafe.performPID(getAngle());
+//            if (Math.signum(power) >= 0){
+           setPower(power-corrections, -power + corrections, -power - corrections, power + corrections);
+//                setPower(setPower - corrections,  -setPower + corrections, -setPower - corrections, setPower + corrections);
+//            }
+//            else {
+//                setPower(power + corrections , -power - corrections , -power + corrections, power - corrections);
+//               setPower(-setPower + corrections,  setPower - corrections, setPower + corrections, -setPower - corrections);
+//            }
+           varCorr = corrections;
+           opMode.telemetry.update();
+       }
+
+       setPower(0.0);
+       setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+       setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+   }
+
+
+
     /**
      * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
      * @param degrees Degrees to turn, + is left - is right

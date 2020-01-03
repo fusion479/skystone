@@ -82,13 +82,13 @@ public class DriveTuner extends LinearOpMode {
             if(gamepad1.dpad_left) driveAngle--;
 
             // change PID
-            if(gamepad1.x) drive.changeCoefficient();
+            if(gamepad2.x) drive.changeCoefficient();
 
-            if(gamepad1.y) drive.changeController();
+            if(gamepad2.y) drive.changeController();
 
-            if(gamepad1.dpad_up) drive.increaseCoefficient();
+            if(gamepad2.dpad_up) drive.increaseCoefficient();
 
-            if(gamepad1.dpad_down) drive.decreaseCoefficient();
+            if(gamepad2.dpad_down) drive.decreaseCoefficient();
         }
     }
 }
