@@ -30,7 +30,7 @@ public class RBF extends LinearOpMode {
         sleep(1000);
 
         //get completely in front of foundation
-        drive.strafeRight(0.5);
+        drive.strafe(-0.5, 0.5);
         sleep(800);
         drive.setPower(0,0,0,0);
         sleep(500);

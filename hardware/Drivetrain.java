@@ -222,18 +222,6 @@ public class Drivetrain extends Mechanism {
 
    public void strafe (double power, double duration){
 //        setPower(-power, power, power, -power);
-//       if (power < 0) {
-//           frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-//           backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-//           frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-//           backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-//       }
-//       else if (power >= 0) {
-//           frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-//           backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-//           frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-//           backRight.setDirection(DcMotorSimple.Direction.FORWARD);
-//       }
 //       double correction;
 //       resetAngle();
 //       setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -279,7 +267,12 @@ public class Drivetrain extends Mechanism {
        while(opMode.opModeIsActive() && (time.seconds() <= duration)) {
            double corrections = pidStrafe.performPID(getAngle());
 //            if (Math.signum(power) >= 0){
-           setPower(power-corrections, -power + corrections, -power - corrections, power + corrections);
+           if (power <= 0) {
+               setPower( - power + corrections, power - corrections, power + corrections, -power - corrections);
+           }
+           else {
+               setPower(power - corrections, -power + corrections, -power - corrections, power + corrections);
+           }
 //                setPower(setPower - corrections,  -setPower + corrections, -setPower - corrections, setPower + corrections);
 //            }
 //            else {
