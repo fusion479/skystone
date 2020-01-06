@@ -53,7 +53,7 @@ public class Drivetrain extends Mechanism {
 
     private PIDController current;
 
-    public double varCorr = 0;
+    private double varCorr = 0;
 
     private int coefficientIndex;
     private int controllerIndex;
@@ -178,6 +178,13 @@ public class Drivetrain extends Mechanism {
             opMode.telemetry.update();
         }
         setPower(0.0);
+
+        if (power < 0) {
+            frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+            backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+            frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+            backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        }
     }
 
     /**
@@ -218,41 +225,8 @@ public class Drivetrain extends Mechanism {
     public void strafeLeft(double power){ teleDrive(-power, 7 * Math.PI / 4, 0); }
 
     public void strafeRight(double power){ teleDrive(-power, 3 * Math.PI / 4, 0); }
-
-
+// negative = right positive = left
    public void strafe (double power, double duration){
-//        setPower(-power, power, power, -power);
-//       double correction;
-//       resetAngle();
-//       setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//
-//       int tickCount = (int) (inches * COUNTS_PER_INCH);
-//       double set_power = power*inches/Math.abs(inches);
-//
-//       frontLeft.setTargetPosition(tickCount);
-//       backLeft.setTargetPosition(tickCount);
-//       backRight.setTargetPosition(tickCount);
-//       frontRight.setTargetPosition(tickCount);
-//
-//       setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//
-//       while(opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
-//           pidDrive.setSetpoint(90);
-//           pidDrive.setOutputRange(0, set_power);
-//           pidDrive.setInputRange(-90, 90);
-//           pidDrive.enable();
-//           correction = pidDrive.performPID(getAngle());
-//
-//           if (Math.signum(inches) > 0) {
-//               setPower(-(set_power + correction), set_power - correction, set_power + correction, -(set_power - correction));
-//           } else if (Math.signum(inches) < 0) {
-//               setPower(-(set_power - correction), set_power + correction, set_power - correction, -(set_power + correction));
-//           }
-//           opMode.telemetry.addData("angle", getAngle());
-//           opMode.telemetry.addData("correction", correction);
-//           opMode.telemetry.update();
-//       }
-//       setPower(0.0);
        ElapsedTime time = new ElapsedTime();
        time.reset();
 
@@ -266,19 +240,12 @@ public class Drivetrain extends Mechanism {
 
        while(opMode.opModeIsActive() && (time.seconds() <= duration)) {
            double corrections = pidStrafe.performPID(getAngle());
-//            if (Math.signum(power) >= 0){
            if (power <= 0) {
-               setPower( - power + corrections, power - corrections, power + corrections, -power - corrections);
+               setPower( power + corrections, - power - corrections, - power + corrections, power - corrections);
            }
            else {
                setPower(power - corrections, -power + corrections, -power - corrections, power + corrections);
            }
-//                setPower(setPower - corrections,  -setPower + corrections, -setPower - corrections, setPower + corrections);
-//            }
-//            else {
-//                setPower(power + corrections , -power - corrections , -power + corrections, power - corrections);
-//               setPower(-setPower + corrections,  setPower - corrections, setPower + corrections, -setPower - corrections);
-//            }
            varCorr = corrections;
            opMode.telemetry.update();
        }
@@ -287,8 +254,6 @@ public class Drivetrain extends Mechanism {
        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
    }
-
-
 
     /**
      * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
