@@ -24,7 +24,7 @@ public class test extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        drive.strafe(5, 2);
+        drive.strafe(0.3,7 );
         sleep(2000);
         drive.setPower(0,0,0,0);
 

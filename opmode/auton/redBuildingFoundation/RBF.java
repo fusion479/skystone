@@ -49,6 +49,5 @@ public class RBF extends LinearOpMode {
 
         //unhook
         hook.unhook();
-        sleep(1000);
     }
 }
