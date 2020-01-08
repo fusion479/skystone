@@ -19,12 +19,12 @@ public class Claw extends Mechanism {
 
     public void close(){ grip.setPosition(0.2);}
 
-    public void front() { swivel.setPosition(0.98); }
+    public void front() { swivel.setPosition(0); }
 
     public void back() throws InterruptedException{
         close();
         Thread.sleep(250);
-        swivel.setPosition(0.3);
+        swivel.setPosition(0.5);
     }
 }
 

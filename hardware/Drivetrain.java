@@ -222,10 +222,8 @@ public class Drivetrain extends Mechanism {
 
         return globalAngle;
     }
-    public void strafeLeft(double power){ teleDrive(-power, 7 * Math.PI / 4, 0); }
 
-    public void strafeRight(double power){ teleDrive(-power, 3 * Math.PI / 4, 0); }
-// negative = right positive = left
+    // negative = right positive = left
    public void strafe (double power, double duration){
        ElapsedTime time = new ElapsedTime();
        time.reset();
@@ -295,7 +293,7 @@ public class Drivetrain extends Mechanism {
         resetAngle();
     }
 
-    public void setSlow(boolean bool) { slow_mode = bool; }
+    public void setSlow() { slow_mode = !slow_mode; }
 
     public boolean getSlow() { return slow_mode; }
 

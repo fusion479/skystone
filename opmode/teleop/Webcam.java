@@ -15,7 +15,7 @@ public class Webcam extends LinearOpMode {
 
         camera.init(hardwareMap);
 
-        waitForStart();
+//        waitForStart();
 
         camera.activateTrackables();
 

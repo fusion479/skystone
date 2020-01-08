@@ -55,13 +55,13 @@ public class DriveTuner extends LinearOpMode {
             if (gamepad1.b) drive.turn(driveAngle, drivePower);
 
             if (gamepad1.back) {
-                drive.strafeLeft(drivePower);
+//                drive.strafeLeft(drivePower);
                 sleep(250);
                 drive.setPower(0,0,0,0);
             }
 
             if(gamepad1.start) {
-                drive.strafeRight(drivePower);
+//                drive.strafeRight(drivePower);
                 sleep(250);
                 drive.setPower(0,0,0,0);
             }
