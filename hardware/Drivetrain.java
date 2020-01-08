@@ -267,6 +267,7 @@ public class Drivetrain extends Mechanism {
         double i = p / 115.0;
         pidRotate.setPID(p, i, 0);
 
+        pidRotate.reset();
         pidRotate.setSetpoint(degrees);
         pidRotate.setInputRange(0, degrees);
         pidRotate.setOutputRange(0, power);
