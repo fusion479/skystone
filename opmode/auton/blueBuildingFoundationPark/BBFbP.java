@@ -30,13 +30,13 @@ public class BBFbP extends LinearOpMode {
         sleep(1000);
 
         //get completely in front of foundation
-        drive.strafe(0.4, 0.5);
+        drive.strafe(0.4, 0.6);
         sleep(800);
         drive.setPower(0, 0, 0, 0);
         sleep(500);
 
         //drive towards foundation
-        drive.driveToPos(31.5, 0.3);
+        drive.driveToPos(31, 0.3);
         sleep(1000);
 
         // clamp down on foundation
@@ -44,7 +44,7 @@ public class BBFbP extends LinearOpMode {
         sleep(1000);
 
         // drive back
-        drive.driveToPos(30.5, -0.3);
+        drive.driveToPos(32.5, -0.3);
         sleep(1000);
 
         //unhook

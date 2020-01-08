@@ -42,13 +42,13 @@ public class TeleMain extends LinearOpMode {
 
             if (gamepad1.dpad_down) {
 //                drive.setSlow(true);
-//                if (){
-//                    drive.setSlow(false);
-//                }
-//                else drive.setSlow(true);
+                if (drive.getSlow()){
+                    drive.setSlow(false);
+                }
+                else drive.setSlow(true);
             }
 
-            if (gamepad1.dpad_up) drive.setSlow(false);
+//            if (gamepad1.dpad_up) drive.setSlow(false);
 
             if (gamepad1.b) claw.open();
 

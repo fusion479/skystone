@@ -33,13 +33,13 @@ public class BBFfP extends LinearOpMode {
         drive.setPower(0,0,0,0);
         sleep(500);
 
-        drive.driveToPos(31.5,0.3);
+        drive.driveToPos(30.5,0.3);
         sleep(1000);
 
         hook.hook();
         sleep(1000);
 
-        drive.driveToPos(31, -0.3);
+        drive.driveToPos(32.5, -0.3);
         sleep(1000);
 
         hook.unhook();

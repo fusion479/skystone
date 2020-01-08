@@ -38,8 +38,5 @@ public class BBF extends LinearOpMode {
 
         hook.unhook();
 
-        drive.strafe(-0.5, 2);
-
-
     }
 }
