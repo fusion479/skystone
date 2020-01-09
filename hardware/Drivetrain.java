@@ -21,6 +21,8 @@ import java.util.Map;
 
 public class Drivetrain extends Mechanism {
 
+    public Camera camera;
+
     private static boolean slow_mode = false;
 
     private static final double COUNTS_PER_MOTOR_REV = 537.6;
@@ -63,9 +65,12 @@ public class Drivetrain extends Mechanism {
 
     public Drivetrain(LinearOpMode opMode) {
         this.opMode = opMode;
+        camera = new Camera(opMode);
     }
 
     public void init(HardwareMap hwMap) {
+
+        camera.init(hwMap);
 
         frontLeft = hwMap.dcMotor.get("frontLeft");
         frontRight = hwMap.dcMotor.get("frontRight");
@@ -224,6 +229,37 @@ public class Drivetrain extends Mechanism {
     }
 
     // negative = right positive = left
+    public void auton_strafe (double power){
+        ElapsedTime time = new ElapsedTime();
+        time.reset();
+
+        pidStrafe.setPID(0.03,0,0);
+
+        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        pidStrafe.reset();
+        pidStrafe.setSetpoint(0);
+        pidStrafe.setOutputRange(0, power);
+        pidStrafe.setInputRange(-90, 90);
+        pidStrafe.enable();
+
+        while(opMode.opModeIsActive() && camera.isTargetVisible().equals("none")) {
+            double corrections = pidStrafe.performPID(getAngle());
+            if (power <= 0) {
+                setPower( power + corrections, - power - corrections, - power + corrections, power - corrections);
+            }
+            else {
+                setPower(power - corrections, -power + corrections, -power - corrections, power + corrections);
+            }
+            varCorr = corrections;
+            opMode.telemetry.update();
+        }
+
+        setPower(0.0);
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
    public void strafe (double power, double duration){
        ElapsedTime time = new ElapsedTime();
        time.reset();

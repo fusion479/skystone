@@ -16,26 +16,33 @@ public class test extends LinearOpMode {
     private Drivetrain drive = new Drivetrain(this);
 //    private Hook hook = new Hook(this);
     private Claw claw = new Claw(this);
-    private Camera camera = new Camera(this);
+//    private Camera camera = new Camera(this);
 
     @Override
     public void runOpMode() throws InterruptedException {
         drive.init(hardwareMap);
         claw.init(hardwareMap);
-        camera.init(hardwareMap);
 
-        camera.activateTrackables();
+        drive.camera.activateTrackables();
 //        hook.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         waitForStart();
         runtime.reset();
-        drive.driveToPos(28, 0.3);
+        drive.driveToPos(26, 0.3);
         drive.setPower(0,0,0,0);
-        sleep(2000);
-        claw.front();
-        sleep(2000);
+        drive.sleep(500);
+//        sleep(500);
+//        claw.front();
+//        sleep(1500);
+//        claw.close();
+//        sleep(1000);
+        drive.auton_strafe(0.1);
+//        while(camera.isTargetVisible().equals("none")) {
+//            drive.strafe(0.3, 0.1);
+//        }
+//        drive.setPower(0,0,0,0);
 //        drive.strafe(0.3,7 );
 //        sleep(2000);
 //        drive.setPower(0,0,0,0);
