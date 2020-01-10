@@ -16,12 +16,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Drivetrain extends Mechanism {
 
-    public Camera camera;
+    private Camera camera;
 
     private static boolean slow_mode = false;
 
@@ -55,8 +52,6 @@ public class Drivetrain extends Mechanism {
 
     private PIDController current;
 
-    private double varCorr = 0;
-
     private int coefficientIndex;
     private int controllerIndex;
 
@@ -65,12 +60,9 @@ public class Drivetrain extends Mechanism {
 
     public Drivetrain(LinearOpMode opMode) {
         this.opMode = opMode;
-        camera = new Camera(opMode);
     }
 
     public void init(HardwareMap hwMap) {
-
-        camera.init(hwMap);
 
         frontLeft = hwMap.dcMotor.get("frontLeft");
         frontRight = hwMap.dcMotor.get("frontRight");
@@ -200,11 +192,11 @@ public class Drivetrain extends Mechanism {
         globalAngle = 0;
     }
 
-    public float getHeading() {
-        return lastAngles.firstAngle;
-    }
-
-    public double getGlobal() { return globalAngle; }
+//    public float getHeading() {
+//        return lastAngles.firstAngle;
+//    }
+//
+//    public double getGlobal() { return globalAngle; }
 
     /**
      * Get current cumulative angle rotation from last reset.
@@ -228,12 +220,14 @@ public class Drivetrain extends Mechanism {
         return globalAngle;
     }
 
+    public void getCamera(Camera camera) {
+        this.camera = camera;
+    }
+
     // negative = right positive = left
-    public void auton_strafe (double power){
+    public void find_stone(double power){
         ElapsedTime time = new ElapsedTime();
         time.reset();
-
-        pidStrafe.setPID(0.03,0,0);
 
         setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -243,7 +237,9 @@ public class Drivetrain extends Mechanism {
         pidStrafe.setInputRange(-90, 90);
         pidStrafe.enable();
 
-        while(opMode.opModeIsActive() && camera.isTargetVisible().equals("none")) {
+        while(opMode.opModeIsActive()) {
+            opMode.telemetry.addData("target", camera.isTargetVisible());
+            opMode.telemetry.update();
             double corrections = pidStrafe.performPID(getAngle());
             if (power <= 0) {
                 setPower( power + corrections, - power - corrections, - power + corrections, power - corrections);
@@ -251,13 +247,15 @@ public class Drivetrain extends Mechanism {
             else {
                 setPower(power - corrections, -power + corrections, -power - corrections, power + corrections);
             }
-            varCorr = corrections;
-            opMode.telemetry.update();
         }
+
+        opMode.telemetry.addData("target", camera.isTargetVisible());
+        opMode.telemetry.update();
 
         setPower(0.0);
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        return true;
     }
 
    public void strafe (double power, double duration){
@@ -280,8 +278,6 @@ public class Drivetrain extends Mechanism {
            else {
                setPower(power - corrections, -power + corrections, -power - corrections, power + corrections);
            }
-           varCorr = corrections;
-           opMode.telemetry.update();
        }
 
        setPower(0.0);
