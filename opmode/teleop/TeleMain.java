@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Hook;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
 
-@TeleOp(name="Main", group="Teleop")
-public class Main extends LinearOpMode {
+@TeleOp(name="TeleMain", group="Teleop")
+public class TeleMain extends LinearOpMode {
 
     private Drivetrain drive = new Drivetrain(this);
     private Claw claw = new Claw(this);
@@ -40,7 +40,11 @@ public class Main extends LinearOpMode {
 
             drive.teleDrive(r, robotAngle, rightX);
 
-            if (gamepad1.start) drive.setSlow();
+            if (gamepad1.dpad_down || gamepad1.dpad_up || gamepad1.dpad_left || gamepad1.dpad_right) {
+                drive.setSlow();
+            }
+
+//            if (gamepad1.dpad_up) drive.setSlow(false);
 
             if (gamepad1.b) claw.open();
 
@@ -50,7 +54,7 @@ public class Main extends LinearOpMode {
 
             if (gamepad1.y) hook.unhook();
 
-            if (gamepad1.left_bumper) claw.front(false);
+            if (gamepad1.left_bumper) claw.front();
 
             if (gamepad1.right_bumper) claw.back();
 
@@ -60,6 +64,7 @@ public class Main extends LinearOpMode {
 
             else lift.liftUp(0);
 
+            telemetry.addData("slow mode", drive.getSlow());
             telemetry.addData("a", gamepad1.a);
             telemetry.addData("b", gamepad1.b);
             telemetry.addData("l", gamepad1.left_bumper);

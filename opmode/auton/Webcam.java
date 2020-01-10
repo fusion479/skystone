@@ -32,7 +32,7 @@ public class Webcam extends LinearOpMode {
 
             String targetVisible = camera.isTargetVisible();
 
-            if(!targetVisible.equals("none")){
+            if(!targetVisible.equals("none")) {
                 // Provide feedback as to where the robot is located (if we know).
 
                 // express position (translation) of robot in inches.
