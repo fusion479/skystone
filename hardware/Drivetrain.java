@@ -237,7 +237,7 @@ public class Drivetrain extends Mechanism {
         pidStrafe.setInputRange(-90, 90);
         pidStrafe.enable();
 
-        while(opMode.opModeIsActive() && camera.isTargetVisible().equals("none")) {
+        while(opMode.opModeIsActive() && camera.isTargetVisible().equals("none") && time.seconds() < 2) {
             opMode.telemetry.addData("target", camera.isTargetVisible());
             opMode.telemetry.update();
             double corrections = pidStrafe.performPID(getAngle());

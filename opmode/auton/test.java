@@ -30,7 +30,6 @@ public class test extends LinearOpMode {
         lift.init(hardwareMap);
 
         camera.activateTrackables();
-//        hook.init(hardwareMap);
         drive.getCamera(camera);
 
         telemetry.addData("Status", "Initialized");
@@ -39,51 +38,52 @@ public class test extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-//        drive.find_stone(0.5);
-//        drive.strafe(-0.2, 4);
-//        sleep(1000);
-//        drive.resetAngle();
-        drive.driveToPos(25, 0.2);
+        claw.front();
+        sleep(1500);
+        claw.open();
         sleep(1000);
-        drive.find_stone(-0.06);
+        drive.driveToPos(25.75,0.2);
+        sleep(200);
+        drive.strafe(-0.1,0.3);
+        claw.close();
+        sleep(1200);
+        lift.liftUp(0.5);
+        sleep(400);
+        lift.liftOff();
+        sleep(500);
+        drive.driveToPos(10, -0.2);
+        sleep(200);
+        drive.strafe(-0.5, 3);
+        sleep(200);
+        lift.liftUp(0.5);
+        sleep(420);
+        lift.liftOff();
+        drive.driveToPos(10,0.2);
+        claw.open();
+
         sleep(1000);
-//        claw.close();
-//        sleep(2000);
-//        lift.liftUp(0.5);
-//        sleep(300);
-//        lift.liftOff();
-//        drive.driveToPos(25, -0.2);
-//        sleep(300);
-//        drive.strafe(-0.2,3);
-//        sleep(500);
-//        claw.open();
-//        sleep(500);
-//        drive.strafe(0.2, 4);
-//        while(true) {
-//            telemetry.addData("status", camera.isTargetVisible());
-//            telemetry.update();
-//        }
-//        long now = runtime.now(TimeUnit.SECONDS);
-//        while(runtime.now(TimeUnit.SECONDS) - now < 2) {
-//            telemetry.addData("track", camera.isTargetVisible());
-//            telemetry.update();
-//        }
-//        drive.strafe(0.5,0.54);
-//        now = runtime.now(TimeUnit.SECONDS);
-//        while(runtime.now(TimeUnit.SECONDS) - now < 1) {
-//            telemetry.addData("track", camera.isTargetVisible());
-//            telemetry.update();
-//        }
-//        drive.strafe(0.5,0.54);
-//        now = runtime.now(TimeUnit.SECONDS);
-//        while(runtime.now(TimeUnit.SECONDS) - now < 1) {
-//            telemetry.addData("track", camera.isTargetVisible());
-//            telemetry.update();
-//        }
-//
-//        if (!camera.isTargetVisible().equals("none")) {
-//            claw.close();
-//            sleep(500);
-//        }
+        drive.driveToPos(10, -0.2);
+        lift.liftDown(0.5);
+        sleep(600);
+        lift.liftOff();
+        sleep(200);
+        drive.strafe(0.5,3.9);
+        sleep(200);
+        drive.driveToPos(10,0.2);
+        claw.close();
+        sleep(1000);
+        lift.liftUp(0.5);
+        sleep(200);
+        lift.liftOff();
+        sleep(500);
+        drive.driveToPos(10, -0.2);
+        sleep(200);
+        drive.strafe(-0.5, 3.9);
+        sleep(200);
+        lift.liftUp(0.5);
+        sleep(400);
+        lift.liftOff();
+        drive.driveToPos(10,0.2);
+        claw.open();
     }
 }
