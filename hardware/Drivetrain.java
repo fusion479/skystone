@@ -237,20 +237,12 @@ public class Drivetrain extends Mechanism {
         pidStrafe.setInputRange(-90, 90);
         pidStrafe.enable();
 
-        while(opMode.opModeIsActive()) {
+        while(opMode.opModeIsActive() && camera.isTargetVisible().equals("none")) {
             opMode.telemetry.addData("target", camera.isTargetVisible());
             opMode.telemetry.update();
             double corrections = pidStrafe.performPID(getAngle());
-            if (power <= 0) {
-                setPower( power + corrections, - power - corrections, - power + corrections, power - corrections);
-            }
-            else {
-                setPower(power - corrections, -power + corrections, -power - corrections, power + corrections);
-            }
+            setPower( power + corrections, - power - corrections, - power + corrections, power - corrections);
         }
-
-        opMode.telemetry.addData("target", camera.isTargetVisible());
-        opMode.telemetry.update();
 
         setPower(0.0);
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -272,12 +264,7 @@ public class Drivetrain extends Mechanism {
 
        while(opMode.opModeIsActive() && (time.seconds() <= duration)) {
            double corrections = pidStrafe.performPID(getAngle());
-           if (power <= 0) {
-               setPower( power + corrections, - power - corrections, - power + corrections, power - corrections);
-           }
-           else {
-               setPower(power - corrections, -power + corrections, -power - corrections, power + corrections);
-           }
+           setPower( power + corrections, - power - corrections, - power + corrections, power - corrections);
        }
 
        setPower(0.0);
