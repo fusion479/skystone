@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Hook;
 
-public class BuildingFoundation extends LinearOpMode {
+public class BF extends LinearOpMode {
     private Drivetrain drive = new Drivetrain(this);
     private ElapsedTime runtime = new ElapsedTime();
     private Hook hook  = new Hook(this);
@@ -18,6 +18,7 @@ public class BuildingFoundation extends LinearOpMode {
         this.alliance = (alliance.compareTo("red") == 0 )
                 ? -1
                 : 1;
+        telemetry.addData("Status", "Initialized");
         telemetry.update();
     }
 

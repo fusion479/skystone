@@ -2,12 +2,12 @@ package org.firstinspires.ftc.teamcode.opmode.auton.buildingFoundation;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name="BlueBuildingFoundation")
-public class BBF extends BuildingFoundation {
+@Autonomous(name="Red-Building-Foundation")
+public class BFRed extends BF {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        super.init("blue");
+        super.init("red");
         waitForStart();
         super.runOpMode();
     }
