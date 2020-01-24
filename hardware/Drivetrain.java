@@ -278,6 +278,8 @@ public class Drivetrain extends Mechanism {
 
      */
     public void turn(int degrees, double power) {
+        setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         // restart imu angle tracking.
         resetAngle();
         double p = Math.abs(power/degrees);

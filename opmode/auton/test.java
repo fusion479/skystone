@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class test extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private Drivetrain drive = new Drivetrain(this);
-//    private Hook hook = new Hook(this);
+    private Hook hook = new Hook(this);
     private Lift lift = new Lift(this);
     private Claw claw = new Claw(this);
     private Camera camera = new Camera(this);
@@ -26,6 +26,7 @@ public class test extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         claw.init(hardwareMap);
         camera.init(hardwareMap);
+        hook.init(hardwareMap);
         drive.init(hardwareMap);
         lift.init(hardwareMap);
 
@@ -38,43 +39,92 @@ public class test extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        // bring claw to front
         claw.front();
         sleep(1400);
+
+        // open the claw
         claw.open();
         sleep(1000);
+
+        // drive forward to block
         drive.driveToPos(25.75,0.2);
-        drive.strafe(-0.1,0.4);
+
+        //slightly strafe for lineup
+        drive.strafe(-0.1,0.5);
+
+        //acquire block
         claw.close();
-        sleep(1200);
+        sleep(1000);
+
+        //bring the lift up
         lift.liftUp(0.4);
         sleep(400);
         lift.liftOff();
         sleep(500);
+
+        //drive back
         drive.driveToPos(10, -0.6);
-        drive.strafe(-0.5, 2.5);
+
+        //get to building site
+        drive.strafe(-0.5, 2.6);
+
+        //lift up more
         lift.liftUp(0.5);
         sleep(400);
         lift.liftOff();
+
+        // drive forward to foundation
         drive.driveToPos(10,0.6);
+
+        //drop the block
         claw.open();
         sleep(1000);
-        drive.driveToPos(10, -0.6);
-        lift.liftDown(0.5);
-        sleep(600);
+
+        drive.strafe(-0.5, 0.7);
+
+        lift.liftDown(0.4);
+        sleep(400);
         lift.liftOff();
-        drive.strafe(0.5,3);
-        drive.driveToPos(10,0.6);
+
         claw.close();
         sleep(1000);
-        lift.liftUp(0.5);
-        sleep(370);
-        lift.liftOff();
-        drive.driveToPos(10, -0.6);
-        drive.strafe(-0.5, 3);
-        lift.liftUp(0.5);
-        sleep(400);
-        lift.liftOff();
-        drive.driveToPos(10,0.2);
-        claw.open();
+
+        claw.back();
+        sleep(1400);
+
+        hook.unhook();
+        sleep(1000);
+
+        drive.driveToPos(3,0.2);
+
+        hook.hook();
+        sleep(1200);
+
+        drive.driveToPos(30.5, -0.5);
+
+        hook.unhook();
+        sleep(1000);
+
+        drive.strafe(0.4,2.5);
+
+//        drive.driveToPos(10, -0.6);
+//        lift.liftDown(0.5);
+//        sleep(600);
+//        lift.liftOff();
+//        drive.strafe(0.5,3);
+//        drive.driveToPos(10,0.6);
+//        claw.close();
+//        sleep(1000);
+//        lift.liftUp(0.5);
+//        sleep(370);
+//        lift.liftOff();
+//        drive.driveToPos(10, -0.6);
+//        drive.strafe(-0.5, 3);
+//        lift.liftUp(0.5);
+//        sleep(400);
+//        lift.liftOff();
+//        drive.driveToPos(10,0.2);
+//        claw.open();
     }
 }

@@ -30,14 +30,12 @@ public class RBF extends LinearOpMode {
         sleep(1000);
 
         //get completely in front of foundation
-        drive.strafe(-0.5, 0.5);
-        sleep(800);
-        drive.setPower(0,0,0,0);
-        sleep(500);
+        drive.strafe(-0.4, 0.8);
+        sleep(400);
 
         //drive towards foundation
         drive.driveToPos(31.5, 0.3);
-        sleep(1000);
+        sleep(500);
 
         // clamp down on foundation
         hook.hook();
@@ -45,9 +43,10 @@ public class RBF extends LinearOpMode {
 
         // drive back
         drive.driveToPos(31.5, -0.3);
-        sleep(1000);
+        sleep(500);
 
         //unhook
         hook.unhook();
+        sleep(1000);
     }
 }

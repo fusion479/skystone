@@ -29,38 +29,34 @@ public class RBFfP extends LinearOpMode {
         sleep(1000);
 
         //get completely in front of foundation
-        drive.strafe(-0.4, 0.5);
-        sleep(800);
-        drive.setPower(0,0,0,0);
-        sleep(500);
+        drive.strafe(-0.4, 0.8);
+        sleep(250);
 
         //drive towards foundation
         drive.driveToPos(31.5, 0.3);
-        sleep(1000);
+        sleep(250);
 
         // clamp down on foundation
         hook.hook();
         sleep(1000);
 
         // drive back
-        drive.driveToPos(30.5, -0.3);
-        sleep(1000);
+        drive.driveToPos(31.5, -0.3);
+        sleep(250);
 
         //unhook
         hook.unhook();
         sleep(1000);
 
         // strafe out of foundation lock
-        drive.strafe(0.5,1);
-        sleep(750);
-        drive.setPower(0,0,0,0);
+        drive.strafe(0.5,1.3);
 
         //drive forward
-        drive.driveToPos(20, 0.5);
-        sleep(500);
+        drive.driveToPos(25, 0.5);
+        sleep(250);
 
         // strafe under bridge
-        drive.strafe(0.5, 0.8);
+        drive.strafe(0.5, 1);
         sleep(250);
         drive.setPower(0,0,0,0);
     }
