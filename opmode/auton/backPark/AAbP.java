@@ -19,7 +19,6 @@ public class AAbP extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
-
         runtime.reset();
 
         //facing towards bridge

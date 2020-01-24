@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.hardware.Lift;
 
 import java.util.concurrent.TimeUnit;
 
-@Autonomous(name="test")
+@Autonomous(name="Red Loading Pick Drop and Back Park")
 
 public class test extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
