@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 
 @Autonomous(name="BackPark")
-public class AAbP extends LinearOpMode {
+public class BP extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private Drivetrain drive = new Drivetrain(this);
 

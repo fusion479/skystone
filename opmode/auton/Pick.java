@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 @Autonomous(name="Red Loading Pick Drop and Back Park")
 
-public class test extends LinearOpMode {
+public class Pick extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private Drivetrain drive = new Drivetrain(this);
     private Hook hook = new Hook(this);
@@ -107,24 +107,5 @@ public class test extends LinearOpMode {
         sleep(1000);
 
         drive.strafe(0.4,2.5);
-
-//        drive.driveToPos(10, -0.6);
-//        lift.liftDown(0.5);
-//        sleep(600);
-//        lift.liftOff();
-//        drive.strafe(0.5,3);
-//        drive.driveToPos(10,0.6);
-//        claw.close();
-//        sleep(1000);
-//        lift.liftUp(0.5);
-//        sleep(370);
-//        lift.liftOff();
-//        drive.driveToPos(10, -0.6);
-//        drive.strafe(-0.5, 3);
-//        lift.liftUp(0.5);
-//        sleep(400);
-//        lift.liftOff();
-//        drive.driveToPos(10,0.2);
-//        claw.open();
     }
 }

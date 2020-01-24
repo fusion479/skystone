@@ -22,11 +22,9 @@ public class RBBLfP extends LinearOpMode {
 
         runtime.reset();
 
-        //facing parallel to bridge using strafe
         drive.driveToPos(23, 0.5);
-        drive.setPower(0,0,0,0);
         sleep(500);
-        drive.strafe(0.5, 1.5);
+        drive.strafe(0.5, 1.7);
         sleep(500);
     }
 }
