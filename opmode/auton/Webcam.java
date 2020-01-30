@@ -37,11 +37,11 @@ public class Webcam extends LinearOpMode {
 
                 // express position (translation) of robot in inches.
                 float[] positions = camera.getLocation();
-                telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f", positions[0], positions[1], positions[2]);
+                telemetry.addData("Pos (in)", "{X, Y, Z} = %.2f, %.2f, %.2f", positions[0], positions[1], positions[2]);
 
                 // express the rotation of the robot in degrees.
                 float[] degrees = camera.getRotation();
-                telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", degrees[0], degrees[1], degrees[2]);
+                telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.2f, %.2f, %.2f", degrees[0], degrees[1], degrees[2]);
             }
 
             telemetry.addData("Visible Target", targetVisible);

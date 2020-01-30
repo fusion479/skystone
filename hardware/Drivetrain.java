@@ -225,8 +225,9 @@ public class Drivetrain extends Mechanism {
     }
 
     // negative = right positive = left
-    public void find_stone(double power){
+    public int find_stone(double power){
         ElapsedTime time = new ElapsedTime();
+        int pattern;
         time.reset();
 
         setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -237,27 +238,27 @@ public class Drivetrain extends Mechanism {
         pidStrafe.setInputRange(-90, 90);
         pidStrafe.enable();
 
-        while(opMode.opModeIsActive() && camera.isTargetVisible().equals("none") && time.seconds() < 3.5) {
+        while(opMode.opModeIsActive() && camera.isTargetVisible().equals("none") && time.seconds() < 5.5) {
             opMode.telemetry.addData("target", camera.isTargetVisible());
             opMode.telemetry.update();
             double corrections = pidStrafe.performPID(getAngle());
             setPower( power + corrections, - power - corrections, - power + corrections, power - corrections);
         }
 
-        if (camera.isTargetVisible().equals("Stone Target") && time.seconds() <= 1.75) {
-            opMode.telemetry.addData("pattern", 1);
+        if (camera.isTargetVisible().equals("Stone Target") && time.seconds() <= 2.75) {
+            pattern = 1;
+        } else if (camera.isTargetVisible().equals("Stone Target") && time.seconds() < 5.5) {
+            pattern = 2;
+        } else {
+            pattern = 3;
         }
-        else if (camera.isTargetVisible().equals("Stone Target") && time.seconds() < 3.5 ) {
-            opMode.telemetry.addData("pattern", 2);
-        }
-        else {
-            opMode.telemetry.addData("pattern", 3);
-        }
+        opMode.telemetry.addData("pattern", pattern);
         opMode.telemetry.update();
 
         setPower(0.0);
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        return pattern;
     }
 
    public void strafe (double power, double duration){
