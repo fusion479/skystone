@@ -1,6 +1,5 @@
-package org.firstinspires.ftc.teamcode.opmode.auton;
+package org.firstinspires.ftc.teamcode.opmode.auton.loadingPickFoundationPark;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -10,102 +9,110 @@ import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Hook;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
 
-import java.util.concurrent.TimeUnit;
-
-@Autonomous(name="Red Loading Pick Drop and Back Park")
-
-public class Pick extends LinearOpMode {
+public class LPiFP extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private Drivetrain drive = new Drivetrain(this);
+    private Claw claw = new Claw(this);
     private Hook hook = new Hook(this);
     private Lift lift = new Lift(this);
-    private Claw claw = new Claw(this);
     private Camera camera = new Camera(this);
+    private int alliance;
 
-    @Override
-    public void runOpMode() throws InterruptedException {
-        claw.init(hardwareMap);
-        camera.init(hardwareMap);
-        hook.init(hardwareMap);
+    protected  void init(String alliance) {
         drive.init(hardwareMap);
+        hook.init(hardwareMap);
+        claw.init(hardwareMap);
+//        camera.init(hardwareMap);
+//        camera.activateTrackables();
         lift.init(hardwareMap);
 
-        camera.activateTrackables();
-        drive.getCamera(camera);
+//        drive.getCamera(camera);
+
+        this.alliance = (alliance.compareTo("red") == 0)
+                ? -1
+                : 1;
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+    }
+    @Override
+    public void runOpMode() throws InterruptedException {
 
-        waitForStart();
         runtime.reset();
 
         // bring claw to front
         claw.front();
-        sleep(1400);
+        sleep(1100);
 
         // open the claw
         claw.open();
-        sleep(1000);
+        sleep(300);
 
         // drive forward to block
-        drive.driveToPos(25.75,0.2);
+        drive.driveToPos(25.5, 0.3);
 
         //slightly strafe for lineup
-        drive.strafe(-0.1,0.5);
+        drive.strafe(-0.1, 0.5);
 
         //acquire block
         claw.close();
-        sleep(1000);
+        sleep(300);
 
         //bring the lift up
         lift.liftUp(0.4);
-        sleep(400);
+        sleep(300);
         lift.liftOff();
-        sleep(500);
 
         //drive back
-        drive.driveToPos(10, -0.6);
+        drive.driveToPos(10, -1);
 
         //get to building site
-        drive.strafe(-0.5, 2.6);
+        drive.strafe(alliance * 0.7, 2);
 
         //lift up more
         lift.liftUp(0.5);
-        sleep(400);
+        sleep(500);
         lift.liftOff();
 
         // drive forward to foundation
-        drive.driveToPos(10,0.6);
+        drive.driveToPos(10,0.8);
 
         //drop the block
         claw.open();
-        sleep(1000);
+        sleep(300);
 
-        drive.strafe(-0.5, 0.7);
+        // center with foundation
+        drive.strafe(alliance * 0.5, 0.5);
 
+        // lower life
         lift.liftDown(0.4);
         sleep(400);
         lift.liftOff();
 
+        // close claw
         claw.close();
-        sleep(1000);
+        sleep(300);
 
+        // retract claw
         claw.back();
-        sleep(1400);
+        sleep(500);
 
+        // get foundation
         hook.unhook();
-        sleep(1000);
+        sleep(400);
 
-        drive.driveToPos(3,0.2);
+        drive.driveToPos(4,0.2);
 
         hook.hook();
-        sleep(1200);
+        sleep(400);
 
-        drive.driveToPos(30.5, -0.5);
+        // drive backwards
+        drive.driveToPos(31, -0.5);
 
         hook.unhook();
-        sleep(1000);
+        sleep(400);
 
-        drive.strafe(0.4,2.5);
+        //park
+        drive.strafe(alliance * -0.4,2.5);
     }
 }
