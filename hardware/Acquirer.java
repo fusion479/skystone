@@ -1,27 +1,31 @@
 package org.firstinspires.ftc.teamcode.hardware;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Acquirer extends Mechanism{
-    private CRServo wheel1;
-    private CRServo wheel2;
+    private DcMotor left;
+    private DcMotor right;
 
     public Acquirer (LinearOpMode opMode) { this.opMode = opMode; }
 
     @Override
     public void init(HardwareMap hwMap) {
-        wheel1 = hwMap.crservo.get("wheel1");
-        wheel2 = hwMap.crservo.get("wheel2");
+        left = hwMap.dcMotor.get("left");
+        right = hwMap.dcMotor.get("right");
 
     }
     public void intake(){
-        wheel1.setPower(1);
-        wheel2.setPower(-1);
+        left.setDirection(DcMotorSimple.Direction.FORWARD);
+        left.setPower(1);
+        right.setPower(-1);
     }
 
-    public void output(){
-        wheel1.setPower(-1);
-        wheel2.setPower(1);
+    public void outtake(){
+        left.setDirection(DcMotorSimple.Direction.FORWARD);
+        left.setPower(-1);
+        right.setPower(1);
     }
 }
