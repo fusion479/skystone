@@ -6,26 +6,28 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Acquirer extends Mechanism{
-    private DcMotor left;
-    private DcMotor right;
+    private DcMotor leftAcquirer;
+    private DcMotor rightAcquirer;
 
     public Acquirer (LinearOpMode opMode) { this.opMode = opMode; }
 
     @Override
     public void init(HardwareMap hwMap) {
-        left = hwMap.dcMotor.get("left");
-        right = hwMap.dcMotor.get("right");
+        leftAcquirer = hwMap.dcMotor.get("leftAcquirer");
+        rightAcquirer = hwMap.dcMotor.get("right");
 
     }
     public void intake(){
-        left.setDirection(DcMotorSimple.Direction.FORWARD);
-        left.setPower(1);
-        right.setPower(-1);
+        leftAcquirer.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightAcquirer.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftAcquirer.setPower(1);
+        rightAcquirer.setPower(-1);
     }
 
     public void outtake(){
-        left.setDirection(DcMotorSimple.Direction.FORWARD);
-        left.setPower(-1);
-        right.setPower(1);
+        leftAcquirer.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightAcquirer.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftAcquirer.setPower(-1);
+        rightAcquirer.setPower(1);
     }
 }
