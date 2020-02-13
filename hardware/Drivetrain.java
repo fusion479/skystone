@@ -75,6 +75,9 @@ public class Drivetrain extends Mechanism {
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        // Set motors to run without encoders
+        setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         // Set motor brake behavior
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -123,11 +126,11 @@ public class Drivetrain extends Mechanism {
     }
 
     public void teleDrive(double r, double robotAngle, double rightX) {
-        double multiplier = (slow_mode) ? 0.5 : 0.75;
-        double v1 = -r * multiplier * Math.cos(robotAngle) - rightX * multiplier;
-        double v2 = -r * multiplier * Math.sin(robotAngle) + rightX * multiplier;
-        double v3 = -r * multiplier * Math.sin(robotAngle) - rightX * multiplier;
-        double v4 = -r * multiplier * Math.cos(robotAngle) + rightX * multiplier;
+        double multiplier = (slow_mode) ? 0.75 : 1;
+        double v1 = r * multiplier * Math.sin(robotAngle) - rightX * multiplier;
+        double v2 = r * multiplier * Math.cos(robotAngle) + rightX * multiplier;
+        double v3 = r * multiplier * Math.cos(robotAngle) - rightX * multiplier;
+        double v4 = r * multiplier * Math.sin(robotAngle) + rightX * multiplier;
         setPower(v1,v2,v3,v4);
     }
 

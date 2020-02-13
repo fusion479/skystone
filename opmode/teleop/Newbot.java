@@ -14,17 +14,17 @@ import org.firstinspires.ftc.teamcode.hardware.Lift;
 @TeleOp (name = "NewBot", group = "TeleOp")
 public class Newbot extends LinearOpMode{
     private Drivetrain drive = new Drivetrain(this);
-    private Claw claw = new Claw(this);
-    private Lift lift = new Lift(this);
-    private Hook hook = new Hook(this);
+//    private Claw claw = new Claw(this);
+//    private Lift lift = new Lift(this);
+//    private Hook hook = new Hook(this);
     private Acquirer acquirer = new Acquirer(this);
 
     @Override
     public void runOpMode() throws InterruptedException{
         drive.init(hardwareMap);
-        claw.init(hardwareMap);
-        hook.init(hardwareMap);
-        lift.init(hardwareMap);
+//        claw.init(hardwareMap);
+//        hook.init(hardwareMap);
+//        lift.init(hardwareMap);
         acquirer.init(hardwareMap);
 
         while(!opModeIsActive() && !isStopRequested()){
@@ -39,11 +39,13 @@ public class Newbot extends LinearOpMode{
             drive.teleDrive(r, robotAngle, rightX);
 
             if(gamepad1.left_trigger > 0){
-                acquirer.intake();
+                acquirer.intake(gamepad1.left_trigger);
             }
             if(gamepad1.right_trigger > 0){
-                acquirer.outtake();
+                acquirer.outtake(gamepad1.right_trigger);
             }
+
+            acquirer.stop();
 //            if (gamepad1.b) claw.open();
 //
 //            if (gamepad1.a) claw.close();

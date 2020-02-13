@@ -13,21 +13,29 @@ public class Acquirer extends Mechanism{
 
     @Override
     public void init(HardwareMap hwMap) {
-        leftAcquirer = hwMap.dcMotor.get("leftAcquirer");
-        rightAcquirer = hwMap.dcMotor.get("right");
-
+        leftAcquirer = hwMap.dcMotor.get("leftAcquire");
+        rightAcquirer = hwMap.dcMotor.get("rightAcquire");
+        leftAcquirer.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightAcquirer.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftAcquirer.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightAcquirer.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
-    public void intake(){
+    public void intake(float power){
         leftAcquirer.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightAcquirer.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftAcquirer.setPower(1);
-        rightAcquirer.setPower(-1);
+        rightAcquirer.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftAcquirer.setPower(power);
+        rightAcquirer.setPower(power);
     }
 
-    public void outtake(){
-        leftAcquirer.setDirection(DcMotorSimple.Direction.FORWARD);
+    public void outtake(float power){
+        leftAcquirer.setDirection(DcMotorSimple.Direction.REVERSE);
         rightAcquirer.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftAcquirer.setPower(-1);
-        rightAcquirer.setPower(1);
+        leftAcquirer.setPower(power);
+        rightAcquirer.setPower(power);
+    }
+
+    public void stop() {
+        leftAcquirer.setPower(0);
+        rightAcquirer.setPower(0);
     }
 }
