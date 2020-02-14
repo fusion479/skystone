@@ -126,8 +126,7 @@ public class Drivetrain extends Mechanism {
     }
 
     public void teleDrive(double r, double robotAngle, double rightX) {
-        double multiplier = 1;
-//        double multiplier = (slow_mode) ? 0.75 : 1;
+        double multiplier = (slow_mode) ? 0.75 : 1;
         double v1 = r * multiplier * Math.sin(robotAngle) - rightX * multiplier;
         double v2 = r * multiplier * Math.cos(robotAngle) + rightX * multiplier;
         double v3 = r * multiplier * Math.cos(robotAngle) - rightX * multiplier;

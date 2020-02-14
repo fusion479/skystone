@@ -13,7 +13,7 @@ public class Lift extends Mechanism{
 
     public Lift(LinearOpMode opMode) {this.opMode = opMode;}
 
-    private static final double     COUNTS_PER_MOTOR_REV    = 1120;
+    private static final double     COUNTS_PER_MOTOR_REV    = 537.6;
     /**
      * Drivetrain gear ratio (< 1.0 if geared up).
      */
