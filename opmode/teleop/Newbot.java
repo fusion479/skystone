@@ -41,11 +41,11 @@ public class Newbot extends LinearOpMode{
             if(gamepad1.left_trigger > 0){
                 acquirer.intake(gamepad1.left_trigger);
             }
-            if(gamepad1.right_trigger > 0){
+            else if(gamepad1.right_trigger > 0){
                 acquirer.outtake(gamepad1.right_trigger);
+            } else {
+                acquirer.stop();
             }
-
-            acquirer.stop();
 //            if (gamepad1.b) claw.open();
 //
 //            if (gamepad1.a) claw.close();

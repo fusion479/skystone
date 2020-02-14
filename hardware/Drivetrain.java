@@ -126,7 +126,8 @@ public class Drivetrain extends Mechanism {
     }
 
     public void teleDrive(double r, double robotAngle, double rightX) {
-        double multiplier = (slow_mode) ? 0.75 : 1;
+        double multiplier = 1;
+//        double multiplier = (slow_mode) ? 0.75 : 1;
         double v1 = r * multiplier * Math.sin(robotAngle) - rightX * multiplier;
         double v2 = r * multiplier * Math.cos(robotAngle) + rightX * multiplier;
         double v3 = r * multiplier * Math.cos(robotAngle) - rightX * multiplier;
@@ -135,13 +136,13 @@ public class Drivetrain extends Mechanism {
     }
 
     public void driveToPos(double inches, double power) {
-        if (power < 0) {
+        if (power > 0) {
             frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
             backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
             frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
             backRight.setDirection(DcMotorSimple.Direction.REVERSE);
         }
-        else if (power >= 0) {
+        else if (power <= 0) {
             frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
             backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
             frontRight.setDirection(DcMotorSimple.Direction.FORWARD);

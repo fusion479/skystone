@@ -33,17 +33,17 @@ public class Test extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        drive.driveToPos(10, 1);
+        drive.driveToPos(5, 1);
         sleep(1000);
-        drive.driveToPos(10, -1);
+        drive.driveToPos(5, -1);
         sleep(1000);
-        drive.strafe(1, 2);
+        drive.strafe(1, 1); //left
         sleep(1000);
-        drive.strafe(-1, 2);
+        drive.strafe(-1, 1); // right
         sleep(1000);
-        drive.turn(90, 1);
+        drive.turn(90, 1); //left
         sleep(1000);
-        drive.turn(-90, 1);
+        drive.turn(-90, 1); // right
 
 //        claw.front();
 //        sleep(1400);
