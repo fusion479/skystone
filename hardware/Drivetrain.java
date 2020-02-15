@@ -126,14 +126,16 @@ public class Drivetrain extends Mechanism {
     }
 
     public void teleDrive(double r, double robotAngle, double rightX) {
-        double multiplier = (slow_mode) ? 0.75 : 1;
-        double v1 = r * multiplier * Math.sin(robotAngle) - rightX * multiplier;
-        double v2 = r * multiplier * Math.cos(robotAngle) + rightX * multiplier;
-        double v3 = r * multiplier * Math.cos(robotAngle) - rightX * multiplier;
-        double v4 = r * multiplier * Math.sin(robotAngle) + rightX * multiplier;
+        double v1 = r * Math.sin(robotAngle) - rightX;
+        double v2 = r * Math.cos(robotAngle) + rightX;
+        double v3 = r * Math.cos(robotAngle) - rightX;
+        double v4 = r * Math.sin(robotAngle) + rightX;
         setPower(v1,v2,v3,v4);
     }
 
+
+//    right front forward back back
+//    left front back back front
     public void driveToPos(double inches, double power) {
         if (power > 0) {
             frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);

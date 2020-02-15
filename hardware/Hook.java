@@ -18,12 +18,12 @@ public class Hook extends Mechanism{
     }
 
     public void hook() {
-        left.setPosition(1);
+        left.setPosition(0);
         right.setPosition(1);
     }
 
     public void unhook() {
-        left.setPosition(0);
+        left.setPosition(1);
         right.setPosition(0);
     }
 }

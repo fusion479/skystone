@@ -16,17 +16,17 @@ import org.firstinspires.ftc.teamcode.hardware.Lift;
 public class TeleMain extends LinearOpMode {
 
     private Drivetrain drive = new Drivetrain(this);
-//    private Claw claw = new Claw(this);
-//    private Lift lift = new Lift(this);
-//    private Hook hook = new Hook(this);
+    private Claw claw = new Claw(this);
+    private Lift lift = new Lift(this);
+    private Hook hook = new Hook(this);
     private Acquirer acquirer = new Acquirer(this);
 
     @Override
     public void runOpMode() throws InterruptedException{
         drive.init(hardwareMap);
-//        claw.init(hardwareMap);
-//        hook.init(hardwareMap);
-//        lift.init(hardwareMap);
+        claw.init(hardwareMap);
+        hook.init(hardwareMap);
+        lift.init(hardwareMap);
         acquirer.init(hardwareMap);
 
         while(!opModeIsActive() && !isStopRequested()){
@@ -39,38 +39,45 @@ public class TeleMain extends LinearOpMode {
             double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             double rightX = gamepad1.right_stick_x;
 
-            if (gamepad1.dpad_down || gamepad1.dpad_up || gamepad1.dpad_left || gamepad1.dpad_right) {
+            if (gamepad1.dpad_down || gamepad1.dpad_up) {
                 drive.setSlow();
             }
 
             drive.teleDrive(r, robotAngle, rightX);
+//
+            if(gamepad1.right_bumper) {
+                acquirer.teleIntake(1);
+            } else if (gamepad1.left_bumper) {
+                acquirer.teleOuttake(1);
+            } else {
+                acquirer.stop();
+            }
 
-//            if(gamepad1.left_trigger > 0){
-//                acquirer.teleIntake(gamepad1.left_trigger);
-//            }
-//            else if(gamepad1.right_trigger > 0){
-//                acquirer.teleOuttake(gamepad1.right_trigger);
-//            } else {
-//                acquirer.stop();
-//            }
-//            if (gamepad1.b) claw.open();
-//
-//            if (gamepad1.a) claw.close();
-//
-//            if (gamepad1.x) hook.hook();
-//
-//            if (gamepad1.y) hook.unhook();
+            if (gamepad1.b) claw.open();
 
-//            if (gamepad1.left_bumper) claw.front();
-//
-//            if (gamepad1.right_bumper) claw.back();
-//
-//            if (gamepad1.left_trigger > 0) lift.liftDown(gamepad1.left_trigger);
-//
-//            else if (gamepad1.right_trigger > 0 ) lift.liftUp(gamepad1.right_trigger);
+            if (gamepad1.a) claw.close();
 
-//            else lift.liftUp(0);
+            if (gamepad1.x) {
+                claw.front();
+            }
 
+            if (gamepad1.y) {
+                claw.back();
+            }
+//
+            if (gamepad1.dpad_left) hook.hook();
+//
+            if (gamepad1.dpad_right) hook.unhook();
+//
+            if (gamepad1.left_trigger > 0) lift.liftDown(gamepad1.left_trigger);
+
+            else if (gamepad1.right_trigger > 0 ) lift.liftUp(gamepad1.right_trigger);
+
+            else lift.liftUp(0);
+
+            telemetry.addData("r", r);
+            telemetry.addData("robot angle", robotAngle);
+            telemetry.addData("rightX", rightX);
             telemetry.addData("slow mode", drive.getSlow());
             telemetry.addData("a", gamepad1.a);
             telemetry.addData("b", gamepad1.b);
