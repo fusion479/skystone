@@ -13,10 +13,9 @@ public class Claw extends Mechanism {
     public void init(HardwareMap hwMap){
         grip = hwMap.servo.get("grip");
         swivel = hwMap.servo.get("swivel");
-//        swivel = hwMap.servo.get("swivel");
     }
 
-    public void open(){grip.setPosition(1);}
+    public void open(){grip.setPosition(0.9);}
 
     public void close(){ grip.setPosition(0.2);}
 
@@ -26,7 +25,6 @@ public class Claw extends Mechanism {
 
     public void back(){
         swivel.setPosition(1);
-//        swivel.
     }
 }
 

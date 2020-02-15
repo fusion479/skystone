@@ -21,6 +21,7 @@ public class Drivetrain extends Mechanism {
     private Camera camera;
 
     private static boolean slow_mode = false;
+    private static boolean reverse_mode = false;
 
     private static final double COUNTS_PER_MOTOR_REV = 537.6;
     /**
@@ -126,16 +127,23 @@ public class Drivetrain extends Mechanism {
     }
 
     public void teleDrive(double r, double robotAngle, double rightX) {
-        double v1 = r * Math.sin(robotAngle) - rightX;
-        double v2 = r * Math.cos(robotAngle) + rightX;
-        double v3 = r * Math.cos(robotAngle) - rightX;
-        double v4 = r * Math.sin(robotAngle) + rightX;
+        double multiplier = (slow_mode) ? 0.5 : 1;
+        double reversed = (reverse_mode) ? -1 : 1;
+        double v1 = reversed * multiplier * r * Math.sin(robotAngle) - multiplier * rightX;
+        double v2 = reversed * multiplier * r * Math.cos(robotAngle) + multiplier * rightX;
+        double v3 = reversed * multiplier * r * Math.cos(robotAngle) - multiplier * rightX;
+        double v4 = reversed * multiplier * r * Math.sin(robotAngle) + multiplier * rightX;
         setPower(v1,v2,v3,v4);
     }
 
+    public void reverse() {
+        if (reverse_mode) {
+            reverse_mode = false;
+        } else {
+            reverse_mode = true;
+        }
+    }
 
-//    right front forward back back
-//    left front back back front
     public void driveToPos(double inches, double power) {
         if (power > 0) {
             frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -330,7 +338,13 @@ public class Drivetrain extends Mechanism {
         resetAngle();
     }
 
-    public void setSlow() { slow_mode = !slow_mode; }
+    public void setSlow() {
+        if(slow_mode) {
+            slow_mode = false;
+        } else {
+            slow_mode = true;
+        }
+    }
 
     public boolean getSlow() { return slow_mode; }
 
