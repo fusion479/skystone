@@ -21,6 +21,7 @@ public class Drivetrain extends Mechanism {
     private Camera camera;
 
     private static boolean slow_mode = false;
+    private static boolean reverse_mode = false;
 
     private static final double COUNTS_PER_MOTOR_REV = 537.6;
     /**
@@ -75,6 +76,9 @@ public class Drivetrain extends Mechanism {
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        // Set motors to run without encoders
+        setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         // Set motor brake behavior
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -123,22 +127,31 @@ public class Drivetrain extends Mechanism {
     }
 
     public void teleDrive(double r, double robotAngle, double rightX) {
-        double multiplier = (slow_mode) ? 0.5 : 0.75;
-        double v1 = -r * multiplier * Math.cos(robotAngle) - rightX * multiplier;
-        double v2 = -r * multiplier * Math.sin(robotAngle) + rightX * multiplier;
-        double v3 = -r * multiplier * Math.sin(robotAngle) - rightX * multiplier;
-        double v4 = -r * multiplier * Math.cos(robotAngle) + rightX * multiplier;
+        double multiplier = (slow_mode) ? 0.5 : 1;
+        double reversed = (reverse_mode) ? -1 : 1;
+        double v1 = reversed * multiplier * r * Math.sin(robotAngle) - multiplier * rightX;
+        double v2 = reversed * multiplier * r * Math.cos(robotAngle) + multiplier * rightX;
+        double v3 = reversed * multiplier * r * Math.cos(robotAngle) - multiplier * rightX;
+        double v4 = reversed * multiplier * r * Math.sin(robotAngle) + multiplier * rightX;
         setPower(v1,v2,v3,v4);
     }
 
+    public void reverse() {
+        if (reverse_mode) {
+            reverse_mode = false;
+        } else {
+            reverse_mode = true;
+        }
+    }
+
     public void driveToPos(double inches, double power) {
-        if (power < 0) {
+        if (power > 0) {
             frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
             backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
             frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
             backRight.setDirection(DcMotorSimple.Direction.REVERSE);
         }
-        else if (power >= 0) {
+        else if (power <= 0) {
             frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
             backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
             frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -325,7 +338,13 @@ public class Drivetrain extends Mechanism {
         resetAngle();
     }
 
-    public void setSlow() { slow_mode = !slow_mode; }
+    public void setSlow() {
+        if(slow_mode) {
+            slow_mode = false;
+        } else {
+            slow_mode = true;
+        }
+    }
 
     public boolean getSlow() { return slow_mode; }
 
