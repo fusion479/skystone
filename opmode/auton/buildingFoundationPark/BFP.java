@@ -34,26 +34,26 @@ public class BFP extends LinearOpMode {
         drive.strafe(alliance * 0.4, 0.8);
         sleep(400);
 
-        drive.driveToPos(31.5, 0.3);
+        drive.driveToPos(2200, 0.3);
         sleep(500);
 
         hook.hook();
         sleep(1000);
 
-        drive.driveToPos(31.5, -0.3);
+        drive.driveToPos(2800, -0.3);
         sleep(500);
 
         hook.unhook();
         sleep(1000);
 
         if(parkPosition.compareTo("back") == 0) {
-            drive.strafe(-1 * alliance * 0.4, 2.5);
+            drive.strafe(1 * alliance * 0.4, 2.5);
         }
         else {
-            drive.strafe(-1 * alliance * 0.5, 1.5);
-            drive.driveToPos(25, 0.5);
+            drive.strafe(1 * alliance * 0.5, 1.5);
+            drive.driveToPos(500, 0.5);
             sleep(250);
-            drive.strafe(-1 * alliance * 0.5, 1);
+            drive.strafe(1 * alliance * 0.5, 1);
         }
     }
 }

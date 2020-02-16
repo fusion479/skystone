@@ -49,7 +49,7 @@ public class LPiFP extends LinearOpMode {
         sleep(300);
 
         // drive forward to block
-        drive.driveToPos(25.5, 0.3);
+//        drive.driveToPos(25.5, 0.3);
 
         //slightly strafe for lineup
         drive.strafe(-0.1, 0.5);

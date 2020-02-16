@@ -32,13 +32,13 @@ public class BF extends LinearOpMode {
         drive.strafe( alliance * 0.4, 0.8);
         sleep(400);
 
-        drive.driveToPos(31.5, 0.3);
+        drive.driveToPos(2200, 0.3);
         sleep(500);
 
         hook.hook();
         sleep(1000);
 
-        drive.driveToPos(31.5, -0.3);
+        drive.driveToPos(2800, -0.3);
         sleep(500);
 
         hook.unhook();
