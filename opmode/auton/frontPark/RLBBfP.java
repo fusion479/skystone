@@ -24,7 +24,7 @@ public class RLBBfP extends LinearOpMode {
 
         drive.driveToPos(23, 0.5);
         sleep(500);
-        drive.strafe(-0.5,1.7);
+        drive.strafe(0.5,1.7);
         sleep(500);
     }
 }

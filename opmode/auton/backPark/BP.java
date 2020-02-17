@@ -22,7 +22,6 @@ public class BP extends LinearOpMode {
         runtime.reset();
 
         //facing towards bridge
-        sleep(1000);
-        drive.driveToPos(200, 0.6);
+        drive.driveToPos(44, 0.6);
     }
 }

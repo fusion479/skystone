@@ -22,8 +22,10 @@ public class Test extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        drive.driveToPos(1500, 0.7);
+//        drive.driveToPos(20, 0.7);
 //        sleep(2000);
-//        sleep(1000);
+        drive.strafe(-0.5, 2);
+        sleep(1000);
+        drive.strafe(0.5, 2);
     }
 }
