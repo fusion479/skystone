@@ -76,10 +76,11 @@ public class TeleMain extends LinearOpMode {
 
             else lift.liftUp(0);
 
+            telemetry.addData("slow mode", drive.getSlow());
+            telemetry.addData("reverse mode", drive.getReverse());
             telemetry.addData("r", r);
             telemetry.addData("robot angle", robotAngle);
             telemetry.addData("rightX", rightX);
-            telemetry.addData("slow mode", drive.getSlow());
             telemetry.addData("a", gamepad1.a);
             telemetry.addData("b", gamepad1.b);
             telemetry.addData("l", gamepad1.left_bumper);

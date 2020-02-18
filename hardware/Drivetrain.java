@@ -86,7 +86,7 @@ public class Drivetrain extends Mechanism {
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         pidRotate = new PIDController(0.005, 0.1, 0);
-        pidDrive = new PIDController(0.04,0,0);
+        pidDrive = new PIDController(0.002,0,0);
         pidStrafe = new PIDController(0.01, 0, 0);
 
         current = pidDrive;
@@ -145,6 +145,14 @@ public class Drivetrain extends Mechanism {
     }
 
     public void driveToPos(double inches, double power) {
+        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+//        setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        setPower(power);
+//        opMode.sleep(time);
+//        setPower(0);
         if (power > 0) {
             frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
             backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -162,14 +170,13 @@ public class Drivetrain extends Mechanism {
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         int tickCount = (int) (inches * COUNTS_PER_INCH);
+        setMode(DcMotor.RunMode.RUN_TO_POSITION);
         double set_power = power*inches/Math.abs(inches);
 
         frontLeft.setTargetPosition(tickCount);
         backLeft.setTargetPosition(tickCount);
         backRight.setTargetPosition(tickCount);
         frontRight.setTargetPosition(tickCount);
-
-        setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         while(opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
             pidDrive.setSetpoint(0);
@@ -347,6 +354,8 @@ public class Drivetrain extends Mechanism {
     }
 
     public boolean getSlow() { return slow_mode; }
+
+    public boolean getReverse() {return reverse_mode;}
 
     public String coefficient() {
         return (coefficientIndex == 0)
