@@ -7,18 +7,20 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.PIDController;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.hardware.Mechanism;
+
+import java.util.List;
 
 public class Drivetrain extends Mechanism {
 
-    private Camera camera;
+    private TensorFlowCamera camera;
 
     private static boolean slow_mode = false;
     private static boolean reverse_mode = false;
@@ -27,17 +29,17 @@ public class Drivetrain extends Mechanism {
     /**
      * Drivetrain gear ratio (< 1.0 if geared up).
      */
-    private static final double     DRIVE_GEAR_REDUCTION    = 1.0;
+    private static final double DRIVE_GEAR_REDUCTION = 1.0;
 
     /**
      * Diameter of wheel in inches.
      */
-    private static final double     WHEEL_DIAMETER_INCHES   = 4.0;
+    private static final double WHEEL_DIAMETER_INCHES = 4.0;
 
     /**
      * Calculated ticks per inch.
      */
-    private static final double     COUNTS_PER_INCH         =
+    private static final double COUNTS_PER_INCH =
             (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
 
 
@@ -56,7 +58,7 @@ public class Drivetrain extends Mechanism {
     private int coefficientIndex;
     private int controllerIndex;
 
-    private double  globalAngle = .30;
+    private double globalAngle = .30;
     private Orientation lastAngles = new Orientation();
 
     public Drivetrain(LinearOpMode opMode) {
@@ -86,7 +88,7 @@ public class Drivetrain extends Mechanism {
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         pidRotate = new PIDController(0.005, 0.1, 0);
-        pidDrive = new PIDController(0.002,0,0);
+        pidDrive = new PIDController(0.002, 0, 0);
         pidStrafe = new PIDController(0.01, 0, 0);
 
         current = pidDrive;
@@ -96,11 +98,11 @@ public class Drivetrain extends Mechanism {
 
         // Initialize IMU with parameters
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         //parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = false;
-        parameters.loggingTag          = "IMU";
+        parameters.loggingEnabled = false;
+        parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         // Retrieve and initialize the IMU
@@ -133,7 +135,7 @@ public class Drivetrain extends Mechanism {
         double v2 = reversed * multiplier * r * Math.cos(robotAngle) + multiplier * rightX;
         double v3 = reversed * multiplier * r * Math.cos(robotAngle) - multiplier * rightX;
         double v4 = reversed * multiplier * r * Math.sin(robotAngle) + multiplier * rightX;
-        setPower(v1,v2,v3,v4);
+        setPower(v1, v2, v3, v4);
     }
 
     public void reverse() {
@@ -158,8 +160,7 @@ public class Drivetrain extends Mechanism {
             backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
             frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
             backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        }
-        else if (power <= 0) {
+        } else if (power <= 0) {
             frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
             backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
             frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -171,14 +172,14 @@ public class Drivetrain extends Mechanism {
 
         int tickCount = (int) (inches * COUNTS_PER_INCH);
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        double set_power = power*inches/Math.abs(inches);
+        double set_power = power * inches / Math.abs(inches);
 
         frontLeft.setTargetPosition(tickCount);
         backLeft.setTargetPosition(tickCount);
         backRight.setTargetPosition(tickCount);
         frontRight.setTargetPosition(tickCount);
 
-        while(opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
+        while (opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
             pidDrive.setSetpoint(0);
             pidDrive.setOutputRange(0, set_power);
             pidDrive.setInputRange(-90, 90);
@@ -220,10 +221,10 @@ public class Drivetrain extends Mechanism {
 
     /**
      * Get current cumulative angle rotation from last reset.
+     *
      * @return Angle in degrees. + = left, - = right from zero point.
      */
-    public double getAngle()
-    {
+    public double getAngle() {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
@@ -240,45 +241,39 @@ public class Drivetrain extends Mechanism {
         return globalAngle;
     }
 
-    public void getCamera(Camera camera) {
+    public void getCamera(TensorFlowCamera camera) {
         this.camera = camera;
     }
 
-    // negative = right positive = left
-    public int find_stone(double power){
-        ElapsedTime time = new ElapsedTime();
-        int pattern;
-        time.reset();
-
-        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        pidStrafe.reset();
-        pidStrafe.setSetpoint(0);
-        pidStrafe.setOutputRange(0, power);
-        pidStrafe.setInputRange(-90, 90);
-        pidStrafe.enable();
-
-        while(opMode.opModeIsActive() && camera.isTargetVisible().equals("none") && time.seconds() < 5.5) {
-            opMode.telemetry.addData("target", camera.isTargetVisible());
-            opMode.telemetry.update();
-            double corrections = pidStrafe.performPID(getAngle());
-            setPower( power + corrections, - power - corrections, - power + corrections, power - corrections);
+    public int find_stone() {
+        double angle = 0.0;
+        while (opMode.opModeIsActive()) {
+            if (camera.getTFod() != null) {
+                List<Recognition> updatedRecognitions = camera.getTFod().getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    opMode.telemetry.addData("# Objects Detected", updatedRecognitions.size());
+                    for (Recognition recognition : updatedRecognitions) {
+                        if (recognition.getLabel().equals("Skystone")) {
+                            opMode.telemetry.addData("Width", recognition.getWidth());
+                            opMode.telemetry.addData("Height", recognition.getImageHeight());
+                            opMode.telemetry.addData("Angle", recognition.estimateAngleToObject(AngleUnit.DEGREES));
+                            angle = recognition.estimateAngleToObject(AngleUnit.DEGREES);
+                            opMode.telemetry.addData("Confidence", recognition.getConfidence());
+                            opMode.telemetry.update();
+                            opMode.sleep(10000);
+                            if (angle < -10) {
+                                return 3;
+                            } else if (angle < 0) {
+                                return 2;
+                            } else {
+                                return 1;
+                            }
+                        }
+                    }
+                }
+            }
         }
-
-        if (camera.isTargetVisible().equals("Stone Target") && time.seconds() <= 2.75) {
-            pattern = 1;
-        } else if (camera.isTargetVisible().equals("Stone Target") && time.seconds() < 5.5) {
-            pattern = 2;
-        } else {
-            pattern = 3;
-        }
-        opMode.telemetry.addData("pattern", pattern);
-        opMode.telemetry.update();
-
-        setPower(0.0);
-        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        return pattern;
+        return 0;
     }
 
    public void strafe (double power, double duration){

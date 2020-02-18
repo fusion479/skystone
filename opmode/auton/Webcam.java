@@ -3,12 +3,12 @@ package org.firstinspires.ftc.teamcode.opmode.auton;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.hardware.Camera;
+import org.firstinspires.ftc.teamcode.hardware.VuforiaCamera;
 
-@Autonomous(name="Webcam")
+@Autonomous(name="TensorFlowCamera")
 public class Webcam extends LinearOpMode {
 
-    Camera camera = new Camera(this);
+    VuforiaCamera camera = new VuforiaCamera(this);
     @Override
     public void runOpMode() {
 
@@ -16,14 +16,14 @@ public class Webcam extends LinearOpMode {
 
         // WARNING:
         // In this sample, we do not wait for PLAY to be pressed.  Target Tracking is started immediately when INIT is pressed.
-        // This sequence is used to enable the new remote DS Camera Preview feature to be used with this sample.
+        // This sequence is used to enable the new remote DS VuforiaCamera Preview feature to be used with this sample.
         // CONSEQUENTLY do not put any driving commands in this loop.
         // To restore the normal opmode structure, just un-comment the following line:
 
          waitForStart();
 
         // Note: To use the remote camera preview:
-        // AFTER you hit Init on the Driver Station, use the "options menu" to select "Camera Stream"
+        // AFTER you hit Init on the Driver Station, use the "options menu" to select "VuforiaCamera Stream"
         // Tap the preview window to receive a fresh image.
 
         camera.activateTrackables();
