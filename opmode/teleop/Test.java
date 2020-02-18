@@ -14,20 +14,20 @@ import java.util.List;
 
 @TeleOp(name="TensorFlow Test")
 public class Test extends LinearOpMode {
-    TensorFlowCamera camera = new TensorFlowCamera(this);
+//    TensorFlowCamera camera = new TensorFlowCamera(this);
     Drivetrain drive = new Drivetrain(this);
     Acquirer acquirer = new Acquirer(this);
 
     @Override
     public void runOpMode() throws InterruptedException {
-        camera.init(hardwareMap);
+//        camera.init(hardwareMap);
         drive.init(hardwareMap);
         acquirer.init(hardwareMap);
 
-        TFObjectDetector tfod = camera.getTFod();
-        if (tfod != null) {
-            tfod.activate();
-        }
+//        TFObjectDetector tfod = camera.getTFod();
+//        if (tfod != null) {
+//            tfod.activate();
+//        }
 
         while(!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("Status", "Waiting in init");
@@ -57,29 +57,29 @@ public class Test extends LinearOpMode {
 
             drive.teleDrive(r, robotAngle, rightX);
 
-            if(tfod != null) {
-                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                if (updatedRecognitions != null) {
-                    telemetry.addData("# Objects Detected", updatedRecognitions.size());
-                    int i = 0;
-                    for (Recognition recognition : updatedRecognitions) {
-//                        telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-//                        telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
-//                                recognition.getLeft(), recognition.getTop());
-//                        telemetry.addData(String.format("  right,bottom (%d)", i),
-//                                "%.03f , %.03f",
-//                                recognition.getRight(), recognition.getBottom());
-                        telemetry.addData("Width", recognition.getWidth());
-                        telemetry.addData("Height", recognition.getImageHeight());
-                        telemetry.addData("Angle", recognition.estimateAngleToObject(AngleUnit.DEGREES));
-                        telemetry.addData("Confidence", recognition.getConfidence());
-                    }
-                    telemetry.update();
-                }
-            }
+//            if(tfod != null) {
+//                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+//                if (updatedRecognitions != null) {
+//                    telemetry.addData("# Objects Detected", updatedRecognitions.size());
+//                    int i = 0;
+//                    for (Recognition recognition : updatedRecognitions) {
+////                        telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
+////                        telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
+////                                recognition.getLeft(), recognition.getTop());
+////                        telemetry.addData(String.format("  right,bottom (%d)", i),
+////                                "%.03f , %.03f",
+////                                recognition.getRight(), recognition.getBottom());
+//                        telemetry.addData("Width", recognition.getWidth());
+//                        telemetry.addData("Height", recognition.getImageHeight());
+//                        telemetry.addData("Angle", recognition.estimateAngleToObject(AngleUnit.DEGREES));
+//                        telemetry.addData("Confidence", recognition.getConfidence());
+//                    }
+//                    telemetry.update();
+//                }
+//            }
         }
-        if (tfod != null) {
-            tfod.shutdown();
-        }
+//        if (tfod != null) {
+//            tfod.shutdown();
+//        }
     }
 }

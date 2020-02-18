@@ -151,10 +151,6 @@ public class Drivetrain extends Mechanism {
         backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-//        setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        setPower(power);
-//        opMode.sleep(time);
-//        setPower(0);
         if (power > 0) {
             frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
             backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -213,9 +209,9 @@ public class Drivetrain extends Mechanism {
         globalAngle = 0;
     }
 
-//    public float getHeading() {
-//        return lastAngles.firstAngle;
-//    }
+    public float getHeading() {
+        return lastAngles.firstAngle;
+    }
 //
 //    public double getGlobal() { return globalAngle; }
 
@@ -246,7 +242,7 @@ public class Drivetrain extends Mechanism {
     }
 
     public int find_stone() {
-        double angle = 0.0;
+        double angle;
         while (opMode.opModeIsActive()) {
             if (camera.getTFod() != null) {
                 List<Recognition> updatedRecognitions = camera.getTFod().getUpdatedRecognitions();
@@ -260,7 +256,6 @@ public class Drivetrain extends Mechanism {
                             angle = recognition.estimateAngleToObject(AngleUnit.DEGREES);
                             opMode.telemetry.addData("Confidence", recognition.getConfidence());
                             opMode.telemetry.update();
-                            opMode.sleep(10000);
                             if (angle < -10) {
                                 return 3;
                             } else if (angle < 0) {
@@ -277,11 +272,15 @@ public class Drivetrain extends Mechanism {
     }
 
    public void strafe (double power, double duration){
+       frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+       backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+       frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+       backRight.setDirection(DcMotorSimple.Direction.FORWARD);
        ElapsedTime time = new ElapsedTime();
        time.reset();
 
        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+       resetAngle();
        pidStrafe.reset();
        pidStrafe.setSetpoint(0);
        pidStrafe.setOutputRange(0, power);
@@ -300,11 +299,16 @@ public class Drivetrain extends Mechanism {
 
     /**
      * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
-     * @param degrees Degrees to turn, + is left - is right
+     * @param degrees Degrees to turn, + is right - is left
 
      */
     public void turn(int degrees, double power) {
-        setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // restart imu angle tracking.
         resetAngle();

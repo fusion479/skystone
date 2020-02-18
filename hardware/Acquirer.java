@@ -20,14 +20,14 @@ public class Acquirer extends Mechanism{
         leftAcquirer.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightAcquirer.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
-    public void teleIntake(float power){
+    public void teleOuttake(float power){
         leftAcquirer.setDirection(DcMotorSimple.Direction.REVERSE);
         rightAcquirer.setDirection(DcMotorSimple.Direction.FORWARD);
         leftAcquirer.setPower(power);
         rightAcquirer.setPower(power);
     }
 
-    public void teleOuttake(float power){
+    public void teleIntake(float power){
         leftAcquirer.setDirection(DcMotorSimple.Direction.FORWARD);
         rightAcquirer.setDirection(DcMotorSimple.Direction.REVERSE);
         leftAcquirer.setPower(power);
