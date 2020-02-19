@@ -252,13 +252,10 @@ public class Drivetrain extends Mechanism {
                     opMode.telemetry.addData("# Objects Detected", updatedRecognitions.size());
                     for (Recognition recognition : updatedRecognitions) {
                         if (recognition.getLabel().equals("Skystone")) {
-                            opMode.telemetry.addData("Width", recognition.getWidth());
-                            opMode.telemetry.addData("Height", recognition.getImageHeight());
                             opMode.telemetry.addData("Angle", recognition.estimateAngleToObject(AngleUnit.DEGREES));
                             angle = recognition.estimateAngleToObject(AngleUnit.DEGREES);
-                            opMode.telemetry.addData("Confidence", recognition.getConfidence());
                             opMode.telemetry.update();
-                            if (angle < -10) {
+                            if (angle < -17) {
                                 return 3;
                             } else if (angle < 0) {
                                 return 2;
