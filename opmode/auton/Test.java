@@ -29,6 +29,7 @@ public class Test extends LinearOpMode {
 //        sleep(1000);
 //        drive.driveToPos(10, 0.5);
 //        drive.strafe(0.5, 1);
+
         drive.init(hardwareMap);
         acquirer.init(hardwareMap);
         camera.init(hardwareMap);
@@ -46,15 +47,24 @@ public class Test extends LinearOpMode {
         drive.driveToPos(20, 0.3);
         int pattern = drive.find_stone();
         if(pattern == 1) {
+            drive.driveToPos(5,0.5);
             drive.strafe(0.5, 0.8);
             drive.turn(-45, 0.5);
-            drive.driveToPos(20, 0.5);
+            drive.acquire(acquirer, 0.7, 25);
+            acquirer.teleIntake(1);
+            sleep(800);
+            acquirer.stop();
         }
         else if (pattern == 3) {
-            drive.turn(30, 0.5);
+            drive.strafe(-0.5, 0.7);
+            drive.driveToPos(30,0.5);
+            sleep(1000);
+            drive.driveToPos(10, -0.5);
+            sleep(1000);
+            drive.turn(85, 0.6);
+            drive.acquire(acquirer,0.7, 12);
         }
-        acquirer.teleIntake(1);
-        sleep(1500);
+        sleep(1000);
         acquirer.stop();
     }
 }

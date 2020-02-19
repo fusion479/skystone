@@ -147,6 +147,8 @@ public class Drivetrain extends Mechanism {
     }
 
     public void driveToPos(double inches, double power) {
+        ElapsedTime time = new ElapsedTime();
+        time.reset();
         frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -175,7 +177,7 @@ public class Drivetrain extends Mechanism {
         backRight.setTargetPosition(tickCount);
         frontRight.setTargetPosition(tickCount);
 
-        while (opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
+        while (opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy() && time.seconds() < 7) {
             pidDrive.setSetpoint(0);
             pidDrive.setOutputRange(0, set_power);
             pidDrive.setInputRange(-90, 90);
@@ -324,21 +326,21 @@ public class Drivetrain extends Mechanism {
         pidRotate.enable();
         //Negative --> right ,Positive --> left
         if (degrees < 0) {
-            while (getAngle() == 0) {
+            while (getAngle() == 0 && opMode.opModeIsActive()) {
                 setPower(-power, power, -power, power);
             }
             do {
                 power = pidRotate.performPID(getAngle()); // power will be - on right turn.
                 setPower(power, -power, power, -power);
             }
-            while (!pidRotate.onTarget());
+            while (!pidRotate.onTarget() && opMode.opModeIsActive());
         }
         else    // left turn.
             do {
                 power = pidRotate.performPID(getAngle()); // power will be + on left turn.
                 setPower(power, -power, power, -power);
             }
-            while (!pidRotate.onTarget());
+            while (!pidRotate.onTarget() && opMode.opModeIsActive());
 
         setPower(0);
         resetAngle();
@@ -392,5 +394,62 @@ public class Drivetrain extends Mechanism {
             current.setPID(current.getP(), current.getI() + change, current.getD() );
         else if(coefficientIndex == 2)
             current.setPID(current.getP(), current.getI(), current.getD() + change );
+    }
+
+    public void acquire(Acquirer acquirer, double power, int inches) {
+        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        if (power > 0) {
+            frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+            backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+            frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+            backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        } else if (power <= 0) {
+            frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+            backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+            frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+            backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        }
+        double correction;
+        resetAngle();
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        int tickCount = (int) (inches * COUNTS_PER_INCH);
+        setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        double set_power = power * inches / Math.abs(inches);
+
+        frontLeft.setTargetPosition(tickCount);
+        backLeft.setTargetPosition(tickCount);
+        backRight.setTargetPosition(tickCount);
+        frontRight.setTargetPosition(tickCount);
+
+        while (opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
+            acquirer.teleIntake(1);
+            pidDrive.setSetpoint(0);
+            pidDrive.setOutputRange(0, set_power);
+            pidDrive.setInputRange(-90, 90);
+            pidDrive.enable();
+            correction = pidDrive.performPID(getAngle());
+
+            if (Math.signum(inches) > 0) {
+                setPower(set_power + correction, set_power - correction, set_power + correction, set_power - correction);
+            } else if (Math.signum(inches) < 0) {
+                setPower(set_power - correction, set_power + correction, set_power - correction, set_power + correction);
+            }
+            opMode.telemetry.addData("angle", getAngle());
+            opMode.telemetry.addData("correction", correction);
+            opMode.telemetry.update();
+        }
+        setPower(0.0);
+        acquirer.stop();
+
+        if (power < 0) {
+            frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+            backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+            frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+            backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        }
     }
 }
