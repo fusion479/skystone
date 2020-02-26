@@ -47,12 +47,13 @@ public class Test extends LinearOpMode {
         runtime.reset();
 
         drive.driveToPos(40, 0.3);
-        sleep(10000);
-        drive.strafe(0.3, 5);
         sleep(5000);
-        drive.strafe(-0.3,5);
+        drive.strafe(0.3, 2);
+        sleep(5000);
+        drive.strafe(-0.3,2);
         sleep(5000);
         drive.driveToPos(40,-0.3);
+        sleep(1000);
 //        drive.driveToPos(20, 0.3);
 //        int pattern = drive.find_stone();
 //        telemetry.addData("pattern", pattern);
