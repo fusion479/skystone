@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.auton.buildingFoundationPark;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.hardware.Claw;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Hook;
 
@@ -10,12 +11,14 @@ public class BFP extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private Drivetrain drive = new Drivetrain(this);
     private Hook hook = new Hook(this);
+    private Claw claw = new Claw(this);
     private int alliance;
     private String parkPosition;
 
     protected void init(String alliance, String parkPosition) {
         drive.init(hardwareMap);
         hook.init(hardwareMap);
+        claw.init(hardwareMap);
         this.alliance = (alliance.compareTo("red") == 0)
                 ? -1
                 : 1;
@@ -47,13 +50,13 @@ public class BFP extends LinearOpMode {
         sleep(1000);
 
         if(parkPosition.compareTo("back") == 0) {
-            drive.strafe(-1 * alliance * 0.4, 2.6);
+            drive.strafe(-1 * alliance * 0.4, 2.7);
         }
         else {
             drive.strafe(-1 * alliance * 0.5, 1.6);
             drive.driveToPos(24, 0.5);
             sleep(250);
-            drive.strafe(1 * alliance * 0.5, 1);
+            drive.strafe(-1 * alliance * 0.5, 1);
         }
     }
 }

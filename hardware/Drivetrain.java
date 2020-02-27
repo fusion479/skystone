@@ -88,7 +88,7 @@ public class Drivetrain extends Mechanism {
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         pidRotate = new PIDController(0.005, 0.1, 0);
-        pidDrive = new PIDController(0.002, 0, 0);
+        pidDrive = new PIDController(0.0007, 0, 0);
         pidStrafe = new PIDController(0.01, 0, 0);
 
         current = pidDrive;
