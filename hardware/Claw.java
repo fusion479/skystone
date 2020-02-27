@@ -6,13 +6,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Claw extends Mechanism {
     private Servo grip;
-    private Servo swivel;
+    private Servo swing;
 
     public Claw(LinearOpMode opMode) { this.opMode = opMode; }
 
     public void init(HardwareMap hwMap){
         grip = hwMap.servo.get("grip");
-        swivel = hwMap.servo.get("swivel");
+        swing = hwMap.servo.get("swing");
     }
 
     public void open(){grip.setPosition(0.9);}
@@ -20,11 +20,11 @@ public class Claw extends Mechanism {
     public void close(){ grip.setPosition(0.2);}
 
     public void front(){
-        swivel.setPosition(0);
+        swing.setPosition(0.1);
     }
 
     public void back(){
-        swivel.setPosition(1);
+        swing.setPosition(1);
     }
 }
 
