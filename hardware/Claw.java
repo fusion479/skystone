@@ -13,6 +13,7 @@ public class Claw extends Mechanism {
     public void init(HardwareMap hwMap){
         grip = hwMap.servo.get("grip");
         swing = hwMap.servo.get("swing");
+        front();
     }
 
     public void open(){grip.setPosition(0.9);}

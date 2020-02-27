@@ -19,12 +19,12 @@ public class TapeMeasure extends Mechanism {
     }
 
     public void extend() {
-        motor.setDirection(DcMotorSimple.Direction.FORWARD);
+        motor.setDirection(DcMotorSimple.Direction.REVERSE);
         motor.setPower(1);
     }
 
     public void retract() {
-        motor.setDirection(DcMotorSimple.Direction.REVERSE);
+        motor.setDirection(DcMotorSimple.Direction.FORWARD);
         motor.setPower(1);
     }
 
