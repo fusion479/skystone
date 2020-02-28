@@ -16,9 +16,9 @@ public class Claw extends Mechanism {
         front();
     }
 
-    public void open(){grip.setPosition(0.9);}
+    public void open(){grip.setPosition(0.3);}
 
-    public void close(){ grip.setPosition(0.2);}
+    public void close(){ grip.setPosition(0.05);}
 
     public void front(){
         swing.setPosition(0.1);
