@@ -59,11 +59,11 @@ public class TeleMain extends LinearOpMode {
 
             if (gamepad1.a) claw.close();
 
-            if (gamepad1.x) {
+            if (gamepad1.y) {
                 claw.front();
             }
 
-            if (gamepad1.y) {
+            if (gamepad1.x) {
                 claw.back();
             }
             if (gamepad1.dpad_left) hook.hook();

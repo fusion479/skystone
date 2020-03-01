@@ -169,13 +169,12 @@ public class Drivetrain extends Mechanism {
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         int tickCount = (int) (inches * COUNTS_PER_INCH);
-        setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        double set_power = power * inches / Math.abs(inches);
-
         frontLeft.setTargetPosition(tickCount);
         backLeft.setTargetPosition(tickCount);
         backRight.setTargetPosition(tickCount);
         frontRight.setTargetPosition(tickCount);
+        setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        double set_power = power * inches / Math.abs(inches);
 
         while (opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy() && time.seconds() < 7) {
             pidDrive.setSetpoint(0);
@@ -414,13 +413,12 @@ public class Drivetrain extends Mechanism {
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         int tickCount = (int) (inches * COUNTS_PER_INCH);
-        setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        double set_power = power * inches / Math.abs(inches);
-
         frontLeft.setTargetPosition(tickCount);
         backLeft.setTargetPosition(tickCount);
         backRight.setTargetPosition(tickCount);
         frontRight.setTargetPosition(tickCount);
+        setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        double set_power = power * inches / Math.abs(inches);
 
         while (opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
             acquirer.teleIntake(1);
