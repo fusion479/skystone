@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.hardware.Claw;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Hook;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
+import org.firstinspires.ftc.teamcode.hardware.Lock;
 
 @TeleOp(name="TeleMain", group="Teleop")
 public class TeleMain extends LinearOpMode {
@@ -17,6 +18,7 @@ public class TeleMain extends LinearOpMode {
     private Claw claw = new Claw(this);
     private Lift lift = new Lift(this);
     private Hook hook = new Hook(this);
+    private Lock lock = new Lock(this);
     private Acquirer acquirer = new Acquirer(this);
 
     @Override
@@ -25,6 +27,7 @@ public class TeleMain extends LinearOpMode {
         claw.init(hardwareMap);
         hook.init(hardwareMap);
         lift.init(hardwareMap);
+        lock.init(hardwareMap);
         acquirer.init(hardwareMap);
 
         while(!opModeIsActive() && !isStopRequested()){
@@ -38,7 +41,12 @@ public class TeleMain extends LinearOpMode {
             double rightX = gamepad1.right_stick_x;
 
             if (gamepad1.dpad_up) {
-                drive.setSlow();
+//                drive.setSlow();
+                if(lock.getLocked()) {
+                    lock.unlock();
+                } else {
+                    lock.lock();
+                }
             }
 
             if(gamepad1.dpad_down) {
