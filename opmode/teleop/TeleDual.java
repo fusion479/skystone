@@ -35,10 +35,7 @@ public class TeleDual extends LinearOpMode{
                 telemetry.update();
             }
 
-            int modeToggle = 0;
-            int gripToggle = 1;
-            int lockToggle = 1;
-            int swingToggle = 1;
+            boolean modeToggle = true;
 
             while(opModeIsActive()){
                 double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
@@ -48,31 +45,25 @@ public class TeleDual extends LinearOpMode{
                 drive.teleDrive(r, robotAngle, rightX);
 
                 if (gamepad1.start){
-                    if (modeToggle % 2 == 0){
+                    if (modeToggle){
                         if (gamepad1.left_trigger > 0) acquirer.teleOuttake(gamepad1.left_trigger);
                         else if (gamepad1.right_trigger > 0 ) acquirer.teleIntake(gamepad1.right_trigger);
 
                         if (gamepad1.a){
                             if (claw.getGripped()){
                                 claw.open();
-                            } else{claw.close(); }
-
+                            } else { claw.close(); }
                         }
-
                         if (gamepad1.x){
                             if (lock.getLocked()){
                                 lock.unlock();
-                            } else {
-                                lock.lock();
-                            }
-
+                            } else { lock.lock(); }
                         }
                     }
-                    else if (modeToggle % 2 == 1 ){
+                    else {
                         drive.reverse();
                         if (gamepad1.right_trigger > 0){
                             lift.liftUp(gamepad1.right_trigger);
-
                         }
                         if (gamepad2.left_trigger > 0){
                             lift.liftDown(gamepad1.left_trigger);
@@ -81,25 +72,21 @@ public class TeleDual extends LinearOpMode{
                             if (claw.getGripped()){
                                 claw.open();
                             } else {claw.close();}
-
-
                         }
                         if (gamepad1.x){
                             if (claw.getSwinged()){
                                 claw.front();
-                            } else {
-                                claw.back();
-                            }
+                            } else { claw.back(); }
                         }
                         if (gamepad1.y){
                             drive.setSlow();
                         }
 
                     }
+                    modeToggle = !modeToggle;
                 }
 
-
-
+                telemetry.addData("mode toggle", modeToggle);
                 telemetry.addData("slow mode", drive.getSlow());
                 telemetry.addData("reverse mode", drive.getReverse());
                 telemetry.addData("r", r);
