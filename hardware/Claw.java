@@ -21,21 +21,25 @@ public class Claw extends Mechanism {
     public void open(){
         grip.setPosition(0.3);
         gripped = false;
+        opMode.sleep(400);
     }
 
     public void close(){
         grip.setPosition(0.05);
         gripped = true;
+        opMode.sleep(400);
     }
 
     public void front(){
         swing.setPosition(0.05);
         swinged = false;
+        opMode.sleep(400);
     }
 
     public void back(){
         swing.setPosition(0.5);
         swinged = true;
+        opMode.sleep(400);
     }
 
     public boolean getSwinged(){

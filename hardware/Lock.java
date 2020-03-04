@@ -16,11 +16,13 @@ public class Lock extends Mechanism{
     public void lock(){
         lock.setPosition(0.45);
         locked = true;
+        opMode.sleep(400);
     }
 
     public void unlock(){
         lock.setPosition(0);
         locked = false;
+        opMode.sleep(400);
     }
 
     public boolean getLocked(){ return locked;}
