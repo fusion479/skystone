@@ -15,7 +15,7 @@ public class Lock extends Mechanism{
     }
 
     public void lock(){
-        lock.setPosition(0.5);
+        lock.setPosition(0.45);
         locked = true;
     }
 
