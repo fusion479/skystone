@@ -50,6 +50,11 @@ public class TeleDual extends LinearOpMode{
                 }
 
                 if (modeToggle){
+                    if(gamepad1.b && hook.getHooked()) {
+                        hook.unhook();
+                    } else if (gamepad1.b && !hook.getHooked()) {
+                        hook.hook();
+                    }
                     if(drive.getSlow()) {
                         drive.setSlow();
                     }
@@ -70,9 +75,9 @@ public class TeleDual extends LinearOpMode{
                         lock.lock();
                     }
 
-                    if (gamepad1.left_bumper){
+                    if (gamepad1.right_bumper){
                         tapeMeasure.retract();
-                    } else if (gamepad1.right_bumper){
+                    } else if (gamepad1.left_bumper){
                         tapeMeasure.extend();
                     } else {
                         tapeMeasure.stop();
@@ -97,6 +102,9 @@ public class TeleDual extends LinearOpMode{
                     }
                     if (gamepad1.y){
                         drive.setSlow();
+                    }
+                    if(gamepad1.b) {
+                        claw.fullBack();
                     }
                 }
 
