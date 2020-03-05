@@ -96,7 +96,21 @@ public class TeleDuo extends LinearOpMode {
 
                // TELEMETRY
 
-            telemetry.addData()
+
+            telemetry.addData("mode toggle", (modeToggle) ? 0 : 1);
+            telemetry.addData("slow mode", drive.getSlow());
+            telemetry.addData("reverse mode", drive.getReverse());
+            telemetry.addData("r", r);
+            telemetry.addData("robot angle", robotAngle);
+            telemetry.addData("rightX", rightX);
+            telemetry.addData("start", gamepad1.start);
+            telemetry.addData("a", gamepad1.a);
+            telemetry.addData("b", gamepad1.b);
+            telemetry.addData("l", gamepad1.left_bumper);
+            telemetry.addData("r", gamepad1.right_bumper);
+            telemetry.addData("lt", gamepad1.left_trigger);
+            telemetry.addData("rt", gamepad1.right_trigger);
+            telemetry.update();
         }
     }
 }
