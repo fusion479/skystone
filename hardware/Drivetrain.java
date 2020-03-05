@@ -48,15 +48,10 @@ public class Drivetrain extends Mechanism {
     private DcMotor backLeft;
     private DcMotor backRight;
 
-    public BNO055IMU imu;
+    private BNO055IMU imu;
     private PIDController pidDrive;
     private PIDController pidRotate;
     private PIDController pidStrafe;
-
-    private PIDController current;
-
-    private int coefficientIndex;
-    private int controllerIndex;
 
     private double globalAngle = .30;
     private Orientation lastAngles = new Orientation();
@@ -90,8 +85,6 @@ public class Drivetrain extends Mechanism {
         pidRotate = new PIDController(0.007, 0.1, 0);
         pidDrive = new PIDController(0.001, 0, 0);
         pidStrafe = new PIDController(0.02, 0, 0);
-
-        current = pidDrive;
 
         // Set all motors to zero power
         setPower(0.0);
@@ -138,10 +131,10 @@ public class Drivetrain extends Mechanism {
         setPower(v1, v2, v3, v4);
     }
 
-    public void reverse() {
-        reverse_mode = !reverse_mode;
-    }
-
+    /**
+     * Drive forward or backwards for inches inches at power power level.
+     * @param power direction to strafe, - is backwards + is forward
+     */
     public void driveToPos(double inches, double power) {
         ElapsedTime time = new ElapsedTime();
         time.reset();
@@ -209,8 +202,8 @@ public class Drivetrain extends Mechanism {
     public float getHeading() {
         return lastAngles.firstAngle;
     }
-//
-//    public double getGlobal() { return globalAngle; }
+
+    public double getGlobal() { return globalAngle; }
 
     /**
      * Get current cumulative angle rotation from last reset.
@@ -232,10 +225,6 @@ public class Drivetrain extends Mechanism {
         lastAngles = angles;
 
         return globalAngle;
-    }
-
-    public void getCamera(Camera camera) {
-        this.camera = camera;
     }
 
     public int find_stone() {
@@ -265,7 +254,11 @@ public class Drivetrain extends Mechanism {
         return 0;
     }
 
-   public void strafe (double power, double duration){
+    /**
+     * Strafe left or right for duration number of seconds.
+     * @param power direction to strafe, - is right + is left
+     */
+   public void strafe(double power, double duration){
        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -294,7 +287,6 @@ public class Drivetrain extends Mechanism {
     /**
      * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
      * @param degrees Degrees to turn, + is right - is left
-
      */
     public void turn(int degrees, double power) {
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -338,109 +330,15 @@ public class Drivetrain extends Mechanism {
         resetAngle();
     }
 
-    public void setSlow() {
-        if(slow_mode) {
-            slow_mode = false;
-        } else {
-            slow_mode = true;
-        }
-    }
+    public void setSlow() { slow_mode = !slow_mode; }
+
+    public void reverse() { reverse_mode = !reverse_mode; }
 
     public boolean getSlow() { return slow_mode; }
 
-    public boolean getReverse() {return reverse_mode;}
+    public boolean getReverse() { return reverse_mode; }
 
-    public String coefficient() {
-        return (coefficientIndex == 0)
-            ? "P"
-            : (coefficientIndex == 1)
-                ? "I"
-                : "D";
-    }
-
-    public void changeCoefficient() { coefficientIndex = (coefficientIndex == 2) ? 0 : coefficientIndex + 1; }
-
-    public void changeController() {
-        if(controllerIndex == 1) {
-            controllerIndex = 0;
-            current = pidDrive;
-        }
-        else {
-            controllerIndex++;
-            current = pidRotate;
-        }
-    }
-
-    public double[] getCoefficients() { return new double[]{current.getP(), current.getI(), current.getD()}; }
-
-    public String controller() { return (controllerIndex == 0) ? "drive" : "turn"; }
-
-    public void increaseCoefficient() { setCoefficient(0.001); }
-
-    public void decreaseCoefficient() { setCoefficient(-0.001); }
-
-    private void setCoefficient(double change) {
-        if(coefficientIndex == 0)
-            current.setPID(current.getP() + change, current.getI(), current.getD() );
-        else if(coefficientIndex == 1)
-            current.setPID(current.getP(), current.getI() + change, current.getD() );
-        else if(coefficientIndex == 2)
-            current.setPID(current.getP(), current.getI(), current.getD() + change );
-    }
-
-    public void acquire(Acquirer acquirer, double power, int inches) {
-        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        if (power > 0) {
-            frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-            backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-            frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-            backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        } else if (power <= 0) {
-            frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-            backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-            frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-            backRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        }
-        double correction;
-        resetAngle();
-        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        int tickCount = (int) (inches * COUNTS_PER_INCH);
-        frontLeft.setTargetPosition(tickCount);
-        backLeft.setTargetPosition(tickCount);
-        backRight.setTargetPosition(tickCount);
-        frontRight.setTargetPosition(tickCount);
-        setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        double set_power = power * inches / Math.abs(inches);
-
-        while (opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
-            acquirer.teleIntake(1);
-            pidDrive.setSetpoint(0);
-            pidDrive.setOutputRange(0, set_power);
-            pidDrive.setInputRange(-90, 90);
-            pidDrive.enable();
-            correction = pidDrive.performPID(getAngle());
-
-            if (Math.signum(inches) > 0) {
-                setPower(set_power + correction, set_power - correction, set_power + correction, set_power - correction);
-            } else if (Math.signum(inches) < 0) {
-                setPower(set_power - correction, set_power + correction, set_power - correction, set_power + correction);
-            }
-            opMode.telemetry.addData("angle", getAngle());
-            opMode.telemetry.addData("correction", correction);
-            opMode.telemetry.update();
-        }
-        setPower(0.0);
-        acquirer.stop();
-
-        if (power < 0) {
-            frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-            backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-            frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-            backRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        }
+    public void getCamera(Camera camera) {
+        this.camera = camera;
     }
 }
