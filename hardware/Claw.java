@@ -37,7 +37,7 @@ public class Claw extends Mechanism {
     }
 
     public void back(){
-        swing.setPosition(0.45);
+        swing.setPosition(0.5);
         swinged = true;
         opMode.sleep(400);
     }
@@ -45,7 +45,7 @@ public class Claw extends Mechanism {
     public void fullBack(){
         swing.setPosition(1);
         swinged = true;
-        opMode.sleep(1000);
+        opMode.sleep(500);
     }
 
     public boolean getSwinged(){
