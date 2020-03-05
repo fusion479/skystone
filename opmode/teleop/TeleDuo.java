@@ -24,15 +24,13 @@ public class TeleDuo extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-
-
         drive.init(hardwareMap);
         claw.init(hardwareMap);
         hook.init(hardwareMap);
         lift.init(hardwareMap);
         lock.init(hardwareMap);
+        tapeMeasure.init(hardwareMap);
         acquirer.init(hardwareMap);
-
 
         while(!opModeIsActive() && !isStopRequested()){
             telemetry.addData("Status", "Waiting in init");
@@ -40,63 +38,46 @@ public class TeleDuo extends LinearOpMode {
         }
 
         while(opModeIsActive()) {
-
-               // MECANUM DRIVE CONTROLS
             double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
             double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             double rightX = gamepad1.right_stick_x;
 
             drive.teleDrive(r,robotAngle,rightX);
 
+            if(gamepad1.left_trigger > 0){ acquirer.teleOuttake(gamepad1.left_trigger); }
+            else if (gamepad1.right_trigger > 0){ acquirer.teleIntake(gamepad1.right_trigger);}
+            else {acquirer.stop();}
 
-             //   DRIVER CONDITIONS (gamepad1)
+            if (gamepad1.right_bumper){hook.hook();}
+            else if (gamepad1.left_bumper){hook.unhook();}
 
-                if(gamepad1.left_trigger > 0){ acquirer.teleOuttake(gamepad1.left_trigger); }
+            if (gamepad1.dpad_up){tapeMeasure.retract();}
+            else if (gamepad1.dpad_down){tapeMeasure.extend();}
+            else {tapeMeasure.stop();}
 
-                if (gamepad1.right_trigger > 0){acquirer.teleIntake(gamepad1.right_trigger);}
+            if(gamepad1.x && lock.getLocked()) lock.unlock();
+            else if (gamepad1.x && !lock.getLocked()) lock.lock();
 
-                if (gamepad1.right_bumper){hook.hook();}
+            if (gamepad1.b) drive.setSlow();
+            if (gamepad1.a){drive.reverse();}
 
-                if (gamepad1.left_bumper){hook.unhook();}
+            if (gamepad2.left_trigger > 0) { lift.liftDown(gamepad2.left_trigger); }
+            else if (gamepad2.right_trigger > 0){lift.liftUp(gamepad2.right_trigger);}
+            else {lift.liftOff();}
 
-                if (gamepad1.dpad_up){tapeMeasure.retract();}
+            if (gamepad2.right_bumper){claw.back();}
+            if (gamepad2.left_bumper){claw.front();}
+            if (gamepad2.y){claw.fullBack();}
 
-                if (gamepad1.dpad_down){tapeMeasure.extend();}
+            if(gamepad2.x && lock.getLocked()) lock.unlock();
+            else if (gamepad2.x && !lock.getLocked()) lock.lock();
 
-                if(gamepad1.x && lock.getLocked()) lock.unlock();
-                else if (gamepad1.x && !lock.getLocked()) lock.lock();
+            if (gamepad2.a && claw.getGripped()) claw.open();
+            else if (gamepad2.a && !claw.getGripped()) claw.close();
 
-                if (gamepad1.b) drive.setSlow();
-
-                if (gamepad1.a){drive.reverse();}
-
-
-                // Operator Mode
-
-                if (gamepad2.left_trigger > 0) { lift.liftDown(gamepad2.left_trigger); }
-
-                if (gamepad2.right_trigger > 0){lift.liftUp(gamepad2.right_trigger);}
-
-                if (gamepad2.left_bumper){claw.back();}
-
-                if (gamepad2.right_bumper){claw.front();}
-
-                if (gamepad2.y){claw.fullBack();}
-
-                if(gamepad2.x && lock.getLocked()) lock.unlock();
-                else if (gamepad1.x && !lock.getLocked()) lock.lock();
-
-                if (gamepad2.a && claw.getGripped()) claw.open();
-                else if (gamepad2.a && !claw.getGripped()) claw.close();
-
-                if (gamepad2.dpad_up){tapeMeasure.retract();}
-
-                if (gamepad2.dpad_down){tapeMeasure.extend();}
-
-
-               // TELEMETRY
-
-
+            if (gamepad2.dpad_up){tapeMeasure.retract();}
+            else if (gamepad2.dpad_down){tapeMeasure.extend();}
+            else {tapeMeasure.stop();}
 
             telemetry.addData("slow mode", drive.getSlow());
             telemetry.addData("reverse mode", drive.getReverse());
