@@ -42,13 +42,21 @@ public class AutonCV extends LinearOpMode {
         sleep(500);
 
         drive.findStone(0.2);
-        picker.extend();
-        sleep(400);
         picker.delatch();
         sleep(400);
-        drive.strafe(-0.4, 0.5);
-        picker.latch();
+        picker.extend();
         sleep(400);
+        drive.strafe(-0.4, 0.65);
+        picker.latch();
+        sleep(1500);
+        picker.stoneRetract();
+        sleep(400);
+
+        drive.strafe(0.4, 0.7);
+
+        drive.driveToPos(70, -0.5);
+
+        drive.strafe(-0.4, 0.5);
 
         if (tfod != null) {
             tfod.deactivate();

@@ -27,6 +27,8 @@ public class Picker extends Mechanism{
         swivel.setPosition(0.5);
     }
 
+    public void stoneRetract() {swivel.setPosition(0.2);}
+
     public void extend() {
         swivel.setPosition(0);
     }
