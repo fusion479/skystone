@@ -97,7 +97,7 @@ public class TeleDuo extends LinearOpMode {
                // TELEMETRY
 
 
-            telemetry.addData("mode toggle", (modeToggle) ? 0 : 1);
+
             telemetry.addData("slow mode", drive.getSlow());
             telemetry.addData("reverse mode", drive.getReverse());
             telemetry.addData("r", r);
