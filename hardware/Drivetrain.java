@@ -139,11 +139,7 @@ public class Drivetrain extends Mechanism {
     }
 
     public void reverse() {
-        if (reverse_mode) {
-            reverse_mode = false;
-        } else {
-            reverse_mode = true;
-        }
+        reverse_mode = !reverse_mode;
     }
 
     public void driveToPos(double inches, double power) {
