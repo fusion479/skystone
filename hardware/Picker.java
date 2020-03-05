@@ -24,7 +24,7 @@ public class Picker extends Mechanism{
     }
 
     public void retract(){
-        swivel.setPosition(1);
+        swivel.setPosition(0.5);
     }
 
     public void extend() {

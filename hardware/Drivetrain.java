@@ -89,7 +89,7 @@ public class Drivetrain extends Mechanism {
 
         pidRotate = new PIDController(0.007, 0.1, 0);
         pidDrive = new PIDController(0.001, 0, 0);
-        pidStrafe = new PIDController(0.02, 0, 0);
+        pidStrafe = new PIDController(0.03, 0, 0);
 
         current = pidDrive;
 
@@ -239,7 +239,7 @@ public class Drivetrain extends Mechanism {
     }
 
     public void findStone(double power) {
-        int inches = 40;
+        int inches = 20;
         boolean foundStone = false;
         ElapsedTime time = new ElapsedTime();
         time.reset();
@@ -270,7 +270,7 @@ public class Drivetrain extends Mechanism {
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
         double set_power = power * inches / Math.abs(inches);
 
-        while (!foundStone && opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy() && time.seconds() < 7) {
+        while (!foundStone && opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy() && time.seconds() < 3) {
             pidDrive.setSetpoint(0);
             pidDrive.setOutputRange(0, set_power);
             pidDrive.setInputRange(-90, 90);
@@ -291,6 +291,8 @@ public class Drivetrain extends Mechanism {
                 if (updatedRecognitions != null) {
                     opMode.telemetry.addData("# Objects Detected", updatedRecognitions.size());
                     for (Recognition recognition : updatedRecognitions) {
+                        opMode.telemetry.addData("label", recognition.getLabel());
+                        opMode.telemetry.update();
                         if (recognition.getLabel().equals("Skystone")) {
                             opMode.telemetry.addData("Angle", recognition.estimateAngleToObject(AngleUnit.DEGREES));
                             opMode.telemetry.update();
