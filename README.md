@@ -1,9 +1,5 @@
 # FIRST FTC Fusion 479 2019-2020 SKYSTONE
 
-## Newbie assignments 
-### Post-lecutre 00
-- [Tell us about yourself](https://github.com/fusion479/skystone/issues/4) so we can add you to our organization 
-- Peruse the [demo repo](https://github.com/fusion479/demobot) of this repo which contains code for our demo bot.
 #### Setting up your coding environment 
 - Download Java 8 by following these [instructions](https://dojo.stuycs.org/resources/software_installation_and_tips/installation_instructions/programming_languages/installing_jdk.html)
 - Create a GitHub account

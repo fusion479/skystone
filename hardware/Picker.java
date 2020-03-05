@@ -12,6 +12,8 @@ public class Picker extends Mechanism{
     public void init(HardwareMap hardwareMap){
         swivel = hardwareMap.servo.get("swivel");
         latch = hardwareMap.servo.get("latch");
+        retract();
+        latch();
     }
 
     public void latch(){

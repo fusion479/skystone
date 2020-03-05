@@ -16,12 +16,6 @@ public class AutonClawTest extends LinearOpMode{
         claw.init(hardwareMap);
         picker.init(hardwareMap);
         waitForStart();
-//        picker.extend();
-//        sleep(2000);
-        picker.latch();
-        sleep(2000);
-        picker.delatch();
-        sleep(2000);
 //        picker.retract();
 //        sleep(2000);
 
