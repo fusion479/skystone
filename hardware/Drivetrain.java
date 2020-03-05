@@ -20,7 +20,7 @@ import java.util.List;
 
 public class Drivetrain extends Mechanism {
 
-    private TensorFlowCamera camera;
+    private Camera camera;
 
     private static boolean slow_mode = false;
     private static boolean reverse_mode = false;
@@ -234,7 +234,7 @@ public class Drivetrain extends Mechanism {
         return globalAngle;
     }
 
-    public void getCamera(TensorFlowCamera camera) {
+    public void getCamera(Camera camera) {
         this.camera = camera;
     }
 
