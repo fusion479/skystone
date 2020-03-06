@@ -56,22 +56,30 @@ public class Drivetrain extends Mechanism {
     private double globalAngle = .30;
     private Orientation lastAngles = new Orientation();
 
-    public Drivetrain(LinearOpMode opMode) {
-        this.opMode = opMode;
+    public Drivetrain(LinearOpMode opMode) { this.opMode = opMode; }
+
+    public void setForwardDirection() {
+        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
+
+    public void setReverseDirection() {
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
     public void init(HardwareMap hwMap) {
-
         frontLeft = hwMap.dcMotor.get("frontLeft");
         frontRight = hwMap.dcMotor.get("frontRight");
         backLeft = hwMap.dcMotor.get("backLeft");
         backRight = hwMap.dcMotor.get("backRight");
 
         // Set motor direction (AndyMark configuration)
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        setReverseDirection();
 
         // Set motors to run without encoders
         setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -138,20 +146,11 @@ public class Drivetrain extends Mechanism {
     public void driveToPos(double inches, double power) {
         ElapsedTime time = new ElapsedTime();
         time.reset();
-        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        setForwardDirection();
         if (power > 0) {
-            frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-            backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-            frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-            backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+            setForwardDirection();
         } else if (power <= 0) {
-            frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-            backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-            frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-            backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+            setReverseDirection();
         }
         double correction;
         resetAngle();
@@ -184,10 +183,7 @@ public class Drivetrain extends Mechanism {
         setPower(0.0);
 
         if (power < 0) {
-            frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-            backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-            frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-            backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+            setReverseDirection();
         }
     }
 
@@ -232,20 +228,10 @@ public class Drivetrain extends Mechanism {
         boolean foundStone = false;
         ElapsedTime time = new ElapsedTime();
         time.reset();
-        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
         if (power > 0) {
-            frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-            backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-            frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-            backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        } else if (power <= 0) {
-            frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-            backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-            frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-            backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+            setForwardDirection();
+        } else if (power < 0) {
+            setReverseDirection();
         }
         double correction;
         resetAngle();
@@ -271,18 +257,13 @@ public class Drivetrain extends Mechanism {
             } else if (Math.signum(inches) < 0) {
                 setPower(set_power - correction, set_power + correction, set_power - correction, set_power + correction);
             }
-            opMode.telemetry.addData("angle", getAngle());
-            opMode.telemetry.addData("correction", correction);
-            opMode.telemetry.addData("time", time.seconds());
-            opMode.telemetry.update();
             if (camera.getTFod() != null) {
                 List<Recognition> updatedRecognitions = camera.getTFod().getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
-                    opMode.telemetry.addData("# Objects Detected", updatedRecognitions.size());
                     for (Recognition recognition : updatedRecognitions) {
-                        opMode.telemetry.addData("label", recognition.getLabel());
-                        opMode.telemetry.update();
                         if (recognition.getLabel().equals("Skystone")) {
+                            opMode.telemetry.addData("time", time.seconds());
+                            opMode.telemetry.addData("label", recognition.getLabel());
                             opMode.telemetry.addData("Angle", recognition.estimateAngleToObject(AngleUnit.DEGREES));
                             opMode.telemetry.update();
                             foundStone = true;
@@ -293,13 +274,6 @@ public class Drivetrain extends Mechanism {
         }
 
         setPower(0.0);
-
-        if (power < 0) {
-            frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-            backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-            frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-            backRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        }
 
         if(time.seconds() <= 1) {
             return 0;
@@ -315,10 +289,7 @@ public class Drivetrain extends Mechanism {
      * @param power direction to strafe, - is right + is left
      */
    public void strafe(double power, double duration){
-       frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-       backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-       frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-       backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+       setReverseDirection();
        ElapsedTime time = new ElapsedTime();
        time.reset();
 
@@ -345,10 +316,7 @@ public class Drivetrain extends Mechanism {
      * @param degrees Degrees to turn, + is right - is left
      */
     public void turn(int degrees, double power) {
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        setReverseDirection();
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 

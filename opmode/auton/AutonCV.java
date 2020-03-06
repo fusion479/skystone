@@ -40,6 +40,7 @@ public class AutonCV extends LinearOpMode {
         sleep(500);
 
         int pattern = drive.findStone(0.2);
+        sleep(5000);
         if (tfod != null) { tfod.deactivate(); }
         if (pattern == 0) {
             drive.driveToPos(5, 0.5);
