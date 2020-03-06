@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Hook;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
 import org.firstinspires.ftc.teamcode.hardware.Lock;
+import org.firstinspires.ftc.teamcode.hardware.Picker;
 import org.firstinspires.ftc.teamcode.hardware.TapeMeasure;
 
 @TeleOp(name="TeleDuo", group="Teleop")
@@ -21,6 +22,7 @@ public class TeleDuo extends LinearOpMode {
      private Lock lock = new Lock(this);
      private TapeMeasure tapeMeasure = new TapeMeasure(this);
      private Acquirer acquirer = new Acquirer(this);
+     private Picker picker = new Picker(this);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -31,6 +33,7 @@ public class TeleDuo extends LinearOpMode {
         lock.init(hardwareMap);
         tapeMeasure.init(hardwareMap);
         acquirer.init(hardwareMap);
+        picker.init(hardwareMap);
 
         while(!opModeIsActive() && !isStopRequested()){
             telemetry.addData("Status", "Waiting in init");

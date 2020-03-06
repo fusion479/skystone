@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Hook;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
 import org.firstinspires.ftc.teamcode.hardware.Lock;
+import org.firstinspires.ftc.teamcode.hardware.Picker;
 import org.firstinspires.ftc.teamcode.hardware.TapeMeasure;
 
 @TeleOp(name="TeleDual", group="Teleop")
@@ -20,6 +21,7 @@ public class TeleDual extends LinearOpMode{
         private Lock lock = new Lock(this);
         private Acquirer acquirer = new Acquirer(this);
         private TapeMeasure tapeMeasure = new TapeMeasure(this);
+        private Picker picker = new Picker(this);
 
         private boolean modeToggle = true;
 
@@ -32,6 +34,7 @@ public class TeleDual extends LinearOpMode{
             tapeMeasure.init(hardwareMap);
             lock.init(hardwareMap);
             acquirer.init(hardwareMap);
+            picker.init(hardwareMap);
 
             while(!opModeIsActive() && !isStopRequested()){
                 telemetry.addData("Status", "Waiting in init");
