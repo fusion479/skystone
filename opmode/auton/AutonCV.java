@@ -36,38 +36,41 @@ public class AutonCV extends LinearOpMode {
 
         runtime.reset();
 
-        drive.strafe(-0.4, 1.3);
+        drive.strafe(-0.6, 1);
         sleep(500);
 
-        int pattern = drive.findStone(0.2);
-        sleep(5000);
-        if (tfod != null) { tfod.deactivate(); }
-        if (pattern == 0) {
-            drive.driveToPos(5, 0.5);
-        } if (pattern == 1 || pattern == 2) {
-            drive.driveToPos(7, 0.5);
+        int pattern = drive.findStone(0.15);
+        telemetry.addData("Pattern", pattern);
+        telemetry.update();
+        if(pattern == 2) {
+            drive.driveToPos(4, 0.5);
         }
+        if (tfod != null) { tfod.deactivate(); }
         picker.delatch();
         sleep(400);
         picker.extend();
-        sleep(400);
-        drive.strafe(-0.4, 0.65);
+        sleep(800);
+        drive.strafe(-0.4, 0.4);
         picker.latch();
-        sleep(1500);
+        sleep(800);
         picker.stoneRetract();
-        sleep(400);
+        sleep(800);
 
-        drive.strafe(0.4, 0.7);
+        drive.strafe(0.5, 0.7);
 
         if(pattern == 0) {
-            drive.driveToPos(70, -0.5);
+            drive.driveToPos(65, -0.5);
         } else if (pattern == 1) {
-            drive.driveToPos(80, -0.5);
+            drive.driveToPos(75, -0.5);
         } else if (pattern == 2) {
-            drive.driveToPos(90, -0.5);
+            drive.driveToPos(85, -0.5);
         }
 
-        drive.strafe(-0.4, 0.5);
+        drive.strafe(-0.6, 0.4);
+
+        picker.delatch();
+
+        drive.strafe(0.6, 0.6);
 
     }
 }

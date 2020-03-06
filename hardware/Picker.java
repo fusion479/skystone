@@ -23,9 +23,7 @@ public class Picker extends Mechanism{
         latch.setPosition(0);
     }
 
-    public void retract(){
-        swivel.setPosition(0.5);
-    }
+    public void retract(){ swivel.setPosition(0.4); }
 
     public void stoneRetract() {swivel.setPosition(0.2);}
 

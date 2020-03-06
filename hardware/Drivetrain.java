@@ -158,7 +158,7 @@ public class Drivetrain extends Mechanism {
 
         pidRotate = new PIDController(0.007, 0.1, 0);
         pidDrive = new PIDController(0.001, 0, 0);
-        pidStrafe = new PIDController(0.03, 0, 0);
+        pidStrafe = new PIDController(0.02, 0, 0);
 
         // Set all motors to zero power
         setPower(0.0);
@@ -190,7 +190,7 @@ public class Drivetrain extends Mechanism {
 
     /**
      * Drive forward or backwards for inches inches at power power level.
-     * @param power direction to strafe, - is backwards + is forward
+     * @param power direction to drive, - is backwards + is forward
      */
     public void driveToPos(double inches, double power) {
         ElapsedTime time = new ElapsedTime();
@@ -250,7 +250,7 @@ public class Drivetrain extends Mechanism {
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
         double set_power = power * inches / Math.abs(inches);
 
-        while (!foundStone && opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy() && time.seconds() < 3) {
+        while (!foundStone && opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy() && time.seconds() < 3.5) {
             pidDrive.setSetpoint(0);
             pidDrive.setOutputRange(0, set_power);
             pidDrive.setInputRange(-90, 90);
@@ -270,7 +270,16 @@ public class Drivetrain extends Mechanism {
                             opMode.telemetry.addData("time", time.seconds());
                             opMode.telemetry.addData("label", recognition.getLabel());
                             opMode.telemetry.addData("Angle", recognition.estimateAngleToObject(AngleUnit.DEGREES));
+                            if(recognition.estimateAngleToObject(AngleUnit.DEGREES) < -5) {
+                                opMode.telemetry.addData("angle", "going forward");
+                                driveToPos(5, 0.5);
+                            }
+                            if(recognition.estimateAngleToObject(AngleUnit.DEGREES) > 5) {
+                                opMode.telemetry.addData("angle", "going backwards");
+                                driveToPos(5, -0.5);
+                            }
                             opMode.telemetry.update();
+
                             foundStone = true;
                         }
                     }
@@ -282,7 +291,7 @@ public class Drivetrain extends Mechanism {
 
         if(time.seconds() <= 1) {
             return 0;
-        } else if(time.seconds() <= 2) {
+        } else if(time.seconds() <= 2.5) {
             return 1;
         } else {
             return 2;
