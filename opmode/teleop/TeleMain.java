@@ -40,46 +40,29 @@ public class TeleMain extends LinearOpMode {
             double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             double rightX = gamepad1.right_stick_x;
 
-            if (gamepad1.dpad_up) {
-//                drive.setSlow();
-                if(lock.getLocked()) {
-                    lock.unlock();
-                } else {
-                    lock.lock();
-                }
-            }
-
-            if(gamepad1.dpad_down) {
-                drive.reverse();
-            }
-
             drive.teleDrive(r, robotAngle, rightX);
 
-            if(gamepad1.right_bumper) {
-                acquirer.teleIntake(1);
-            } else if (gamepad1.left_bumper) {
-                acquirer.teleOuttake(1);
-            } else {
-                acquirer.stop();
+            if (gamepad1.dpad_up) {
+                if(lock.getLocked()) lock.unlock();
+                else lock.lock();
             }
 
-            if (gamepad1.b) claw.open();
+            if(gamepad1.dpad_down) drive.reverse();
+
+            if(gamepad1.right_bumper) acquirer.teleIntake(1);
+            else if (gamepad1.left_bumper) acquirer.teleOuttake(1);
+            else acquirer.stop();
 
             if (gamepad1.a) claw.close();
+            if (gamepad1.b) claw.open();
+            if (gamepad1.x) claw.back();
+            if (gamepad1.y) claw.front();
 
-            if (gamepad1.y) {
-                claw.front();
-            }
-
-            if (gamepad1.x) {
-                claw.back();
-            }
             if (gamepad1.dpad_left) hook.hook();
             if (gamepad1.dpad_right) hook.unhook();
+
             if (gamepad1.left_trigger > 0) lift.liftDown(gamepad1.left_trigger);
-
             else if (gamepad1.right_trigger > 0 ) lift.liftUp(gamepad1.right_trigger);
-
             else lift.liftUp(0);
 
             telemetry.addData("slow mode", drive.getSlow());

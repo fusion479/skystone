@@ -10,9 +10,9 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
-public class TensorFlowCamera extends Mechanism{
+public class Camera extends Mechanism{
 
-    public TensorFlowCamera(LinearOpMode opMode) {this.opMode = opMode; }
+    public Camera(LinearOpMode opMode) {this.opMode = opMode; }
 
     /**
      * This 2019-2020 OpMode illustrates the basics of using the TensorFlow Object Detection API to

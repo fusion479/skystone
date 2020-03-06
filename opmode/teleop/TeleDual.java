@@ -45,75 +45,43 @@ public class TeleDual extends LinearOpMode{
 
                 drive.teleDrive(r, robotAngle, rightX);
 
-                if (gamepad1.start){
-                    modeToggle = !modeToggle;
-                }
+                if (gamepad1.start) modeToggle = !modeToggle;
 
                 if (modeToggle){
-                    if(gamepad1.b && hook.getHooked()) {
-                        hook.unhook();
-                    } else if (gamepad1.b && !hook.getHooked()) {
-                        hook.hook();
-                    }
-                    if(drive.getSlow()) {
-                        drive.setSlow();
-                    }
-                    if(drive.getReverse()) {
-                        drive.reverse();
-                    }
-                    if (gamepad1.left_trigger > 0) {
-                        acquirer.teleOuttake(gamepad1.left_trigger);
-                    } else if (gamepad1.right_trigger > 0 ) {
-                        acquirer.teleIntake(gamepad1.right_trigger);
-                    } else {
-                        acquirer.stop();
-                    }
+                    if(drive.getSlow()) drive.setSlow();
+                    if(drive.getReverse()) drive.reverse();
 
-                    if(gamepad1.x && lock.getLocked()) {
-                        lock.unlock();
-                    } else if (gamepad1.x && !lock.getLocked()) {
-                        lock.lock();
-                    }
+                    if(gamepad1.b && hook.getHooked()) hook.unhook();
+                    else if (gamepad1.b && !hook.getHooked()) hook.hook();
 
-                    if (gamepad1.right_bumper){
-                        tapeMeasure.retract();
-                    } else if (gamepad1.left_bumper){
-                        tapeMeasure.extend();
-                    } else {
-                        tapeMeasure.stop();
-                    }
+                    if (gamepad1.left_trigger > 0) acquirer.teleOuttake(gamepad1.left_trigger);
+                    else if (gamepad1.right_trigger > 0 ) acquirer.teleIntake(gamepad1.right_trigger);
+                    else acquirer.stop();
+
+                    if(gamepad1.x && lock.getLocked()) lock.unlock();
+                    else if (gamepad1.x && !lock.getLocked()) lock.lock();
+
+                    if (gamepad1.left_bumper) tapeMeasure.retract();
+                    else if (gamepad1.right_bumper) tapeMeasure.extend();
+                    else tapeMeasure.stop();
                 }
                 else {
-                    if(!drive.getReverse()) {
-                        drive.reverse();
-                    }
-                    if (gamepad1.right_trigger > 0) {
-                        lift.liftUp(gamepad1.right_trigger);
-                    } else if (gamepad1.left_trigger > 0) {
-                        lift.liftDown(gamepad1.left_trigger);
-                    } else {
-                        lift.liftOff();
-                    }
+                    if(!drive.getReverse()) drive.reverse();
+                    if (gamepad1.y) drive.setSlow();
 
-                    if(gamepad1.x && claw.getSwinged()) {
-                        claw.front();
-                    } else if (gamepad1.x && !claw.getSwinged()) {
-                        claw.back();
-                    }
-                    if (gamepad1.y){
-                        drive.setSlow();
-                    }
-                    if(gamepad1.b) {
-                        claw.fullBack();
-                    }
+                    if (gamepad1.right_trigger > 0) lift.liftUp(gamepad1.right_trigger);
+                    else if (gamepad1.left_trigger > 0) lift.liftDown(gamepad1.left_trigger);
+                    else lift.liftOff();
+
+                    if(gamepad1.x && claw.getSwinged()) claw.front();
+                    else if (gamepad1.x && !claw.getSwinged()) claw.back();
+
+                    if(gamepad1.b) claw.fullBack();
                 }
 
-                if(gamepad1.a && claw.getGripped()) {
-                    claw.open();
+                if(gamepad1.a && claw.getGripped()) claw.open();
+                else if (gamepad1.a && !claw.getGripped()) claw.close();
 
-                } else if(gamepad1.a && !claw.getGripped()) {
-                    claw.close();
-                }
 
                 telemetry.addData("mode toggle", (modeToggle) ? 0 : 1);
                 telemetry.addData("slow mode", drive.getSlow());
