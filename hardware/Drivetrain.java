@@ -42,7 +42,6 @@ public class Drivetrain extends Mechanism {
     private static final double COUNTS_PER_INCH =
             (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
 
-
     private DcMotor frontLeft;
     private DcMotor frontRight;
     private DcMotor backLeft;
@@ -58,18 +57,85 @@ public class Drivetrain extends Mechanism {
 
     public Drivetrain(LinearOpMode opMode) { this.opMode = opMode; }
 
-    public void setForwardDirection() {
+    private void setForwardDirection() {
         frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
-    public void setReverseDirection() {
+    private void setReverseDirection() {
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+    }
+
+    private void setTargetPosition(int tickCount) {
+        frontLeft.setTargetPosition(tickCount);
+        backLeft.setTargetPosition(tickCount);
+        backRight.setTargetPosition(tickCount);
+        frontRight.setTargetPosition(tickCount);
+    }
+
+    private void setPower(double power) { setPower(power, power, power, power); }
+
+    private void setPower(double FL, double FR, double BL, double BR) {
+        frontLeft.setPower(FL);
+        backRight.setPower(BR);
+        backLeft.setPower(BL);
+        frontRight.setPower(FR);
+    }
+
+    private void setMode(DcMotor.RunMode mode) {
+        frontLeft.setMode(mode);
+        backRight.setMode(mode);
+        backLeft.setMode(mode);
+        frontRight.setMode(mode);
+    }
+
+    public void setSlow() { slow_mode = !slow_mode; }
+
+    public void reverse() { reverse_mode = !reverse_mode; }
+
+    public boolean getSlow() { return slow_mode; }
+
+    public boolean getReverse() { return reverse_mode; }
+
+    public void setCamera(Camera camera) { this.camera = camera; }
+
+    /**
+     * Resets the cumulative angle tracking to zero.
+     */
+    private void resetAngle() {
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        globalAngle = 0;
+    }
+
+//    public float getHeading() { return lastAngles.firstAngle; }
+
+//    public double getGlobal() { return globalAngle; }
+
+    /**
+     * Get current cumulative angle rotation from last reset.
+     *
+     * @return Angle in degrees. + = left, - = right from zero point.
+     */
+    private double getAngle() {
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
+
+        if (deltaAngle < -180)
+            deltaAngle += 360;
+        else if (deltaAngle > 180)
+            deltaAngle -= 360;
+
+        globalAngle += deltaAngle;
+
+        lastAngles = angles;
+
+        return globalAngle;
     }
 
     public void init(HardwareMap hwMap) {
@@ -111,31 +177,14 @@ public class Drivetrain extends Mechanism {
         imu.initialize(parameters);
     }
 
-    private void setPower(double power) {
-        setPower(power, power, power, power);
-    }
-
-    public void setPower(double FL, double FR, double BL, double BR) {
-        frontLeft.setPower(FL);
-        backRight.setPower(BR);
-        backLeft.setPower(BL);
-        frontRight.setPower(FR);
-    }
-
-    private void setMode(DcMotor.RunMode mode) {
-        frontLeft.setMode(mode);
-        backRight.setMode(mode);
-        backLeft.setMode(mode);
-        frontRight.setMode(mode);
-    }
-
     public void teleDrive(double r, double robotAngle, double rightX) {
         double multiplier = (slow_mode) ? 0.5 : 1;
         double reversed = (reverse_mode) ? -1 : 1;
-        double v1 = reversed * multiplier * r * Math.sin(robotAngle) - multiplier * rightX;
-        double v2 = reversed * multiplier * r * Math.cos(robotAngle) + multiplier * rightX;
-        double v3 = reversed * multiplier * r * Math.cos(robotAngle) - multiplier * rightX;
-        double v4 = reversed * multiplier * r * Math.sin(robotAngle) + multiplier * rightX;
+        double power = reversed * multiplier * r;
+        double v1 = power * Math.sin(robotAngle) - multiplier * rightX;
+        double v2 = power * Math.cos(robotAngle) + multiplier * rightX;
+        double v3 = power * Math.cos(robotAngle) - multiplier * rightX;
+        double v4 = power * Math.sin(robotAngle) + multiplier * rightX;
         setPower(v1, v2, v3, v4);
     }
 
@@ -149,7 +198,7 @@ public class Drivetrain extends Mechanism {
         setForwardDirection();
         if (power > 0) {
             setForwardDirection();
-        } else if (power <= 0) {
+        } else if (power < 0) {
             setReverseDirection();
         }
         double correction;
@@ -157,10 +206,7 @@ public class Drivetrain extends Mechanism {
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         int tickCount = (int) (inches * COUNTS_PER_INCH);
-        frontLeft.setTargetPosition(tickCount);
-        backLeft.setTargetPosition(tickCount);
-        backRight.setTargetPosition(tickCount);
-        frontRight.setTargetPosition(tickCount);
+        setTargetPosition(tickCount);
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
         double set_power = power * inches / Math.abs(inches);
 
@@ -182,45 +228,7 @@ public class Drivetrain extends Mechanism {
         }
         setPower(0.0);
 
-        if (power < 0) {
-            setReverseDirection();
-        }
-    }
-
-    /**
-     * Resets the cumulative angle tracking to zero.
-     */
-    public void resetAngle() {
-        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        globalAngle = 0;
-    }
-
-    public float getHeading() {
-        return lastAngles.firstAngle;
-    }
-
-    public double getGlobal() { return globalAngle; }
-
-    /**
-     * Get current cumulative angle rotation from last reset.
-     *
-     * @return Angle in degrees. + = left, - = right from zero point.
-     */
-    public double getAngle() {
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
-
-        if (deltaAngle < -180)
-            deltaAngle += 360;
-        else if (deltaAngle > 180)
-            deltaAngle -= 360;
-
-        globalAngle += deltaAngle;
-
-        lastAngles = angles;
-
-        return globalAngle;
+        if (power < 0) { setReverseDirection(); }
     }
 
     public int findStone(double power) {
@@ -238,10 +246,7 @@ public class Drivetrain extends Mechanism {
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         int tickCount = (int) (inches * COUNTS_PER_INCH);
-        frontLeft.setTargetPosition(tickCount);
-        backLeft.setTargetPosition(tickCount);
-        backRight.setTargetPosition(tickCount);
-        frontRight.setTargetPosition(tickCount);
+        setTargetPosition(tickCount);
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
         double set_power = power * inches / Math.abs(inches);
 
@@ -353,14 +358,4 @@ public class Drivetrain extends Mechanism {
         setPower(0);
         resetAngle();
     }
-
-    public void setSlow() { slow_mode = !slow_mode; }
-
-    public void reverse() { reverse_mode = !reverse_mode; }
-
-    public boolean getSlow() { return slow_mode; }
-
-    public boolean getReverse() { return reverse_mode; }
-
-    public void setCamera(Camera camera) { this.camera = camera; }
 }
