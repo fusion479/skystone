@@ -26,9 +26,7 @@ public class AutonCV extends LinearOpMode {
         picker.init(hardwareMap);
 
         TFObjectDetector tfod = camera.getTFod();
-        if (tfod != null) {
-            tfod.activate();
-        }
+        if (tfod != null) { tfod.activate(); }
         drive.setCamera(camera);
 
         telemetry.addData("Status", "Initialized");
@@ -41,7 +39,13 @@ public class AutonCV extends LinearOpMode {
         drive.strafe(-0.4, 1.3);
         sleep(500);
 
-        drive.findStone(0.2);
+        int pattern = drive.findStone(0.2);
+        if (tfod != null) { tfod.deactivate(); }
+        if (pattern == 0) {
+            drive.driveToPos(5, 0.5);
+        } if (pattern == 1 || pattern == 2) {
+            drive.driveToPos(7, 0.5);
+        }
         picker.delatch();
         sleep(400);
         picker.extend();
@@ -54,12 +58,15 @@ public class AutonCV extends LinearOpMode {
 
         drive.strafe(0.4, 0.7);
 
-        drive.driveToPos(70, -0.5);
+        if(pattern == 0) {
+            drive.driveToPos(70, -0.5);
+        } else if (pattern == 1) {
+            drive.driveToPos(80, -0.5);
+        } else if (pattern == 2) {
+            drive.driveToPos(90, -0.5);
+        }
 
         drive.strafe(-0.4, 0.5);
 
-        if (tfod != null) {
-            tfod.deactivate();
-        }
     }
 }

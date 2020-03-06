@@ -227,7 +227,7 @@ public class Drivetrain extends Mechanism {
         return globalAngle;
     }
 
-    public void findStone(double power) {
+    public int findStone(double power) {
         int inches = 20;
         boolean foundStone = false;
         ElapsedTime time = new ElapsedTime();
@@ -273,6 +273,7 @@ public class Drivetrain extends Mechanism {
             }
             opMode.telemetry.addData("angle", getAngle());
             opMode.telemetry.addData("correction", correction);
+            opMode.telemetry.addData("time", time.seconds());
             opMode.telemetry.update();
             if (camera.getTFod() != null) {
                 List<Recognition> updatedRecognitions = camera.getTFod().getUpdatedRecognitions();
@@ -290,6 +291,7 @@ public class Drivetrain extends Mechanism {
                 }
             }
         }
+
         setPower(0.0);
 
         if (power < 0) {
@@ -297,6 +299,14 @@ public class Drivetrain extends Mechanism {
             backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
             frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
             backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        }
+
+        if(time.seconds() <= 1) {
+            return 0;
+        } else if(time.seconds() <= 2) {
+            return 1;
+        } else {
+            return 2;
         }
     }
 
@@ -384,7 +394,5 @@ public class Drivetrain extends Mechanism {
 
     public boolean getReverse() { return reverse_mode; }
 
-    public void setCamera(Camera camera) {
-        this.camera = camera;
-    }
+    public void setCamera(Camera camera) { this.camera = camera; }
 }
