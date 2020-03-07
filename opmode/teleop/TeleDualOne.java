@@ -85,7 +85,6 @@ public class TeleDualOne extends LinearOpMode{
             if(gamepad1.a && claw.getGripped()) claw.open();
             else if (gamepad1.a && !claw.getGripped()) claw.close();
 
-
             telemetry.addData("mode toggle", (modeToggle) ? 0 : 1);
             telemetry.addData("slow mode", drive.getSlow());
             telemetry.addData("reverse mode", drive.getReverse());

@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Hook;
 import org.firstinspires.ftc.teamcode.hardware.Picker;
 
-@Autonomous(name="Red-AutonCV-Foundation-Park")
+@Autonomous(name="Red-Vision-Foundation-Park")
 public class CVFPRed extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private Drivetrain drive = new Drivetrain(this);
