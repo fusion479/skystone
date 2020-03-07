@@ -36,11 +36,17 @@ public class RedCV extends LinearOpMode {
 
         runtime.reset();
 
-        drive.strafe(-0.6, 0.9);
+        drive.strafe(-0.6, 1);
         sleep(500);
 
         int pattern = drive.findStone(0.15);
-        if(pattern == 0) { drive.driveToPos(2.5,0.5); }
+        if(pattern == 0) {
+            drive.driveToPos(4.55, 0.5);
+        }
+        if(pattern == 2) {
+            drive.driveToPos(4.6, 0.5);
+        }
+//        if(pattern == 0 || pattern == 2) { drive.driveToPos(4.55,0.5); }
         telemetry.addData("Pattern", pattern);
         telemetry.update();
         if (tfod != null) { tfod.deactivate(); }
@@ -48,29 +54,29 @@ public class RedCV extends LinearOpMode {
         sleep(400);
         picker.extend();
         sleep(800);
-        drive.strafe(-0.4, 0.6);
+        drive.strafe(-0.4, 0.7);
         picker.latch();
         sleep(800);
         picker.stoneRetract();
         sleep(800);
 
-        drive.strafe(0.5, 0.7);
+        drive.strafe(0.5, 0.5);
 
         if(pattern == 0) {
-            drive.driveToPos(65, -0.5);
+            drive.driveToPos(67, -0.5);
         } else if (pattern == 1) {
-            drive.driveToPos(75, -0.5);
-        } else if (pattern == 2) {
             drive.driveToPos(85, -0.5);
+        } else if (pattern == 2) {
+            drive.driveToPos(95, -0.5);
         }
 
-        drive.strafe(-0.6, 0.5);
+        drive.strafe(-0.6, 0.35);
 
-        picker.extend();
-        sleep(1000);
         picker.delatch();
         sleep(1000);
+        picker.stoneRetract();
+        sleep(1000);
 
-        drive.strafe(0.6, 0.6);
+        drive.strafe(0.6, 0.55);
     }
 }
