@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode.auton;
+package org.firstinspires.ftc.teamcode.opmode.auton.visionFoundationPark;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -8,21 +8,24 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.hardware.Camera;
 import org.firstinspires.ftc.teamcode.hardware.Claw;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
+import org.firstinspires.ftc.teamcode.hardware.Hook;
 import org.firstinspires.ftc.teamcode.hardware.Picker;
 
-@Autonomous(name="AutonCV")
-public class RedCV extends LinearOpMode {
+@Autonomous(name="Red-AutonCV-Foundation-Park")
+public class CVFPRed extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private Drivetrain drive = new Drivetrain(this);
     private Claw claw = new Claw(this);
     private Camera camera = new Camera(this);
     private Picker picker = new Picker(this);
+    private Hook hook = new Hook(this);
 
     @Override
     public void runOpMode() throws InterruptedException {
         drive.init(hardwareMap);
         claw.init(hardwareMap);
         camera.init(hardwareMap);
+        hook.init(hardwareMap);
         picker.init(hardwareMap);
 
         TFObjectDetector tfod = camera.getTFod();
@@ -77,6 +80,19 @@ public class RedCV extends LinearOpMode {
         picker.stoneRetract();
         sleep(1000);
 
-        drive.strafe(0.6, 0.55);
+        drive.strafe(0.6, 0.25);
+        sleep(500);
+        drive.turn(90, 1);
+        hook.unhook();
+        sleep(400);
+        drive.driveToPos(3, 0.5);
+        hook.hook();
+        sleep(500);
+        drive.driveToPos(20, -0.7);
+        drive.turn(90, 1);
+        sleep(500);
+        drive.driveToPos(10, 0.7);
+        hook.unhook();
+        sleep(400);
     }
 }
