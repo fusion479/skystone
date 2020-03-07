@@ -19,6 +19,7 @@ public class Picker extends Mechanism{
     public void latch(){
         latch.setPosition(1);
     }
+
     public void delatch(){
         latch.setPosition(0);
     }

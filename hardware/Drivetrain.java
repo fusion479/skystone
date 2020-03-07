@@ -267,19 +267,16 @@ public class Drivetrain extends Mechanism {
                 if (updatedRecognitions != null) {
                     for (Recognition recognition : updatedRecognitions) {
                         if (recognition.getLabel().equals("Skystone")) {
+                            if(recognition.estimateAngleToObject(AngleUnit.DEGREES) < -3) {
+                                driveToPos(4, 0.5);
+                            }
+                            if(recognition.estimateAngleToObject(AngleUnit.DEGREES) > 3) {
+                                driveToPos(3, -0.5);
+                            }
                             opMode.telemetry.addData("time", time.seconds());
                             opMode.telemetry.addData("label", recognition.getLabel());
                             opMode.telemetry.addData("Angle", recognition.estimateAngleToObject(AngleUnit.DEGREES));
-                            if(recognition.estimateAngleToObject(AngleUnit.DEGREES) < -5) {
-                                opMode.telemetry.addData("angle", "going forward");
-                                driveToPos(5, 0.5);
-                            }
-                            if(recognition.estimateAngleToObject(AngleUnit.DEGREES) > 5) {
-                                opMode.telemetry.addData("angle", "going backwards");
-                                driveToPos(5, -0.5);
-                            }
                             opMode.telemetry.update();
-
                             foundStone = true;
                         }
                     }
@@ -291,7 +288,7 @@ public class Drivetrain extends Mechanism {
 
         if(time.seconds() <= 1) {
             return 0;
-        } else if(time.seconds() <= 2.5) {
+        } else if(time.seconds() <= 3) {
             return 1;
         } else {
             return 2;

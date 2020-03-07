@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Picker;
 
 @Autonomous(name="AutonCV")
-public class AutonCV extends LinearOpMode {
+public class RedCV extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private Drivetrain drive = new Drivetrain(this);
     private Claw claw = new Claw(this);
@@ -36,21 +36,19 @@ public class AutonCV extends LinearOpMode {
 
         runtime.reset();
 
-        drive.strafe(-0.6, 1);
+        drive.strafe(-0.6, 0.9);
         sleep(500);
 
         int pattern = drive.findStone(0.15);
+        if(pattern == 0) { drive.driveToPos(2.5,0.5); }
         telemetry.addData("Pattern", pattern);
         telemetry.update();
-        if(pattern == 2) {
-            drive.driveToPos(4, 0.5);
-        }
         if (tfod != null) { tfod.deactivate(); }
         picker.delatch();
         sleep(400);
         picker.extend();
         sleep(800);
-        drive.strafe(-0.4, 0.4);
+        drive.strafe(-0.4, 0.6);
         picker.latch();
         sleep(800);
         picker.stoneRetract();
@@ -66,11 +64,13 @@ public class AutonCV extends LinearOpMode {
             drive.driveToPos(85, -0.5);
         }
 
-        drive.strafe(-0.6, 0.4);
+        drive.strafe(-0.6, 0.5);
 
+        picker.extend();
+        sleep(1000);
         picker.delatch();
+        sleep(1000);
 
         drive.strafe(0.6, 0.6);
-
     }
 }
