@@ -65,8 +65,8 @@ public class TeleDualTwo extends LinearOpMode{
             if(gamepad1.x && lock.getLocked()) lock.unlock();
             else if (gamepad1.x && !lock.getLocked()) lock.lock();
 
-            if (gamepad1.left_bumper) tapeMeasure.retract();
-            else if (gamepad1.right_bumper) tapeMeasure.extend();
+            if (gamepad1.right_bumper) tapeMeasure.retract();
+            else if (gamepad1.left_bumper) tapeMeasure.extend();
             else tapeMeasure.stop();
 
             if (gamepad2.right_trigger > 0) lift.liftUp(gamepad2.right_trigger);
@@ -76,10 +76,10 @@ public class TeleDualTwo extends LinearOpMode{
             if(gamepad2.x && claw.getSwinged()) claw.front();
             else if (gamepad2.x && !claw.getSwinged()) claw.back();
 
-            if(gamepad2.b) claw.fullBack();
+            if(gamepad2.b && !gamepad2.start) claw.fullBack();
 
-            if((gamepad1.a || gamepad2.a) && claw.getGripped()) claw.open();
-            else if ((gamepad1.a || gamepad2.a) && !claw.getGripped()) claw.close();
+            if((gamepad1.a || gamepad2.a) && claw.getGripped() && !gamepad2.start) claw.open();
+            else if ((gamepad1.a || gamepad2.a) && !claw.getGripped() && !gamepad2.start) claw.close();
 
             telemetry.addData("slow mode", drive.getSlow());
             telemetry.addData("reverse mode", drive.getReverse());
