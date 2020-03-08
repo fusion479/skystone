@@ -271,7 +271,7 @@ public class Drivetrain extends Mechanism {
                                 driveToPos(0.5, 0.4);
                                 return 2;
                             }
-                            if(recognition.estimateAngleToObject(AngleUnit.DEGREES) < -2) {
+                            if(recognition.estimateAngleToObject(AngleUnit.DEGREES) < -2 && !(time.seconds() < 1)) {
                                 driveToPos(3, 0.4);
                             }
                             if(recognition.estimateAngleToObject(AngleUnit.DEGREES) > 4.5) {
@@ -324,7 +324,7 @@ public class Drivetrain extends Mechanism {
 
     /**
      * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
-     * @param degrees Degrees to turn, + is right - is left
+     * @param degrees Degrees to turn, - is right + is left
      */
     public void turn(int degrees, double power) {
         setReverseDirection();

@@ -78,8 +78,8 @@ public class TeleDuo extends LinearOpMode {
             if (gamepad2.a && claw.getGripped()) claw.open();
             else if (gamepad2.a && !claw.getGripped()) claw.close();
 
-            if (gamepad2.dpad_up){tapeMeasure.retract();}
-            else if (gamepad2.dpad_down){tapeMeasure.extend();}
+            if (gamepad2.dpad_up){tapeMeasure.extend();}
+            else if (gamepad2.dpad_down){tapeMeasure.retract();}
             else {tapeMeasure.stop();}
 
             telemetry.addData("slow mode", drive.getSlow());

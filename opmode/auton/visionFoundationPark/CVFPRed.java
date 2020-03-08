@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.hardware.Claw;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Hook;
 import org.firstinspires.ftc.teamcode.hardware.Picker;
+import org.firstinspires.ftc.teamcode.hardware.TapeMeasure;
 
 @Autonomous(name="Red-Vision-Foundation-Park")
 public class CVFPRed extends LinearOpMode {
@@ -19,6 +20,7 @@ public class CVFPRed extends LinearOpMode {
     private Camera camera = new Camera(this);
     private Picker picker = new Picker(this);
     private Hook hook = new Hook(this);
+    private TapeMeasure tapeMeasure = new TapeMeasure(this);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -27,6 +29,7 @@ public class CVFPRed extends LinearOpMode {
         camera.init(hardwareMap);
         hook.init(hardwareMap);
         picker.init(hardwareMap);
+        tapeMeasure.init(hardwareMap);
 
         TFObjectDetector tfod = camera.getTFod();
         if (tfod != null) { tfod.activate(); }
@@ -40,7 +43,6 @@ public class CVFPRed extends LinearOpMode {
         runtime.reset();
 
         drive.strafe(-0.6, 1);
-        sleep(500);
 
         int pattern = drive.findStone(0.15);
         if(pattern == 0) {
@@ -68,31 +70,41 @@ public class CVFPRed extends LinearOpMode {
         if(pattern == 0) {
             drive.driveToPos(67, -0.5);
         } else if (pattern == 1) {
-            drive.driveToPos(85, -0.5);
+            drive.driveToPos(75, -0.5);
         } else if (pattern == 2) {
-            drive.driveToPos(95, -0.5);
+            drive.driveToPos(80, -0.5);
         }
 
         drive.strafe(-0.6, 0.35);
 
+        picker.extend();
+        sleep(800);
         picker.delatch();
-        sleep(1000);
+        sleep(800);
         picker.stoneRetract();
-        sleep(1000);
+        sleep(800);
 
         drive.strafe(0.6, 0.25);
         sleep(500);
-        drive.turn(90, 1);
+        drive.turn(-90, 1);
         hook.unhook();
         sleep(400);
-        drive.driveToPos(3, 0.5);
+        drive.strafe(-0.4, 1);
+        sleep(500);
+        drive.driveToPos(7, 0.5);
         hook.hook();
         sleep(500);
         drive.driveToPos(20, -0.7);
-        drive.turn(90, 1);
+        drive.turn(-90, 1);
         sleep(500);
-        drive.driveToPos(10, 0.7);
+        drive.driveToPos(14, 0.7);
         hook.unhook();
         sleep(400);
+        drive.driveToPos(7, -0.5);
+        drive.turn(90, 1);
+        drive.turn(90, 1);
+        tapeMeasure.extend();
+        sleep(3000);
+        tapeMeasure.stop();
     }
 }

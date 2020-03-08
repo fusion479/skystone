@@ -65,8 +65,8 @@ public class TeleDualTwo extends LinearOpMode{
             if(gamepad1.x && lock.getLocked()) lock.unlock();
             else if (gamepad1.x && !lock.getLocked()) lock.lock();
 
-            if (gamepad1.right_bumper) tapeMeasure.retract();
-            else if (gamepad1.left_bumper) tapeMeasure.extend();
+            if (gamepad1.left_bumper) tapeMeasure.retract();
+            else if (gamepad1.right_bumper) tapeMeasure.extend();
             else tapeMeasure.stop();
 
             if (gamepad2.right_trigger > 0) lift.liftUp(gamepad2.right_trigger);
