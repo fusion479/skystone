@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Hook;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
 import org.firstinspires.ftc.teamcode.hardware.Lock;
+import org.firstinspires.ftc.teamcode.hardware.Picker;
 import org.firstinspires.ftc.teamcode.hardware.TapeMeasure;
 
 @TeleOp(name="TeleDuo", group="Teleop")
@@ -21,6 +22,7 @@ public class TeleDuo extends LinearOpMode {
      private Lock lock = new Lock(this);
      private TapeMeasure tapeMeasure = new TapeMeasure(this);
      private Acquirer acquirer = new Acquirer(this);
+     private Picker picker = new Picker(this);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -31,6 +33,7 @@ public class TeleDuo extends LinearOpMode {
         lock.init(hardwareMap);
         tapeMeasure.init(hardwareMap);
         acquirer.init(hardwareMap);
+        picker.init(hardwareMap);
 
         while(!opModeIsActive() && !isStopRequested()){
             telemetry.addData("Status", "Waiting in init");
@@ -75,8 +78,8 @@ public class TeleDuo extends LinearOpMode {
             if (gamepad2.a && claw.getGripped()) claw.open();
             else if (gamepad2.a && !claw.getGripped()) claw.close();
 
-            if (gamepad2.dpad_up){tapeMeasure.retract();}
-            else if (gamepad2.dpad_down){tapeMeasure.extend();}
+            if (gamepad2.dpad_up){tapeMeasure.extend();}
+            else if (gamepad2.dpad_down){tapeMeasure.retract();}
             else {tapeMeasure.stop();}
 
             telemetry.addData("slow mode", drive.getSlow());

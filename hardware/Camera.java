@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
@@ -82,5 +83,38 @@ public class Camera extends Mechanism{
 
     public TFObjectDetector getTFod() {
         return tfod;
+    }
+
+    public void findSkystone() {
+        if (getTFod() != null) {
+            List<Recognition> updatedRecognitions = getTFod().getUpdatedRecognitions();
+            if (updatedRecognitions != null) {
+                for (Recognition recognition : updatedRecognitions) {
+                    if (recognition.getLabel().equals("Skystone")) {
+                        opMode.telemetry.addData("Angle", recognition.estimateAngleToObject(AngleUnit.DEGREES));
+                        opMode.telemetry.update();
+                    }
+                }
+            }
+        }
+    }
+
+    public void trackSkystone() {
+        Recognition prevRecogniton = null;
+        do {
+            if (getTFod() != null) {
+                List<Recognition> updatedRecognitions = getTFod().getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    for (Recognition recognition : updatedRecognitions) {
+                        if (recognition.getLabel().equals("Skystone")) {
+                            prevRecogniton = recognition;
+                            opMode.telemetry.addData("Angle", recognition.estimateAngleToObject(AngleUnit.DEGREES));
+                            opMode.telemetry.update();
+                        }
+                    }
+                }
+            }
+            // drive forward !
+        } while(prevRecogniton != null && prevRecogniton.estimateAngleToObject(AngleUnit.DEGREES) < 0);
     }
 }
