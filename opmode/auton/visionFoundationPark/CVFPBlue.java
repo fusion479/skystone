@@ -72,11 +72,11 @@ public class CVFPBlue extends LinearOpMode {
 
         if (pattern == 0) {
             drive.driveToPos(67, 0.5);
-//        } else if (pattern == 1) {
-//            drive.driveToPos(75, 0.5);
-//        } else if (pattern == 2) {
-//            drive.driveToPos(100, 0.5);
-//        }
+        } else if (pattern == 1) {
+            drive.driveToPos(75, 0.5);
+        } else if (pattern == 2) {
+            drive.driveToPos(100, 0.5);
+        }
 
             drive.strafe(-0.6, 0.35);
 
@@ -105,6 +105,5 @@ public class CVFPBlue extends LinearOpMode {
             tapeMeasure.extend();
             sleep(3000);
             tapeMeasure.stop();
-        }
     }
 }

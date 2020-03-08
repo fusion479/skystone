@@ -53,7 +53,7 @@ public class TeleDualOne extends LinearOpMode{
             if (gamepad1.start) {
                 double current = runtime.seconds();
                 while(gamepad1.start) {
-                    if(runtime.seconds() - current > 0.5) {
+                    if(runtime.seconds() - current > 0.25) {
                         modeToggle = !modeToggle;
                         break;
                     }
