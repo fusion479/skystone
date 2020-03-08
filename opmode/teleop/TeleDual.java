@@ -13,8 +13,8 @@ import org.firstinspires.ftc.teamcode.hardware.Lock;
 import org.firstinspires.ftc.teamcode.hardware.Picker;
 import org.firstinspires.ftc.teamcode.hardware.TapeMeasure;
 
-@TeleOp(name="TeleDualOne", group="Teleop")
-public class TeleDualOne extends LinearOpMode{
+@TeleOp(name="TeleDual", group="Teleop")
+public class TeleDual extends LinearOpMode{
     private Drivetrain drive = new Drivetrain(this);
     private Claw claw = new Claw(this);
     private Lift lift = new Lift(this);

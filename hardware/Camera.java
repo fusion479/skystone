@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
@@ -75,12 +76,45 @@ public class Camera extends Mechanism{
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minimumConfidence = 0.85;
+        tfodParameters.minimumConfidence = 0.8;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
 
     public TFObjectDetector getTFod() {
         return tfod;
+    }
+
+    public void findSkystone() {
+        if (getTFod() != null) {
+            List<Recognition> updatedRecognitions = getTFod().getUpdatedRecognitions();
+            if (updatedRecognitions != null) {
+                for (Recognition recognition : updatedRecognitions) {
+                    if (recognition.getLabel().equals("Skystone")) {
+                        opMode.telemetry.addData("Angle", recognition.estimateAngleToObject(AngleUnit.DEGREES));
+                        opMode.telemetry.update();
+                    }
+                }
+            }
+        }
+    }
+
+    public void trackSkystone() {
+        Recognition prevRecogniton = null;
+        do {
+            if (getTFod() != null) {
+                List<Recognition> updatedRecognitions = getTFod().getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    for (Recognition recognition : updatedRecognitions) {
+                        if (recognition.getLabel().equals("Skystone")) {
+                            prevRecogniton = recognition;
+                            opMode.telemetry.addData("Angle", recognition.estimateAngleToObject(AngleUnit.DEGREES));
+                            opMode.telemetry.update();
+                        }
+                    }
+                }
+            }
+            // drive forward !
+        } while(prevRecogniton != null && prevRecogniton.estimateAngleToObject(AngleUnit.DEGREES) < 0);
     }
 }
