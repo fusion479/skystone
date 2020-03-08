@@ -231,6 +231,70 @@ public class Drivetrain extends Mechanism {
         if (power < 0) { setReverseDirection(); }
     }
 
+    public int blueFindStone(double power) {
+        int inches = 20;
+        boolean foundStone = false;
+        ElapsedTime time = new ElapsedTime();
+        time.reset();
+        if (power > 0) {
+            setForwardDirection();
+        } else if (power < 0) {
+            setReverseDirection();
+        }
+        double correction;
+        resetAngle();
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        int tickCount = (int) (inches * COUNTS_PER_INCH);
+        setTargetPosition(tickCount);
+        setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        double set_power = power * inches / Math.abs(inches);
+
+        while (!foundStone && opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy() && time.seconds() < 3.4) {
+            pidDrive.setSetpoint(0);
+            pidDrive.setOutputRange(0, set_power);
+            pidDrive.setInputRange(-90, 90);
+            pidDrive.enable();
+            correction = pidDrive.performPID(getAngle());
+
+            if (Math.signum(inches) > 0) {
+                setPower(set_power + correction, set_power - correction, set_power + correction, set_power - correction);
+            } else if (Math.signum(inches) < 0) {
+                setPower(set_power - correction, set_power + correction, set_power - correction, set_power + correction);
+            }
+            if (camera.getTFod() != null) {
+                List<Recognition> updatedRecognitions = camera.getTFod().getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    for (Recognition recognition : updatedRecognitions) {
+                        if (recognition.getLabel().equals("Skystone")) {
+                            if(time.seconds() > 2 && recognition.estimateAngleToObject(AngleUnit.DEGREES) < -1) {
+                                driveToPos(0.5, 0.4);
+                                return 2;
+                            }
+                            if(recognition.estimateAngleToObject(AngleUnit.DEGREES) < -2 && !(time.seconds() < 1)) {
+                                driveToPos(3, 0.4);
+                            }
+                            if(recognition.estimateAngleToObject(AngleUnit.DEGREES) > 4.5) {
+                                driveToPos(2, -0.4);
+                            }
+                            foundStone = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        setPower(0.0);
+
+        if(time.seconds() <= 1.75) {
+            return 0;
+        } else if(time.seconds() <= 3.3) {
+            return 1;
+        } else {
+            return 2;
+        }
+    }
+
     public int findStone(double power) {
         int inches = 20;
         boolean foundStone = false;

@@ -44,12 +44,12 @@ public class CVFPBlue extends LinearOpMode {
 
         drive.strafe(-0.6, 1);
 
-        int pattern = drive.findStone(-0.15);
-        if(pattern == 0) {
-            drive.driveToPos(4.55, -0.5);
+        int pattern = drive.blueFindStone(-0.15);
+        if(pattern == 1) {
+            drive.driveToPos(4.55, 0.5);
         }
         if(pattern == 2) {
-            drive.driveToPos(4.6, -0.5);
+            drive.driveToPos(4.8, 0.5);
         }
         telemetry.addData("Pattern", pattern);
         telemetry.update();
@@ -64,14 +64,14 @@ public class CVFPBlue extends LinearOpMode {
         picker.stoneRetract();
         sleep(800);
 
-        drive.strafe(0.5, 0.5);
+        drive.strafe(0.5, 0.6);
 
         if(pattern == 0) {
             drive.driveToPos(67, 0.5);
         } else if (pattern == 1) {
             drive.driveToPos(75, 0.5);
         } else if (pattern == 2) {
-            drive.driveToPos(80, 0.5);
+            drive.driveToPos(85, 0.5);
         }
 
         drive.strafe(-0.6, 0.35);
@@ -85,7 +85,7 @@ public class CVFPBlue extends LinearOpMode {
 
         drive.strafe(0.6, 0.25);
         sleep(500);
-        drive.turn(90, 1);
+        drive.turn(-90, 1);
         hook.unhook();
         sleep(400);
         drive.strafe(0.4, 1);
