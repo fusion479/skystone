@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.Claw;
@@ -22,6 +23,7 @@ public class TeleDualOne extends LinearOpMode{
     private Acquirer acquirer = new Acquirer(this);
     private TapeMeasure tapeMeasure = new TapeMeasure(this);
     private Picker picker = new Picker(this);
+    private ElapsedTime runtime = new ElapsedTime();
 
     private boolean modeToggle = true;
 
@@ -48,7 +50,15 @@ public class TeleDualOne extends LinearOpMode{
 
             drive.teleDrive(r, robotAngle, rightX);
 
-            if (gamepad1.start) modeToggle = !modeToggle;
+            if (gamepad1.start) {
+                double current = runtime.seconds();
+                while(gamepad1.start) {
+                    if(runtime.seconds() - current > 0.5) {
+                        modeToggle = !modeToggle;
+                        break;
+                    }
+                }
+            }
 
             if (modeToggle){
                 if(drive.getSlow()) drive.setSlow();
