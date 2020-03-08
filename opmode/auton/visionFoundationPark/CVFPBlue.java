@@ -32,7 +32,9 @@ public class CVFPBlue extends LinearOpMode {
         tapeMeasure.init(hardwareMap);
 
         TFObjectDetector tfod = camera.getTFod();
-        if (tfod != null) { tfod.activate(); }
+        if (tfod != null) {
+            tfod.activate();
+        }
         drive.setCamera(camera);
 
         telemetry.addData("Status", "Initialized");
@@ -45,15 +47,17 @@ public class CVFPBlue extends LinearOpMode {
         drive.strafe(-0.6, 1);
 
         int pattern = drive.blueFindStone(-0.15);
-        if(pattern == 1) {
+        if (pattern == 1) {
             drive.driveToPos(4.55, 0.5);
         }
-        if(pattern == 2) {
+        if (pattern == 2) {
             drive.driveToPos(4.8, 0.5);
         }
         telemetry.addData("Pattern", pattern);
         telemetry.update();
-        if (tfod != null) { tfod.deactivate(); }
+        if (tfod != null) {
+            tfod.deactivate();
+        }
         picker.delatch();
         sleep(400);
         picker.extend();
@@ -64,46 +68,43 @@ public class CVFPBlue extends LinearOpMode {
         picker.stoneRetract();
         sleep(800);
 
-        drive.strafe(0.5, 0.6);
+        drive.strafe(0.5, 0.8);
 
-        if(pattern == 0) {
+        if (pattern == 0) {
             drive.driveToPos(67, 0.5);
-        } else if (pattern == 1) {
-            drive.driveToPos(75, 0.5);
-        } else if (pattern == 2) {
-            drive.driveToPos(85, 0.5);
+//        } else if (pattern == 1) {
+//            drive.driveToPos(75, 0.5);
+//        } else if (pattern == 2) {
+//            drive.driveToPos(100, 0.5);
+//        }
+
+            drive.strafe(-0.6, 0.35);
+
+            picker.extend();
+            sleep(800);
+            picker.delatch();
+            sleep(800);
+            picker.stoneRetract();
+            sleep(800);
+
+            drive.turn(-90, 1);
+            hook.unhook();
+            sleep(400);
+            drive.driveToPos(4, 0.5);
+            hook.hook();
+            sleep(500);
+            drive.driveToPos(22, -0.7);
+            drive.turn(90, 1);
+            sleep(500);
+            drive.driveToPos(14, 0.7);
+            hook.unhook();
+            sleep(400);
+            drive.driveToPos(7, -0.5);
+            drive.turn(-90, 1);
+            drive.turn(-90, 1);
+            tapeMeasure.extend();
+            sleep(3000);
+            tapeMeasure.stop();
         }
-
-        drive.strafe(-0.6, 0.35);
-
-        picker.extend();
-        sleep(800);
-        picker.delatch();
-        sleep(800);
-        picker.stoneRetract();
-        sleep(800);
-
-        drive.strafe(0.6, 0.25);
-        sleep(500);
-        drive.turn(-90, 1);
-        hook.unhook();
-        sleep(400);
-        drive.strafe(0.4, 1);
-        sleep(500);
-        drive.driveToPos(7, 0.5);
-        hook.hook();
-        sleep(500);
-        drive.driveToPos(20, -0.7);
-        drive.turn(90, 1);
-        sleep(500);
-        drive.driveToPos(14, 0.7);
-        hook.unhook();
-        sleep(400);
-        drive.driveToPos(7, -0.5);
-        drive.turn(-90, 1);
-        drive.turn(-90, 1);
-        tapeMeasure.extend();
-        sleep(3000);
-        tapeMeasure.stop();
     }
 }

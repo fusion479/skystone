@@ -65,7 +65,7 @@ public class CVFPRed extends LinearOpMode {
         picker.stoneRetract();
         sleep(800);
 
-        drive.strafe(0.5, 0.5);
+        drive.strafe(0.5, 0.6);
 
         if(pattern == 0) {
             drive.driveToPos(67, -0.5);
@@ -94,7 +94,7 @@ public class CVFPRed extends LinearOpMode {
         drive.driveToPos(7, 0.5);
         hook.hook();
         sleep(500);
-        drive.driveToPos(20, -0.7);
+        drive.driveToPos(25, -0.7);
         drive.turn(-90, 1);
         sleep(500);
         drive.driveToPos(14, 0.7);

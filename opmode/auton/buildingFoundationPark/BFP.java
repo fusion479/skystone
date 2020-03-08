@@ -46,12 +46,13 @@ public class BFP extends LinearOpMode {
 
         hook.unhook();
 
-        drive.strafe(alliance * -0.4, 0.65);
+        drive.strafe(alliance * -0.4, 0.6);
         sleep(250);
 
         drive.driveToPos(3, 0.4);
 
         hook.hook();
+        drive.strafe(-0.3, 0.5);
         sleep(600);
 
         drive.turn(alliance * 90, 1);

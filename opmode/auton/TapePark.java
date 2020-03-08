@@ -24,9 +24,8 @@ public class TapePark extends LinearOpMode {
         waitForStart();
 
         runtime.reset();
-
         tapeMeasure.extend();
-        sleep(1500);
+        sleep(1200);
         tapeMeasure.stop();
     }
 }

@@ -250,7 +250,7 @@ public class Drivetrain extends Mechanism {
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
         double set_power = power * inches / Math.abs(inches);
 
-        while (!foundStone && opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy() && time.seconds() < 3.4) {
+        while (!foundStone && opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy() && time.seconds() < 3.2) {
             pidDrive.setSetpoint(0);
             pidDrive.setOutputRange(0, set_power);
             pidDrive.setInputRange(-90, 90);
@@ -288,7 +288,7 @@ public class Drivetrain extends Mechanism {
 
         if(time.seconds() <= 1.75) {
             return 0;
-        } else if(time.seconds() <= 3.3) {
+        } else if(time.seconds() <= 2.8) {
             return 1;
         } else {
             return 2;
@@ -352,7 +352,7 @@ public class Drivetrain extends Mechanism {
 
         if(time.seconds() <= 1.75) {
             return 0;
-        } else if(time.seconds() <= 2.95) {
+        } else if(time.seconds() <= 2.8) {
             return 1;
         } else {
             return 2;
